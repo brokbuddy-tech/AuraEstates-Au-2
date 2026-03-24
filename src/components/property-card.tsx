@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Bed, Bath, Car, Heart, Sparkles, X } from "lucide-react";
+import { Bed, Bath, Car, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { 
@@ -38,6 +38,8 @@ export function PropertyCard({ image, price, address, beds, baths, cars, descrip
       const result = await summarizePropertyDescription({ description });
       setSummary(result.summary);
     } catch (error) {
+      // Errors are handled by the global error boundary/listener if it were a Firebase error,
+      // for Genkit flows we just log and potentially show a local fallback if needed.
       console.error("Failed to fetch summary", error);
     } finally {
       setIsLoadingSummary(false);
@@ -48,11 +50,19 @@ export function PropertyCard({ image, price, address, beds, baths, cars, descrip
     <div className="group relative flex-shrink-0 w-full sm:w-[400px] rounded-2xl overflow-hidden bg-card border border-white/5 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2">
       {/* Property Image */}
       <div className="relative h-64 w-full overflow-hidden">
-        <img
-          src={image}
-          alt={address}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={address}
+            width={800}
+            height={600}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+             <span className="text-white/20">No Image Available</span>
+          </div>
+        )}
         <Button
           variant="ghost"
           size="icon"

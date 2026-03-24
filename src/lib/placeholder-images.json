@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-home",
+      "description": "Modern Australian luxury home with large glass windows",
+      "imageUrl": "https://picsum.photos/seed/aura1/1920/1080",
+      "imageHint": "modern architecture"
+    },
+    {
+      "id": "prop-1",
+      "description": "Coastal modern villa with ocean views",
+      "imageUrl": "https://picsum.photos/seed/aura2/800/600",
+      "imageHint": "beach house"
+    },
+    {
+      "id": "prop-2",
+      "description": "Architectural masterpiece in the suburbs",
+      "imageUrl": "https://picsum.photos/seed/aura3/800/600",
+      "imageHint": "luxury home"
+    },
+    {
+      "id": "prop-3",
+      "description": "Urban penthouse with city skyline view",
+      "imageUrl": "https://picsum.photos/seed/aura4/800/600",
+      "imageHint": "penthouse city"
+    },
+    {
+      "id": "prop-4",
+      "description": "Contemporary family home with pool",
+      "imageUrl": "https://picsum.photos/seed/aura5/800/600",
+      "imageHint": "modern pool"
+    },
+    {
+      "id": "editorial-1",
+      "description": "Elegant interior living room",
+      "imageUrl": "https://picsum.photos/seed/aura6/1920/1080",
+      "imageHint": "interior design"
+    }
+  ]
 }

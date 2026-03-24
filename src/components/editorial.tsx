@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -28,14 +29,20 @@ export function Editorial() {
 
   return (
     <section className="relative h-[600px] w-full flex items-center overflow-hidden">
-      <div 
-        className="absolute inset-0 z-0 parallax-bg"
-        style={{ backgroundImage: `url(${editorialImage})` }}
-      >
-        <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 z-0">
+        {editorialImage && (
+          <Image
+            src={editorialImage}
+            alt="Editorial Background"
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
+        <div className="absolute inset-0 bg-black/50 z-10" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 md:px-12 flex justify-end">
+      <div className="relative z-20 container mx-auto px-6 md:px-12 flex justify-end">
         <div className="w-full max-w-lg glass-morphism rounded-3xl p-10 animate-fade-up">
           <span className="text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Insights</span>
           <h2 className="text-4xl font-bold text-white mb-8 leading-tight">Latest Real Estate News & Trends</h2>
@@ -49,8 +56,8 @@ export function Editorial() {
                   </h4>
                   <span className="text-white/30 text-xs">{item.date}</span>
                 </div>
-                <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                   <img src={item.img} alt="" className="w-full h-full object-cover" />
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                   <Image src={item.img} alt="" fill className="object-cover" />
                 </div>
               </div>
             ))}
