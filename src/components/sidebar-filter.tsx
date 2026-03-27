@@ -144,7 +144,6 @@ export function SidebarFilter({ className }: { className?: string }) {
                     fill 
                     className="object-cover grayscale opacity-40"
                   />
-                  {/* Reuse of logic inside the modal for properties display */}
                   <div className="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-black uppercase tracking-[0.5em] select-none">
                      Map Exploration Active
                   </div>
@@ -175,6 +174,15 @@ export function SidebarFilter({ className }: { className?: string }) {
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#111111]/40">$</span>
               <Input placeholder="Max" className="pl-7 h-11 bg-white border-[#E5E7EB] text-sm" />
             </div>
+          </div>
+        </div>
+
+        {/* Land Size */}
+        <div className="space-y-4">
+          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Land Size (m²)</Label>
+          <div className="flex gap-3">
+            <Input placeholder="Min" className="h-11 bg-white border-[#E5E7EB] text-sm" />
+            <Input placeholder="Max" className="h-11 bg-white border-[#E5E7EB] text-sm" />
           </div>
         </div>
 
@@ -261,15 +269,6 @@ export function SidebarFilter({ className }: { className?: string }) {
                 </label>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Land Size */}
-        <div className="space-y-4">
-          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Land Size (m²)</Label>
-          <div className="flex gap-3">
-            <Input placeholder="Min" className="h-11 bg-white border-[#E5E7EB] text-sm" />
-            <Input placeholder="Max" className="h-11 bg-white border-[#E5E7EB] text-sm" />
           </div>
         </div>
       </div>
