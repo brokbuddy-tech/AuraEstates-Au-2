@@ -32,7 +32,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/90">
-          <Link href="#" className="hover:text-primary transition-colors">Buy</Link>
+          <Link href="/buy" className="hover:text-primary transition-colors">Buy</Link>
           <Link href="#" className="hover:text-primary transition-colors">Rent</Link>
           <Link href="/sell" className="hover:text-primary transition-colors">Sell</Link>
           <Link href="#" className="hover:text-primary transition-colors">New Homes</Link>
