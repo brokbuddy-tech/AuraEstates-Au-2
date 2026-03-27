@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 import { 
   Search, 
   ChevronDown, 
-  Sparkles
+  Sparkles,
+  Filter
 } from "lucide-react";
 import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { SidebarFilter } from "@/components/sidebar-filter";
 
 const BUY_LISTINGS = [
   {
@@ -118,54 +120,74 @@ export default function BuyPage() {
                 className="bg-transparent border-none text-white placeholder:text-white/30 h-14 pl-12 focus-visible:ring-0 text-lg w-full"
               />
             </div>
-            <Button size="lg" className="h-14 px-10 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-xl shadow-blue-900/20 w-full md:w-auto">
+            <Button size="lg" className="h-14 px-10 bg-[#005F73] hover:bg-[#005F73]/90 text-white font-bold rounded-xl shadow-xl shadow-blue-900/20 w-full md:w-auto">
               SEARCH
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Property Grid Section */}
-      <section className="py-16 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div>
-              <h2 className="text-3xl font-black text-[#111111] uppercase tracking-tight">Available Listings</h2>
-              <p className="text-[#111111]/40 text-sm font-medium mt-1">Showing 156 properties in Sydney & Greater NSW</p>
-            </div>
-            <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
-              <span>Sort by:</span>
-              <button className="flex items-center gap-1 text-[#111111] hover:text-primary transition-colors">
-                Newest First <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+      {/* Property Results Section with Sidebar */}
+      <section className="py-16 px-6 md:px-12 bg-white">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="flex flex-col lg:flex-row gap-12">
+            
+            {/* Sidebar - Desktop Only */}
+            <aside className="hidden lg:block w-[300px] shrink-0">
+              <div className="sticky top-24">
+                <SidebarFilter className="rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]" />
+              </div>
+            </aside>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {BUY_LISTINGS.map((listing) => (
-              <PropertyCard 
-                key={listing.id}
-                id={listing.id}
-                image={listing.image}
-                price={listing.price}
-                address={listing.address}
-                beds={listing.beds}
-                baths={listing.baths}
-                cars={listing.cars}
-                description={listing.description}
-                status={listing.status}
-              />
-            ))}
-          </div>
+            {/* Main Content Grid */}
+            <div className="flex-1">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div>
+                  <h2 className="text-3xl font-black text-[#111111] uppercase tracking-tight">Available Listings</h2>
+                  <p className="text-[#111111]/40 text-sm font-medium mt-1">Showing 156 properties in Sydney & Greater NSW</p>
+                </div>
+                <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
+                  <span>Sort by:</span>
+                  <button className="flex items-center gap-1 text-[#111111] hover:text-primary transition-colors">
+                    Newest First <ChevronDown className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
 
-          <div className="mt-20 flex flex-col items-center">
-            <p className="text-black/40 text-sm mb-6">You've viewed 6 of 156 properties</p>
-            <Button variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
-              LOAD MORE PROPERTIES
-            </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {BUY_LISTINGS.map((listing) => (
+                  <PropertyCard 
+                    key={listing.id}
+                    id={listing.id}
+                    image={listing.image}
+                    price={listing.price}
+                    address={listing.address}
+                    beds={listing.beds}
+                    baths={listing.baths}
+                    cars={listing.cars}
+                    description={listing.description}
+                    status={listing.status}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-20 flex flex-col items-center">
+                <p className="text-black/40 text-sm mb-6">You've viewed 6 of 156 properties</p>
+                <Button variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
+                  LOAD MORE PROPERTIES
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Mobile Floating Action Button */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <Button className="h-12 px-8 bg-[#111111] text-white font-bold rounded-full shadow-2xl flex items-center gap-3 active:scale-95 transition-transform">
+          <Filter className="w-4 h-4 text-primary" /> FILTERS
+        </Button>
+      </div>
 
       {/* Market Insight Section */}
       <section className="py-24 px-6 md:px-12 bg-[#111111] text-white">
