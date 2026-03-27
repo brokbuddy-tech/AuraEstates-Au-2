@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { User, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -43,13 +43,14 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button
-          variant="outline"
-          className="hidden md:flex items-center gap-2 border-white/20 text-white hover:bg-primary hover:border-primary transition-all duration-300 backdrop-blur-sm"
-        >
-          <User className="w-4 h-4" />
-          Sign in / Join
-        </Button>
+        <Link href="/contact">
+          <Button
+            variant="outline"
+            className="hidden md:flex items-center gap-2 border-white/20 text-white hover:bg-primary hover:border-primary transition-all duration-300 backdrop-blur-sm"
+          >
+            Contact Us
+          </Button>
+        </Link>
         <Button variant="ghost" size="icon" className="lg:hidden text-white">
           <Menu className="w-6 h-6" />
         </Button>
