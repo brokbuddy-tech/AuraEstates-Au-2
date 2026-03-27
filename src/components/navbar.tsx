@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -28,14 +27,14 @@ export function Navbar() {
       <div className="flex items-center gap-12">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl font-bold tracking-tighter text-white">
-            Aura<span className="text-primary">Estates</span>
+            Aether<span className="text-primary"> Australia</span>
           </span>
         </Link>
 
         <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/90">
           <Link href="#" className="hover:text-primary transition-colors">Buy</Link>
           <Link href="#" className="hover:text-primary transition-colors">Rent</Link>
-          <Link href="#" className="hover:text-primary transition-colors">Sold</Link>
+          <Link href="/sell" className="hover:text-primary transition-colors">Sell</Link>
           <Link href="#" className="hover:text-primary transition-colors">New Homes</Link>
           <Link href="#" className="hover:text-primary transition-colors">Commercial</Link>
           <Link href="/about" className="hover:text-primary transition-colors">About Us</Link>

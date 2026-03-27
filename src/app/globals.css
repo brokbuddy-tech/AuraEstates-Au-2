@@ -4,25 +4,25 @@
 
 @layer base {
   :root {
-    --background: 165 15% 13%;
+    --background: 0 0% 7%;
     --foreground: 0 0% 98%;
-    --card: 165 15% 15%;
+    --card: 0 0% 9%;
     --card-foreground: 0 0% 98%;
-    --popover: 165 15% 13%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 162 87% 34%;
+    --primary: 191 100% 23%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 165 15% 20%;
-    --secondary-foreground: 137 51% 73%;
-    --muted: 165 15% 20%;
-    --muted-foreground: 165 5% 65%;
-    --accent: 137 51% 73%;
-    --accent-foreground: 165 15% 13%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 191 50% 80%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 191 100% 23%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 165 10% 25%;
-    --input: 165 10% 25%;
-    --ring: 162 87% 34%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 191 100% 23%;
     --radius: 1rem;
   }
 }
@@ -45,7 +45,7 @@
 }
 
 .glass-morphism-dark {
-  background: rgba(28, 38, 35, 0.6);
+  background: rgba(17, 17, 17, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
