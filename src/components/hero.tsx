@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
-const CATEGORIES = ["Buy", "Rent", "Sold", "Address", "Rural", "Commercial"];
+const CATEGORIES = ["Buy", "Rent", "Sold", "Rural", "Commercial"];
 
 export function Hero() {
   const [activeTab, setActiveTab] = useState("Buy");
