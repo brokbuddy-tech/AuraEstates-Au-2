@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { 
   MapPin, 
   Bed, 
@@ -13,7 +14,8 @@ import {
   Home,
   Building,
   TreePine,
-  Briefcase
+  Briefcase,
+  Maximize2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +34,30 @@ export function SidebarFilter({ className }: { className?: string }) {
       </div>
 
       <div className="p-6 space-y-8 overflow-y-auto max-h-[calc(100vh-160px)] no-scrollbar">
+        {/* Map View Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Map View</Label>
+            <button className="text-[10px] font-bold text-primary flex items-center gap-1 hover:underline">
+              <Maximize2 className="w-3 h-3" /> Full Screen
+            </button>
+          </div>
+          <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-[#E5E7EB] group cursor-pointer shadow-sm">
+            <Image 
+              src="https://picsum.photos/seed/aether-map-v1/600/400" 
+              alt="Map Preview" 
+              fill 
+              className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              data-ai-hint="satellite map"
+            />
+            <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
+            <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#E5E7EB] shadow-sm flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="text-[10px] font-bold text-[#111111]">Live Search Area</span>
+            </div>
+          </div>
+        </div>
+
         {/* Location & Radius */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Location & Radius</Label>
