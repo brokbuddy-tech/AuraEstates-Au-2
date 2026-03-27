@@ -58,20 +58,13 @@ export function SidebarFilter({ className }: { className?: string }) {
           </div>
         </div>
 
-        {/* Location & Radius */}
+        {/* Location */}
         <div className="space-y-4">
-          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Location & Radius</Label>
+          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Location</Label>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#111111]/40" />
             <Input placeholder="Suburb or Postcode" className="pl-10 h-11 bg-white border-[#E5E7EB] text-sm focus-visible:ring-primary/20" />
             <Target className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary cursor-pointer hover:scale-110 transition-transform" />
-          </div>
-          <div className="space-y-3">
-            <div className="flex justify-between text-[11px] font-medium text-[#111111]/60">
-              <span>Radius</span>
-              <span>+10km</span>
-            </div>
-            <Slider defaultValue={[10]} max={100} step={1} className="py-2" />
           </div>
         </div>
 
