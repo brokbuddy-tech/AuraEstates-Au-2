@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -36,7 +35,7 @@ export default function ContactPage() {
 
         <div className="relative z-20 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Contact Information */}
-          <div className="text-white space-y-8 animate-fade-up">
+          <div className="text-white space-y-8">
             <div>
               <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
                 Get in <span className="text-primary">Touch</span>
@@ -80,7 +79,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Form */}
-          <div className="glass-morphism p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl animate-fade-up [animation-delay:200ms]">
+          <div className="glass-morphism p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl">
             <h2 className="text-2xl font-bold text-white mb-6">Send a Message</h2>
             <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

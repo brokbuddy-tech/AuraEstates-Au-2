@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -31,11 +30,11 @@ export default function AboutPage() {
         </div>
 
         <div className="relative z-20 max-w-5xl mx-auto text-center">
-          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block animate-fade-up">Our Legacy</span>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight animate-fade-up">
+          <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-4 block">Our Legacy</span>
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight">
             Redefining <span className="text-primary italic">Luxury</span> Real Estate
           </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-16 animate-fade-up [animation-delay:100ms]">
+          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-16">
             At AuraEstates, we believe that finding a home is more than a transaction—it's an emotional journey. We blend cutting-edge AI technology with deep human expertise to deliver an unparalleled property experience.
           </p>
 
@@ -48,8 +47,7 @@ export default function AboutPage() {
             ].map((item, idx) => (
               <div 
                 key={idx} 
-                className="glass-morphism p-8 rounded-3xl border border-white/5 hover:border-primary/30 transition-all group animate-fade-up"
-                style={{ animationDelay: `${200 + idx * 100}ms` }}
+                className="glass-morphism p-8 rounded-3xl border border-white/5 hover:border-primary/30 transition-all group"
               >
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
                   <item.icon className="w-6 h-6" />
@@ -64,7 +62,7 @@ export default function AboutPage() {
 
       <section className="py-24 px-6 md:px-12 bg-[#151d1a]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="relative aspect-video lg:aspect-square rounded-3xl overflow-hidden glass-morphism border border-white/10 animate-fade-up">
+          <div className="relative aspect-video lg:aspect-square rounded-3xl overflow-hidden glass-morphism border border-white/10">
              <Image 
               src="https://picsum.photos/seed/aura8/1000/1000" 
               alt="Our Story" 
@@ -74,7 +72,7 @@ export default function AboutPage() {
              />
              <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           </div>
-          <div className="space-y-8 animate-fade-up [animation-delay:200ms]">
+          <div className="space-y-8">
             <h2 className="text-4xl font-bold text-white tracking-tight">The <span className="text-primary">Aura</span> Story</h2>
             <p className="text-white/60 leading-relaxed text-lg">
               Founded in Sydney, AuraEstates emerged from a simple observation: the real estate market was ready for a digital evolution that didn't sacrifice the prestige and personal touch of high-end consultancy.

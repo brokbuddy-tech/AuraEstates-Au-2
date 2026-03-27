@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -38,8 +37,6 @@ export function PropertyCard({ image, price, address, beds, baths, cars, descrip
       const result = await summarizePropertyDescription({ description });
       setSummary(result.summary);
     } catch (error) {
-      // Errors are handled by the global error boundary/listener if it were a Firebase error,
-      // for Genkit flows we just log and potentially show a local fallback if needed.
       console.error("Failed to fetch summary", error);
     } finally {
       setIsLoadingSummary(false);
@@ -110,7 +107,7 @@ export function PropertyCard({ image, price, address, beds, baths, cars, descrip
                     </div>
                   ) : (
                     summary.map((point, idx) => (
-                      <div key={idx} className="flex gap-3 items-start animate-fade-up" style={{ animationDelay: `${idx * 100}ms` }}>
+                      <div key={idx} className="flex gap-3 items-start">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                         <p className="text-sm text-white/90">{point}</p>
                       </div>

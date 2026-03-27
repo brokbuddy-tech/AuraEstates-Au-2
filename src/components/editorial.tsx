@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -43,7 +42,7 @@ export function Editorial() {
       </div>
 
       <div className="relative z-20 container mx-auto px-6 md:px-12 flex justify-end">
-        <div className="w-full max-w-lg glass-morphism rounded-3xl p-10 animate-fade-up">
+        <div className="w-full max-w-lg glass-morphism rounded-3xl p-10">
           <span className="text-primary font-bold tracking-widest text-xs uppercase mb-4 block">Insights</span>
           <h2 className="text-4xl font-bold text-white mb-8 leading-tight">Latest Real Estate News & Trends</h2>
           
