@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { FeatureGrid } from "@/components/feature-grid";
@@ -15,7 +14,7 @@ export default function Home() {
       <PropertyCarousel />
       <Editorial />
       <section className="py-24 px-6 md:px-12 bg-background flex flex-col items-center text-center">
-        <div className="max-w-3xl glass-morphism rounded-3xl p-12 shimmer-effect border border-primary/20">
+        <div className="max-w-3xl glass-morphism rounded-3xl p-12 border border-primary/20">
           <h2 className="text-4xl font-bold text-white mb-6">Ready to find your dream property?</h2>
           <p className="text-white/60 text-lg mb-8">
             Join over 2 million Australians using AuraEstates to find their perfect home. 

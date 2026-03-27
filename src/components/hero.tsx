@@ -29,7 +29,7 @@ export function Hero() {
           Find your next home.
         </h1>
 
-        <div className="w-full glass-morphism rounded-2xl p-2 md:p-6 shimmer-effect animate-fade-up [animation-delay:200ms]">
+        <div className="w-full glass-morphism rounded-2xl p-2 md:p-6 animate-fade-up [animation-delay:200ms]">
           {/* Tabs */}
           <div className="flex flex-wrap items-center justify-center gap-2 md:gap-8 mb-6 border-b border-white/10 pb-4">
             {CATEGORIES.map((cat) => (
