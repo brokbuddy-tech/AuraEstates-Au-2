@@ -1,154 +1,250 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Sparkles, Home, ShieldCheck, Key } from "lucide-react";
+import { 
+  Search, 
+  MapPin, 
+  ChevronDown, 
+  SlidersHorizontal, 
+  Grid2X2, 
+  List,
+  Sparkles
+} from "lucide-react";
+import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
+
+const BUY_LISTINGS = [
+  {
+    id: "b1",
+    image: "https://picsum.photos/seed/aura10/800/600",
+    price: "$4,250,000",
+    address: "15 Oceanview Drive, Vaucluse NSW 2030",
+    beds: 5,
+    baths: 4,
+    cars: 3,
+    status: "New Listing",
+    description: "A breathtaking architectural masterpiece with uninterrupted Pacific views. This residence defines coastal luxury with expansive living zones and a private infinity pool."
+  },
+  {
+    id: "b2",
+    image: "https://picsum.photos/seed/aura11/800/600",
+    price: "Auction",
+    address: "42 Heritage Lane, Paddington NSW 2021",
+    beds: 3,
+    baths: 2,
+    cars: 1,
+    status: "Auction",
+    description: "Timeless elegance meets modern convenience in this beautifully restored Victorian terrace. Prime location in the heart of Paddington's boutique district."
+  },
+  {
+    id: "b3",
+    image: "https://picsum.photos/seed/aura12/800/600",
+    price: "$2,890,000",
+    address: "88 Skyline Terrace, Southbank VIC 3006",
+    beds: 3,
+    baths: 2,
+    cars: 2,
+    status: "Exclusive",
+    description: "Experience the pinnacle of urban living in this expansive skyline penthouse. Floor-to-ceiling glass offers unmatched views of the Yarra River and CBD."
+  },
+  {
+    id: "b4",
+    image: "https://picsum.photos/seed/aura13/800/600",
+    price: "$1,550,000",
+    address: "12 Garden Street, Mosman NSW 2088",
+    beds: 4,
+    baths: 2,
+    cars: 2,
+    status: "Under Offer",
+    description: "A sun-drenched family haven nestled in a quiet, leafy street. Perfect for entertaining with a gourmet kitchen and seamless indoor-outdoor flow."
+  },
+  {
+    id: "b5",
+    image: "https://picsum.photos/seed/aura14/800/600",
+    price: "$5,100,000",
+    address: "22 Beachfront Parade, Byron Bay NSW 2481",
+    beds: 4,
+    baths: 4,
+    cars: 4,
+    status: "New Listing",
+    description: "Ultra-modern beachfront sanctuary. An architectural statement piece with sustainable design principles and direct access to the sand."
+  },
+  {
+    id: "b6",
+    image: "https://picsum.photos/seed/aura15/800/600",
+    price: "$1,120,000",
+    address: "304/55 Park Road, Milton QLD 4064",
+    beds: 2,
+    baths: 2,
+    cars: 1,
+    status: "For Sale",
+    description: "Sophisticated inner-city apartment with high-end finishes and resort-style amenities. Walking distance to the riverwalk and dining precinct."
+  }
+];
 
 export default function BuyPage() {
+  const [scrolled, setScrolled] = useState(false);
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-home")?.imageUrl;
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <main className="min-h-screen bg-background relative flex flex-col">
+    <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative h-[85vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
+      {/* Hero Section with Parallax Vibe */}
+      <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 z-0 parallax-bg"
+          className="absolute inset-0 z-0"
           style={{ 
             backgroundImage: `url(${heroImage})`,
-            transform: 'translateZ(0)',
+            backgroundAttachment: 'fixed',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover'
           }}
         >
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
         <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center text-center">
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter leading-none">
+          <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase mb-4 block animate-fade-in">Residential Portfolio</span>
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-8 uppercase tracking-tighter leading-none">
             Find Your <span className="text-primary">Forever.</span>
           </h1>
-          <p className="text-white/70 text-lg md:text-xl max-w-2xl mb-12">
-            Explore Australia's most exclusive collection of premium properties and architectural masterpieces.
-          </p>
-
-          <div className="w-full max-w-2xl glass-morphism p-2 rounded-2xl flex items-center gap-2 border border-white/20">
-            <div className="relative flex-1">
+          
+          <div className="w-full max-w-3xl glass-morphism p-2 rounded-2xl flex flex-col md:flex-row items-center gap-2 border border-white/20 shadow-2xl">
+            <div className="relative flex-1 w-full">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
               <Input 
-                placeholder="Search by suburb, postcode, or keyword..." 
-                className="bg-transparent border-none text-white placeholder:text-white/30 h-14 pl-12 focus-visible:ring-0 text-lg"
+                placeholder="Suburb, Postcode or Landmark..." 
+                className="bg-transparent border-none text-white placeholder:text-white/30 h-14 pl-12 focus-visible:ring-0 text-lg w-full"
               />
             </div>
-            <Button size="lg" className="h-14 px-8 bg-[#0047AB] hover:bg-[#0047AB]/90 text-white font-bold rounded-xl shadow-xl shadow-blue-900/20">
+            <Button size="lg" className="h-14 px-10 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-xl shadow-blue-900/20 w-full md:w-auto">
               SEARCH
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Dual-Action Conversion Grid */}
-      <section className="py-24 px-6 md:px-12 bg-[#F7F6F2]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Off-Market Card */}
-          <div className="group bg-white p-12 rounded-3xl border border-black/5 hover:shadow-2xl transition-all duration-500 cursor-pointer">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <h2 className="text-3xl font-black text-[#111111] mb-4">Off-Market Registry</h2>
-            <p className="text-[#111111]/60 text-lg mb-8 leading-relaxed">
-              Gain exclusive access to high-end properties before they reach the public portals. Join our elite buyer network.
-            </p>
-            <button className="text-primary font-bold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-              Apply for Access <span className="text-xl">→</span>
-            </button>
+      {/* Sticky Filter Bar */}
+      <div className={cn(
+        "sticky top-[68px] z-40 w-full transition-all duration-300",
+        scrolled ? "bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-sm" : "bg-transparent translate-y-4 opacity-0 pointer-events-none"
+      )}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1 md:pb-0">
+            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
+              Price Range (AUD) <ChevronDown className="w-3 h-3" />
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
+              Property Type <ChevronDown className="w-3 h-3" />
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
+              Bedrooms <ChevronDown className="w-3 h-3" />
+            </Button>
+            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
+              Bathrooms <ChevronDown className="w-3 h-3" />
+            </Button>
           </div>
-
-          {/* Concierge Card */}
-          <div className="group bg-white p-12 rounded-3xl border border-black/5 hover:shadow-2xl transition-all duration-500 cursor-pointer">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-8 group-hover:scale-110 transition-transform">
-              <ShieldCheck className="w-8 h-8" />
-            </div>
-            <h2 className="text-3xl font-black text-[#111111] mb-4">VIP Buyer Concierge</h2>
-            <p className="text-[#111111]/60 text-lg mb-8 leading-relaxed">
-              Let our expert acquisition specialists handle the search, evaluation, and negotiation for your next landmark acquisition.
-            </p>
-            <button className="text-primary font-bold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-              Book Consultation <span className="text-xl">→</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Buying Process Section */}
-      <section className="py-24 px-6 md:px-12 bg-[#111111]">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-20 uppercase tracking-tighter">
-            Our Approach to <span className="text-primary">Masterful</span> Acquisition.
-          </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
-            {/* Step 1 */}
-            <div className="relative group">
-              <div className="w-24 h-24 rounded-full glass-morphism border border-white/20 flex items-center justify-center text-primary mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                <MapPin className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Tailored Discovery</h3>
-              <p className="text-white/40 leading-relaxed">
-                Utilizing 2026 AI-driven intelligence to match properties precisely to your unique lifestyle and investment requirements.
-              </p>
-              <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Link href="#" className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">Explore Method</Link>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 border-l border-black/10 pl-4">
+            <Button variant="ghost" size="icon" className="text-black/40 hover:text-primary"><Grid2X2 className="w-5 h-5" /></Button>
+            <Button variant="ghost" size="icon" className="text-black/40 hover:text-primary"><List className="w-5 h-5" /></Button>
+            <Button variant="outline" size="sm" className="rounded-full border-primary/20 text-primary hover:bg-primary/5 text-xs font-bold gap-2 ml-2">
+              <SlidersHorizontal className="w-3 h-3" /> Advanced
+            </Button>
+          </div>
+        </div>
+      </div>
 
-            {/* Step 2 */}
-            <div className="relative group">
-              <div className="w-24 h-24 rounded-full glass-morphism border border-white/20 flex items-center justify-center text-primary mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                <Home className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Exclusive Previews</h3>
-              <p className="text-white/40 leading-relaxed">
-                Experience the finest residences through curated private viewings and high-key digital storytelling walkthroughs.
-              </p>
-              <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Link href="#" className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">View Showcase</Link>
-              </div>
+      {/* Property Grid Section */}
+      <section className="py-16 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+            <div>
+              <h2 className="text-3xl font-black text-[#111111] uppercase tracking-tight">Available Listings</h2>
+              <p className="text-[#111111]/40 text-sm font-medium mt-1">Showing 156 properties in Sydney & Greater NSW</p>
             </div>
+            <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
+              <span>Sort by:</span>
+              <button className="flex items-center gap-1 text-[#111111] hover:text-primary transition-colors">
+                Newest First <ChevronDown className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
 
-            {/* Step 3 */}
-            <div className="relative group">
-              <div className="w-24 h-24 rounded-full glass-morphism border border-white/20 flex items-center justify-center text-primary mx-auto mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                <Key className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-4">Secure Ownership</h3>
-              <p className="text-white/40 leading-relaxed">
-                Masterful negotiation strategies that ensure you secure the premium property you desire on the best possible terms.
-              </p>
-              <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Link href="#" className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">Our Strategy</Link>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {BUY_LISTINGS.map((listing) => (
+              <PropertyCard 
+                key={listing.id}
+                id={listing.id}
+                image={listing.image}
+                price={listing.price}
+                address={listing.address}
+                beds={listing.beds}
+                baths={listing.baths}
+                cars={listing.cars}
+                description={listing.description}
+                // Custom prop check for status if needed in future
+              />
+            ))}
+          </div>
+
+          <div className="mt-20 flex flex-col items-center">
+            <p className="text-black/40 text-sm mb-6">You've viewed 6 of 156 properties</p>
+            <Button variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
+              LOAD MORE PROPERTIES
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Market Insights Footer snippet */}
-      <section className="py-24 px-6 md:px-12 bg-white border-t border-black/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="inline-block px-4 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">Market Insight</span>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#111111] mb-8 italic">
-            "Sydney's premium market continues to lead global growth with a 15.2% appreciation in the last 12 months."
-          </h2>
-          <div className="flex items-center justify-center gap-4 text-sm font-medium text-black/40">
-             <span>Source: Aether Market Research</span>
-             <span className="w-1 h-1 rounded-full bg-black/20" />
-             <span>Q4 2026 Forecast</span>
+      {/* Market Insight Section */}
+      <section className="py-24 px-6 md:px-12 bg-[#111111] text-white">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+          <div className="lg:w-1/2 space-y-6">
+            <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">Aether Market Intelligence</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">The 2026 Residential <span className="text-primary">Outlook.</span></h2>
+            <p className="text-white/40 text-lg leading-relaxed">
+              Sydney's premium market continues to lead global growth with a 15.2% appreciation in the last 12 months. Our AI models predict a continued stabilization of interest rates throughout Q3.
+            </p>
+            <div className="pt-8 flex items-center gap-8">
+               <div>
+                 <p className="text-3xl font-black text-white">+12.4%</p>
+                 <p className="text-primary text-[10px] uppercase font-bold tracking-widest mt-1">Annual Yield</p>
+               </div>
+               <div className="w-px h-12 bg-white/10" />
+               <div>
+                 <p className="text-3xl font-black text-white">$1.8M</p>
+                 <p className="text-primary text-[10px] uppercase font-bold tracking-widest mt-1">Median Price</p>
+               </div>
+            </div>
+          </div>
+          <div className="lg:w-1/2 relative aspect-video rounded-3xl overflow-hidden glass-morphism border border-white/10">
+             <Image 
+              src="https://picsum.photos/seed/insight/800/600" 
+              alt="Market Insight" 
+              fill 
+              className="object-cover opacity-60"
+             />
+             <div className="absolute inset-0 flex items-center justify-center">
+                <Button variant="outline" className="bg-white/10 border-white/20 text-white backdrop-blur-md rounded-full px-8 gap-2">
+                   <Sparkles className="w-4 h-4" /> Download Q4 Report
+                </Button>
+             </div>
           </div>
         </div>
       </section>
