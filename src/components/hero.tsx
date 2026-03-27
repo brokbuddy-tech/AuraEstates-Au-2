@@ -64,7 +64,7 @@ export function Hero() {
               )}
             >
               <Sparkles className="w-4 h-4" />
-              AI Description Search
+              AI
             </Button>
           </div>
 
