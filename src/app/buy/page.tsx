@@ -154,7 +154,7 @@ export default function BuyPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {BUY_LISTINGS.map((listing) => (
                   <PropertyCard 
                     key={listing.id}
