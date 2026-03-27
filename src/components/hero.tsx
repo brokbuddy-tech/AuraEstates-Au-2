@@ -31,10 +31,11 @@ export function Hero() {
         </h1>
 
         <div className="w-full glass-morphism rounded-2xl p-2 md:p-6">
-          {/* Tabs */}
+          {/* Tabs Container */}
           <div className="flex flex-wrap items-center justify-between gap-2 md:gap-8 mb-6 border-b border-white/10 pb-4">
-            <div className="flex flex-wrap items-center gap-2 md:gap-8">
-              {CATEGORIES.map((cat) => (
+            <div className="flex flex-wrap items-center gap-2 md:gap-8 min-h-[40px]">
+              {/* Only show categories if NOT in AI mode */}
+              {!isAiMode && CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => {
@@ -43,15 +44,22 @@ export function Hero() {
                   }}
                   className={cn(
                     "px-4 py-2 text-sm font-medium transition-all relative",
-                    activeTab === cat && !isAiMode ? "text-white" : "text-white/60 hover:text-white"
+                    activeTab === cat ? "text-white" : "text-white/60 hover:text-white"
                   )}
                 >
                   {cat}
-                  {activeTab === cat && !isAiMode && (
+                  {activeTab === cat && (
                     <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
                   )}
                 </button>
               ))}
+              
+              {/* If in AI mode, show a small label or just keep it empty to shift focus to the button */}
+              {isAiMode && (
+                <span className="text-white font-bold text-sm tracking-widest flex items-center gap-2">
+                   AI SEARCH ACTIVE
+                </span>
+              )}
             </div>
             
             <Button
@@ -64,7 +72,7 @@ export function Hero() {
               )}
             >
               <Sparkles className="w-4 h-4" />
-              AI SEARCH
+              {isAiMode ? "EXIT AI" : "AI SEARCH"}
             </Button>
           </div>
 
@@ -91,12 +99,14 @@ export function Hero() {
             </Button>
           </div>
 
-          {/* Quick Filters */}
-          <div className="flex items-center justify-center gap-6 mt-6 text-xs text-white/50">
-             <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><MapPin className="w-3 h-3" /> Near Me</span>
-             <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><Building className="w-3 h-3" /> New Developments</span>
-             <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><School className="w-3 h-3" /> School Zones</span>
-          </div>
+          {/* Quick Filters - Also hide in AI mode to keep it minimal */}
+          {!isAiMode && (
+            <div className="flex items-center justify-center gap-6 mt-6 text-xs text-white/50">
+               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><MapPin className="w-3 h-3" /> Near Me</span>
+               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><Building className="w-3 h-3" /> New Developments</span>
+               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><School className="w-3 h-3" /> School Zones</span>
+            </div>
+          )}
         </div>
       </div>
     </section>
