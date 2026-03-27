@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -167,7 +166,6 @@ export function SidebarFilter({ className }: { className?: string }) {
         {/* Price Range */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Price Range (AUD)</Label>
-          <Slider defaultValue={[20, 80]} max={100} step={1} className="py-2" />
           <div className="flex gap-3">
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#111111]/40">$</span>
