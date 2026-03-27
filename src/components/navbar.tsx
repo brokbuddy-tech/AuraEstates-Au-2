@@ -38,7 +38,7 @@ export function Navbar() {
           <Link href="#" className="hover:text-primary transition-colors">Sold</Link>
           <Link href="#" className="hover:text-primary transition-colors">New Homes</Link>
           <Link href="#" className="hover:text-primary transition-colors">Commercial</Link>
-          <Link href="#" className="hover:text-primary transition-colors">News</Link>
+          <Link href="/about" className="hover:text-primary transition-colors">About Us</Link>
         </div>
       </div>
 
