@@ -111,19 +111,6 @@ export default function BuyPage() {
           <h1 className="text-5xl md:text-7xl font-black text-white mb-8 uppercase tracking-tighter leading-none">
             Find Your <span className="text-primary">Forever.</span>
           </h1>
-          
-          <div className="w-full max-w-3xl glass-morphism p-2 rounded-2xl flex flex-col md:flex-row items-center gap-2 border border-white/20 shadow-2xl">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-              <Input 
-                placeholder="Suburb, Postcode or Landmark..." 
-                className="bg-transparent border-none text-white placeholder:text-white/30 h-14 pl-12 focus-visible:ring-0 text-lg w-full"
-              />
-            </div>
-            <Button size="lg" className="h-14 px-10 bg-[#005F73] hover:bg-[#005F73]/90 text-white font-bold rounded-xl shadow-xl shadow-blue-900/20 w-full md:w-auto">
-              SEARCH
-            </Button>
-          </div>
         </div>
       </section>
 
