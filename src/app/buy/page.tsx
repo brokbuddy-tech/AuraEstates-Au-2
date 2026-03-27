@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -8,16 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { 
   Search, 
-  MapPin, 
   ChevronDown, 
-  SlidersHorizontal, 
-  Grid2X2, 
-  List,
   Sparkles
 } from "lucide-react";
 import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { cn } from "@/lib/utils";
 
 const BUY_LISTINGS = [
   {
@@ -89,16 +84,7 @@ const BUY_LISTINGS = [
 ];
 
 export default function BuyPage() {
-  const [scrolled, setScrolled] = useState(false);
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-home")?.imageUrl;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
@@ -119,7 +105,7 @@ export default function BuyPage() {
         </div>
 
         <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center text-center">
-          <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase mb-4 block animate-fade-in">Residential Portfolio</span>
+          <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase mb-4 block">Residential Portfolio</span>
           <h1 className="text-5xl md:text-7xl font-black text-white mb-8 uppercase tracking-tighter leading-none">
             Find Your <span className="text-primary">Forever.</span>
           </h1>
@@ -138,37 +124,6 @@ export default function BuyPage() {
           </div>
         </div>
       </section>
-
-      {/* Sticky Filter Bar */}
-      <div className={cn(
-        "sticky top-[68px] z-40 w-full transition-all duration-300",
-        scrolled ? "bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-sm" : "bg-transparent translate-y-4 opacity-0 pointer-events-none"
-      )}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1 md:pb-0">
-            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
-              Price Range (AUD) <ChevronDown className="w-3 h-3" />
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
-              Property Type <ChevronDown className="w-3 h-3" />
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
-              Bedrooms <ChevronDown className="w-3 h-3" />
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full border-black/10 text-xs font-bold gap-2 whitespace-nowrap">
-              Bathrooms <ChevronDown className="w-3 h-3" />
-            </Button>
-          </div>
-          
-          <div className="flex items-center gap-2 border-l border-black/10 pl-4">
-            <Button variant="ghost" size="icon" className="text-black/40 hover:text-primary"><Grid2X2 className="w-5 h-5" /></Button>
-            <Button variant="ghost" size="icon" className="text-black/40 hover:text-primary"><List className="w-5 h-5" /></Button>
-            <Button variant="outline" size="sm" className="rounded-full border-primary/20 text-primary hover:bg-primary/5 text-xs font-bold gap-2 ml-2">
-              <SlidersHorizontal className="w-3 h-3" /> Advanced
-            </Button>
-          </div>
-        </div>
-      </div>
 
       {/* Property Grid Section */}
       <section className="py-16 px-6 md:px-12">
@@ -198,7 +153,7 @@ export default function BuyPage() {
                 baths={listing.baths}
                 cars={listing.cars}
                 description={listing.description}
-                // Custom prop check for status if needed in future
+                status={listing.status}
               />
             ))}
           </div>
