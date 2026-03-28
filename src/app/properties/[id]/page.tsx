@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -20,7 +20,8 @@ import {
   Mail,
   FileText,
   Star,
-  Share2
+  Share2,
+  Info
 } from "lucide-react";
 
 // Mock Data for the Showcase (In a real app, this would come from Firestore)
@@ -52,6 +53,44 @@ const PROPERTY_DATA = {
   }
 };
 
+const EERGauge = ({ value }: { value: number }) => {
+  const rotation = (value / 10) * 180 - 90; // Map 0-10 to -90 to 90 degrees
+  return (
+    <div className="relative w-48 h-24 overflow-hidden flex flex-col items-center">
+      <svg className="w-48 h-24" viewBox="0 0 100 50">
+        <path
+          d="M 10 50 A 40 40 0 0 1 90 50"
+          fill="none"
+          stroke="#F1F5F9"
+          strokeWidth="10"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 10 50 A 40 40 0 0 1 90 50"
+          fill="none"
+          stroke="url(#gradient)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray="125.6"
+          strokeDashoffset={125.6 - (value / 10) * 125.6}
+        />
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#D9F99D" />
+            <stop offset="100%" stopColor="#22C55E" />
+          </linearGradient>
+        </defs>
+        {/* Needle */}
+        <g transform={`rotate(${rotation}, 50, 50)`}>
+          <line x1="50" y1="50" x2="50" y2="15" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="50" cy="50" r="3" fill="#334155" />
+        </g>
+      </svg>
+      <p className="mt-2 text-xs font-black text-[#64748B] tracking-widest">{value.toFixed(1)} EER</p>
+    </div>
+  );
+};
+
 export default function PropertyShowcase() {
   const params = useParams();
   const propertyId = params.id as string;
@@ -70,10 +109,9 @@ export default function PropertyShowcase() {
                 src={property.images[0]} 
                 alt={property.title} 
                 fill 
-                className="object-cover transition-colors"
+                className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
               <Button variant="outline" className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-xl shadow-xl">
                 <Maximize2 className="w-4 h-4 mr-2" /> View All Photos
               </Button>
@@ -101,11 +139,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase">{property.title}</h1>
+                  <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase">{property.title}</h1>
                   <p className="text-[#111111]/40 text-sm md:text-base font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg md:text-xl font-black text-primary tracking-tighter">
+                  <p className="text-base md:text-lg font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -156,6 +194,28 @@ export default function PropertyShowcase() {
                       <CheckCircle2 className="w-4 h-4 text-primary" /> {feature}
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Energy Efficiency Rating (EER) Section */}
+              <div className="pt-12 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black uppercase tracking-tight">Energy Efficiency Rating (EER)</h3>
+                    <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">Last updated in March 2026 from agent supplied data</p>
+                  </div>
+                  <Info className="w-4 h-4 text-[#111111]/20 cursor-help" />
+                </div>
+
+                <div className="bg-white border border-[#F1F1F1] rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-12">
+                  <div className="flex-1 space-y-4 text-center md:text-left">
+                    <p className="text-[#111111]/60 text-lg font-light leading-relaxed">
+                      This property's energy efficiency has a <span className="text-[#111111] font-bold">medium quality</span> rating of <span className="text-[#111111] font-bold">6/10</span>. To learn more about EER Scores, visit the <Link href="#" className="text-[#005F73] font-bold hover:underline">Nationwide House Energy Rating Scheme.</Link>
+                    </p>
+                  </div>
+                  <div className="shrink-0 flex items-center justify-center">
+                    <EERGauge value={6.0} />
+                  </div>
                 </div>
               </div>
             </div>
