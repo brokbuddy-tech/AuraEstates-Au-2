@@ -3,7 +3,7 @@
 
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
-import { HelpCircle, CheckCircle2, ShieldCheck, Info, ChevronRight, QrCode } from "lucide-react";
+import { Info, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -40,40 +40,6 @@ export function TrustAndFinancials() {
     <div className="py-24 px-6 md:px-12 bg-white space-y-24">
       <div className="max-w-7xl mx-auto space-y-20">
         
-        {/* Module A: Verified Compliance (The Trust Anchor) */}
-        <section className="bg-[#F7F6F2] rounded-[2rem] p-8 md:p-12 border border-black/5 flex flex-col lg:flex-row items-center gap-12 group hover:shadow-xl transition-all duration-500">
-          <div className="flex-shrink-0 relative w-32 h-32 md:w-40 md:h-40 glass-morphism rounded-2xl flex items-center justify-center border border-white p-4">
-            <QrCode className="w-full h-full text-[#111111]/20" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white p-2 rounded-lg shadow-sm">
-                <ShieldCheck className="w-8 h-8 text-primary" />
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex-1 space-y-4 text-center lg:text-left">
-            <div className="flex flex-col lg:flex-row items-center gap-4">
-              <span className="px-4 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.3em]">Compliance Module</span>
-              <h2 className="text-2xl md:text-3xl font-black text-[#111111] uppercase tracking-tighter">
-                REIA Listing <span className="text-primary italic">Verification.</span>
-              </h2>
-            </div>
-            <p className="text-[#111111]/60 text-lg leading-relaxed font-light max-w-2xl">
-              This platform is fully reviewed and verified by the Real Estate Institute of Australia (REIA) standards for transparency and consumer protection. Scan to verify credentials.
-            </p>
-          </div>
-
-          <div className="flex-shrink-0 flex items-center gap-4 bg-white/50 backdrop-blur-md p-6 rounded-2xl border border-white">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-[#111111]/40 uppercase tracking-widest">Listing ID</p>
-              <p className="text-lg font-bold text-[#111111]">AE-2026-X942</p>
-            </div>
-          </div>
-        </section>
-
         {/* Module B: Estimated Payment Transparency (The Financial Guide) */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div className="space-y-10">
