@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -14,26 +14,13 @@ import {
   Car, 
   Maximize2, 
   CheckCircle2, 
-  Calendar as CalendarIcon,
   ArrowRight,
-  Info,
-  Share2,
   Heart,
   MessageSquare,
   Mail,
   FileText,
   Star
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 // Mock Data for the Showcase (In a real app, this would come from Firestore)
 const PROPERTY_DATA = {
@@ -69,27 +56,6 @@ export default function PropertyShowcase() {
   const propertyId = params.id as string;
   const property = PROPERTY_DATA[propertyId as keyof typeof PROPERTY_DATA] || PROPERTY_DATA["b1"];
   
-  const [selectedState, setSelectedState] = useState("nsw");
-  const [depositPercent, setDepositPercent] = useState(10);
-
-  // Financial Calculations
-  const financials = useMemo(() => {
-    const price = property.price;
-    // Simple rough estimates for 2026 AU market
-    const rates = { nsw: 0.045, vic: 0.055, qld: 0.035, wa: 0.04, sa: 0.05 };
-    const stampDuty = price * (rates[selectedState as keyof typeof rates] || 0.045);
-    const legalFees = 2800;
-    const deposit = price * (depositPercent / 100);
-    const totalUpfront = stampDuty + legalFees + deposit;
-
-    return {
-      stampDuty,
-      legalFees,
-      deposit,
-      totalUpfront
-    };
-  }, [property.price, selectedState, depositPercent]);
-
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
       <Navbar />
@@ -124,7 +90,7 @@ export default function PropertyShowcase() {
       <section className="py-16 px-6 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
           
-          {/* Left Column: Dossier & Transparency */}
+          {/* Left Column: Dossier */}
           <div className="lg:col-span-8 space-y-16">
             
             {/* 2. Property Dossier & Specs */}
@@ -186,86 +152,6 @@ export default function PropertyShowcase() {
                       <CheckCircle2 className="w-4 h-4 text-primary" /> {feature}
                     </div>
                   ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Financial Transparency */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-black uppercase tracking-tighter">Financial Transparency</h3>
-                <div className="flex items-center gap-2 text-primary">
-                  <Info className="w-4 h-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Estimated Purchase Breakdown</span>
-                </div>
-              </div>
-
-              <div className="glass-morphism rounded-3xl p-8 md:p-12 border border-[#F1F1F1] shadow-sm space-y-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest">Select State</Label>
-                    <Select value={selectedState} onValueChange={setSelectedState}>
-                      <SelectTrigger className="h-12 rounded-xl bg-white border-[#F1F1F1]">
-                        <SelectValue placeholder="Select State" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="nsw">New South Wales</SelectItem>
-                        <SelectItem value="vic">Victoria</SelectItem>
-                        <SelectItem value="qld">Queensland</SelectItem>
-                        <SelectItem value="wa">Western Australia</SelectItem>
-                        <SelectItem value="sa">South Australia</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest">Deposit Percentage</Label>
-                    <div className="relative">
-                      <Input 
-                        type="number" 
-                        value={depositPercent} 
-                        onChange={(e) => setDepositPercent(Number(e.target.value))}
-                        className="h-12 rounded-xl bg-white border-[#F1F1F1] pr-10"
-                      />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#111111]/40">%</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest">Est. Settlement Period</Label>
-                    <div className="h-12 rounded-xl bg-white border border-[#F1F1F1] flex items-center px-4 text-sm font-medium">
-                      42 Days (Standard)
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-4 border-b border-[#F1F1F1]">
-                    <span className="text-sm font-medium text-[#111111]/60">Purchase Price</span>
-                    <span className="text-lg font-black">${property.price.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-4 border-b border-[#F1F1F1]">
-                    <span className="text-sm font-medium text-[#111111]/60">Stamp Duty (Estimated {selectedState.toUpperCase()})</span>
-                    <span className="text-lg font-black">${financials.stampDuty.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-4 border-b border-[#F1F1F1]">
-                    <span className="text-sm font-medium text-[#111111]/60">Conveyancing & Legal Fees (GST Inc.)</span>
-                    <span className="text-lg font-black">${financials.legalFees.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-4 border-b border-[#F1F1F1]">
-                    <span className="text-sm font-medium text-[#111111]/60">Deposit Amount ({depositPercent}%)</span>
-                    <span className="text-lg font-black">${financials.deposit.toLocaleString()}</span>
-                  </div>
-                  
-                  <div className="pt-6 flex justify-between items-center">
-                    <div>
-                      <h4 className="text-3xl font-black uppercase tracking-tighter">Total Upfront</h4>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#111111]/30">Initial Capital Commitment</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-3xl md:text-5xl font-black text-primary tracking-tighter">
-                        ${financials.totalUpfront.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
