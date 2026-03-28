@@ -126,11 +126,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">{property.title}</h1>
-                  <p className="text-[#111111]/40 text-lg font-medium tracking-widest uppercase">{property.address}</p>
+                  <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">{property.title}</h1>
+                  <p className="text-[#111111]/40 text-base md:text-lg font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl md:text-5xl font-black text-primary tracking-tighter">
+                  <p className="text-2xl md:text-4xl font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -273,7 +273,7 @@ export default function PropertyShowcase() {
                       <p className="text-[10px] font-bold uppercase tracking-widest text-[#111111]/30">Initial Capital Commitment</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-4xl md:text-5xl font-black text-primary tracking-tighter">
+                      <p className="text-3xl md:text-5xl font-black text-primary tracking-tighter">
                         ${financials.totalUpfront.toLocaleString()}
                       </p>
                     </div>
