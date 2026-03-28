@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -135,11 +136,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase">{property.title}</h1>
+                  <h1 className="text-xl md:text-3xl font-black tracking-tighter uppercase">{property.title}</h1>
                   <p className="text-[#111111]/40 text-sm md:text-base font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl md:text-3xl font-black text-primary tracking-tighter">
+                  <p className="text-lg md:text-2xl font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
