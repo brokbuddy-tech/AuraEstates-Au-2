@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
@@ -37,9 +36,9 @@ export default function Home() {
                 Search Properties
               </button>
             </Link>
-            <Link href="/buy">
+            <Link href="/contact">
               <button className="px-10 py-5 bg-white text-[#111111] font-bold rounded-2xl border border-[#E5E7EB] hover:border-primary transition-all active:scale-95">
-                Explore Suburbs
+                Contact Us
               </button>
             </Link>
           </div>
