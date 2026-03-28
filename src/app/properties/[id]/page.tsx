@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -136,7 +135,7 @@ export default function PropertyShowcase() {
   
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
-      <Navbar />
+      <Navbar theme="light" />
 
       {/* 1. Hero Experience (Gallery) */}
       <section className="pt-24 px-6 md:px-12">

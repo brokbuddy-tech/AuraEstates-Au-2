@@ -2,12 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function Navbar() {
+interface NavbarProps {
+  theme?: "light" | "dark"; // light background (dark text) or dark background (white text)
+}
+
+export function Navbar({ theme = "dark" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,18 +22,20 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isLight = theme === "light" || scrolled;
+
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12 flex items-center justify-between",
-        scrolled ? "glass-morphism py-3" : "bg-transparent"
+        scrolled ? "glass-morphism py-3 shadow-sm" : "bg-transparent"
       )}
     >
       <div className="flex items-center gap-12">
         <Link href="/" className="flex items-center gap-2">
           <span className={cn(
             "text-2xl font-bold tracking-tighter transition-colors",
-            scrolled ? "text-[#111111]" : "text-white"
+            isLight ? "text-[#111111]" : "text-white"
           )}>
             Aether<span className="text-primary"> Australia</span>
           </span>
@@ -36,7 +43,7 @@ export function Navbar() {
 
         <div className={cn(
           "hidden lg:flex items-center gap-8 text-sm font-medium transition-colors",
-          scrolled ? "text-[#111111]/80" : "text-white/90"
+          isLight ? "text-[#111111]/80" : "text-white/90"
         )}>
           <Link href="/buy" className="hover:text-primary transition-colors">Buy</Link>
           <Link href="/rent" className="hover:text-primary transition-colors">Rent</Link>
@@ -48,12 +55,12 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Link href="/contact">
+        <Link href="/contact" className="hidden md:block">
           <Button
             variant="outline"
             className={cn(
-              "hidden md:flex items-center gap-2 transition-all duration-300 backdrop-blur-sm",
-              scrolled 
+              "items-center gap-2 transition-all duration-300 backdrop-blur-sm",
+              isLight 
                 ? "border-primary/20 text-primary hover:bg-primary hover:text-white" 
                 : "border-white/20 text-white hover:bg-white hover:text-primary"
             )}
@@ -61,13 +68,33 @@ export function Navbar() {
             Contact Us
           </Button>
         </Link>
-        <Button variant="ghost" size="icon" className={cn(
-          "lg:hidden transition-colors",
-          scrolled ? "text-[#111111]" : "text-white"
-        )}>
-          <Menu className="w-6 h-6" />
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className={cn(
+            "lg:hidden transition-colors",
+            isLight ? "text-[#111111]" : "text-white"
+          )}
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 top-[64px] bg-white z-40 p-8 flex flex-col gap-6 animate-in slide-in-from-right duration-300">
+           <Link href="/buy" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Buy</Link>
+           <Link href="/rent" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Rent</Link>
+           <Link href="/sold" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Sold</Link>
+           <Link href="/agents" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Find Agent</Link>
+           <Link href="/commercial" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Commercial</Link>
+           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">About Us</Link>
+           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-8">
+             <Button className="w-full h-14 bg-primary text-white font-bold rounded-xl">Contact Us</Button>
+           </Link>
+        </div>
+      )}
     </nav>
   );
 }
