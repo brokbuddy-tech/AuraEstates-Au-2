@@ -26,15 +26,14 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-5xl px-6 flex flex-col items-center text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-12">
+        <h1 className="text-5xl md:text-7xl font-bold text-white mb-12 drop-shadow-sm">
           Find your next home.
         </h1>
 
-        <div className="w-full glass-morphism rounded-2xl p-2 md:p-6">
+        <div className="w-full glass-morphism rounded-3xl p-4 md:p-8">
           {/* Tabs Container */}
-          <div className="flex flex-wrap items-center justify-between gap-2 md:gap-8 mb-6 border-b border-white/10 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 md:gap-8 mb-8 border-b border-white/20 pb-4">
             <div className="flex flex-wrap items-center gap-2 md:gap-8 min-h-[40px]">
-              {/* Only show categories if NOT in AI mode */}
               {!isAiMode && CATEGORIES.map((cat) => (
                 <button
                   key={cat}
@@ -43,21 +42,20 @@ export function Hero() {
                     setIsAiMode(false);
                   }}
                   className={cn(
-                    "px-4 py-2 text-sm font-medium transition-all relative",
+                    "px-4 py-2 text-sm font-bold transition-all relative",
                     activeTab === cat ? "text-white" : "text-white/60 hover:text-white"
                   )}
                 >
                   {cat}
                   {activeTab === cat && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />
+                    <div className="absolute bottom-[-17px] left-0 right-0 h-1 bg-primary rounded-full shadow-[0_0_12px_rgba(var(--primary),0.5)]" />
                   )}
                 </button>
               ))}
               
-              {/* If in AI mode, show a small label or just keep it empty to shift focus to the button */}
               {isAiMode && (
-                <span className="text-white font-bold text-sm tracking-widest flex items-center gap-2">
-                   AI SEARCH ACTIVE
+                <span className="text-white font-black text-sm tracking-[0.2em] flex items-center gap-2">
+                   <Sparkles className="w-4 h-4 text-primary animate-pulse" /> AI SEARCH ACTIVE
                 </span>
               )}
             </div>
@@ -67,8 +65,8 @@ export function Hero() {
               size="sm"
               onClick={() => setIsAiMode(!isAiMode)}
               className={cn(
-                "flex items-center gap-2 text-xs font-bold tracking-widest uppercase transition-all",
-                isAiMode ? "bg-primary text-white" : "text-primary hover:bg-primary/10"
+                "flex items-center gap-2 text-xs font-black tracking-widest uppercase transition-all rounded-full px-6",
+                isAiMode ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-white border border-white/20 hover:bg-white/10"
               )}
             >
               <Sparkles className="w-4 h-4" />
@@ -77,34 +75,39 @@ export function Hero() {
           </div>
 
           {/* Search Bar */}
-          <div className="flex flex-col md:flex-row items-center gap-3">
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="relative flex-1 w-full">
               {isAiMode ? (
-                <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
+                <Sparkles className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
               ) : (
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               )}
               <Input
                 placeholder={isAiMode 
                   ? "Describe your ideal home (e.g., 'Modern 3-bed with ocean views and a pool in Sydney')" 
                   : "Search by suburb, postcode, or school"}
                 className={cn(
-                  "w-full h-14 pl-12 text-lg border-none focus-visible:ring-primary rounded-xl transition-all",
-                  isAiMode ? "bg-white/95 text-primary placeholder:text-primary/40 ring-2 ring-primary/20 shadow-lg shadow-primary/5" : "bg-white/90 text-background placeholder:text-muted-foreground"
+                  "w-full h-16 pl-14 text-lg border-none focus-visible:ring-primary/50 rounded-2xl transition-all shadow-inner",
+                  isAiMode ? "bg-white/95 text-primary placeholder:text-primary/40" : "bg-white/90 text-[#111111] placeholder:text-muted-foreground"
                 )}
               />
             </div>
-            <Button size="lg" className="h-14 px-8 w-full md:w-auto bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-transform active:scale-95 shadow-xl shadow-primary/20">
+            <Button size="lg" className="h-16 px-10 w-full md:w-auto bg-primary hover:bg-primary/90 text-white font-black rounded-2xl transition-all active:scale-95 shadow-2xl shadow-primary/20 tracking-widest">
               {isAiMode ? "AI SEARCH" : "SEARCH"}
             </Button>
           </div>
 
-          {/* Quick Filters - Also hide in AI mode to keep it minimal */}
           {!isAiMode && (
-            <div className="flex items-center justify-center gap-6 mt-6 text-xs text-white/50">
-               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><MapPin className="w-3 h-3" /> Near Me</span>
-               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><Building className="w-3 h-3" /> New Developments</span>
-               <span className="flex items-center gap-1 cursor-pointer hover:text-white transition-colors"><School className="w-3 h-3" /> School Zones</span>
+            <div className="flex items-center justify-center gap-8 mt-8 text-[11px] text-white/70 font-bold uppercase tracking-[0.1em]">
+               <span className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
+                 <MapPin className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> Near Me
+               </span>
+               <span className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
+                 <Building className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> New Developments
+               </span>
+               <span className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
+                 <School className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> School Zones
+               </span>
             </div>
           )}
         </div>
