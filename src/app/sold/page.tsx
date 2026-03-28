@@ -7,7 +7,6 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronDown, 
-  Sparkles,
   Filter
 } from "lucide-react";
 import { PropertyCard } from "@/components/property-card";
@@ -90,7 +89,6 @@ export default function SoldPage() {
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 z-0"
@@ -112,19 +110,16 @@ export default function SoldPage() {
         </div>
       </section>
 
-      {/* Results Section */}
       <section className="py-16 px-6 md:px-12 bg-white">
         <div className="max-w-[1440px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12">
             
-            {/* Sidebar */}
             <aside className="hidden lg:block w-[300px] shrink-0">
               <div className="sticky top-24">
                 <SidebarFilter className="rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]" />
               </div>
             </aside>
 
-            {/* Main Content */}
             <div className="flex-1">
               <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                 <div>
@@ -167,14 +162,12 @@ export default function SoldPage() {
         </div>
       </section>
 
-      {/* Mobile FAB */}
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <Button className="h-12 px-8 bg-[#111111] text-white font-bold rounded-full shadow-2xl flex items-center gap-3 active:scale-95 transition-transform">
           <Filter className="w-4 h-4 text-primary" /> FILTERS
         </Button>
       </div>
 
-      {/* Insight Section */}
       <section className="py-24 px-6 md:px-12 bg-[#111111] text-white">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <div className="lg:w-1/2 space-y-6">
@@ -202,11 +195,6 @@ export default function SoldPage() {
               fill 
               className="object-cover opacity-60"
              />
-             <div className="absolute inset-0 flex items-center justify-center">
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white backdrop-blur-md rounded-full px-8 gap-2">
-                   <Sparkles className="w-4 h-4" /> Download 2026 Report
-                </Button>
-             </div>
           </div>
         </div>
       </section>

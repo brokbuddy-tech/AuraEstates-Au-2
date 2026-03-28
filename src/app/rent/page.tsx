@@ -7,7 +7,6 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { 
   ChevronDown, 
-  Sparkles,
   Filter
 } from "lucide-react";
 import { PropertyCard } from "@/components/property-card";
@@ -90,7 +89,6 @@ export default function RentPage() {
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 z-0"
@@ -112,19 +110,16 @@ export default function RentPage() {
         </div>
       </section>
 
-      {/* Results Section */}
       <section className="py-16 px-6 md:px-12 bg-white">
         <div className="max-w-[1440px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12">
             
-            {/* Sidebar */}
             <aside className="hidden lg:block w-[300px] shrink-0">
               <div className="sticky top-24">
                 <SidebarFilter className="rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]" />
               </div>
             </aside>
 
-            {/* Main Content */}
             <div className="flex-1">
               <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                 <div>
@@ -167,7 +162,6 @@ export default function RentPage() {
         </div>
       </section>
 
-      {/* Mobile FAB */}
       <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
         <Button className="h-12 px-8 bg-[#111111] text-white font-bold rounded-full shadow-2xl flex items-center gap-3 active:scale-95 transition-transform">
           <Filter className="w-4 h-4 text-primary" /> FILTERS
