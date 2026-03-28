@@ -13,6 +13,7 @@ const config: Config = {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
         code: ['monospace'],
       },
       colors: {

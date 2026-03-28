@@ -1,8 +1,10 @@
+
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { FeatureGrid } from "@/components/feature-grid";
 import { PropertyCarousel } from "@/components/property-carousel";
 import { Editorial } from "@/components/editorial";
+import { TrustAndFinancials } from "@/components/trust-and-financials";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
@@ -12,6 +14,7 @@ export default function Home() {
       <Hero />
       <PropertyCarousel />
       <FeatureGrid />
+      <TrustAndFinancials />
       <Editorial />
       
       <section className="py-32 px-6 md:px-12 bg-white flex flex-col items-center text-center">
