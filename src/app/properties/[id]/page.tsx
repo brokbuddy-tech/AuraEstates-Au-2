@@ -177,13 +177,13 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-sm font-black tracking-tighter uppercase">{property.title}</h1>
-                  <p className="text-[#111111]/40 text-xs font-medium tracking-widest uppercase">{property.address}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-black text-primary tracking-tighter">
+                  <p className="text-2xl md:text-4xl font-black text-primary tracking-tighter mb-1">
                     ${property.price.toLocaleString()}
                   </p>
+                  <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none">{property.title}</h1>
+                  <p className="text-[#111111]/40 text-sm font-medium tracking-widest uppercase mt-4">{property.address}</p>
+                </div>
+                <div className="text-right">
                   <div className="flex gap-2 justify-end mt-2">
                     <Button size="icon" variant="outline" className="rounded-full border-[#F1F1F1]"><Heart className="w-4 h-4" /></Button>
                     <Button size="icon" variant="outline" className="rounded-full border-[#F1F1F1]"><Share2 className="w-4 h-4" /></Button>
