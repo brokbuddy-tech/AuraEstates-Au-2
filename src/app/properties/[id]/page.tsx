@@ -437,6 +437,20 @@ export default function PropertyShowcase() {
                           </div>
                         </div>
 
+                        {/* Gallery Row */}
+                        <div className="grid grid-cols-3 gap-1 px-1 mt-1">
+                          {property.images.map((img, idx) => (
+                            <div key={idx} className="relative aspect-video">
+                              <Image 
+                                src={img} 
+                                alt={`Gallery ${idx + 1}`} 
+                                fill 
+                                className="object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+
                         {/* Brochure Content */}
                         <div className="p-12 space-y-12">
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[#F1F1F1]">
