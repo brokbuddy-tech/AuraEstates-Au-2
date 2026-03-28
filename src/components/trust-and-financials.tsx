@@ -48,15 +48,15 @@ export function TrustAndFinancials() {
         
         {/* Module C: Competitive Intelligence (The Expert Edge) */}
         <section className="pt-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 rounded-[3rem] overflow-hidden bg-[#111111] text-white shadow-2xl min-h-[600px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 rounded-[3rem] overflow-hidden bg-[#111111] text-white shadow-2xl min-h-[600px] relative">
             {/* Image Section */}
-            <div className="lg:col-span-7 relative h-[400px] lg:h-auto overflow-hidden group">
+            <div className="lg:col-span-7 relative h-[400px] lg:h-auto overflow-hidden">
               {SLIDES.map((slide, idx) => (
                 <div 
                   key={idx}
                   className={cn(
-                    "absolute inset-0 transition-opacity duration-1000",
-                    activeSlide === idx ? "opacity-100" : "opacity-0"
+                    "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+                    activeSlide === idx ? "opacity-100 scale-100" : "opacity-0 scale-105"
                   )}
                 >
                   <Image 
@@ -72,21 +72,33 @@ export function TrustAndFinancials() {
             </div>
 
             {/* Content Section */}
-            <div className="lg:col-span-5 p-12 md:p-20 flex flex-col justify-center space-y-8 relative">
-              <div className="space-y-4 min-h-[280px]">
-                <div className="overflow-hidden">
-                  <span className="text-primary font-bold text-[10px] uppercase tracking-[0.4em] inline-block animate-fade-up">
-                    {SLIDES[activeSlide].tag}
-                  </span>
-                </div>
-                <h2 className="text-4xl md:text-5xl font-serif italic text-white leading-tight animate-fade-up">
-                  {SLIDES[activeSlide].title}<span className="text-primary">{SLIDES[activeSlide].titleHighlight}</span>
-                </h2>
-                <p className="text-white/40 text-lg font-light leading-relaxed animate-fade-up">
-                  {SLIDES[activeSlide].description}
-                </p>
+            <div className="lg:col-span-5 p-12 md:p-20 flex flex-col justify-center relative bg-[#111111]">
+              {/* Stable height container for text slides */}
+              <div className="relative h-[300px] md:h-[280px]">
+                {SLIDES.map((slide, idx) => (
+                  <div 
+                    key={idx}
+                    className={cn(
+                      "absolute inset-0 transition-all duration-1000 ease-in-out flex flex-col justify-center gap-4",
+                      activeSlide === idx 
+                        ? "opacity-100 translate-y-0" 
+                        : "opacity-0 translate-y-8 pointer-events-none"
+                    )}
+                  >
+                    <span className="text-primary font-bold text-[10px] uppercase tracking-[0.4em] inline-block">
+                      {slide.tag}
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-serif italic text-white leading-tight">
+                      {slide.title}<span className="text-primary">{slide.titleHighlight}</span>
+                    </h2>
+                    <p className="text-white/40 text-lg font-light leading-relaxed">
+                      {slide.description}
+                    </p>
+                  </div>
+                ))}
               </div>
 
+              {/* Static Controls Area */}
               <div className="pt-8 flex flex-col gap-6">
                 <Button variant="link" className="p-0 h-auto text-primary font-bold uppercase tracking-[0.2em] text-xs justify-start group">
                   EXPLORE THE EDGE <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
