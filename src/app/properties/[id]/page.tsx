@@ -21,7 +21,9 @@ import {
   FileText,
   Star,
   Share2,
-  Info
+  Info,
+  MapPin,
+  TrendingUp
 } from "lucide-react";
 
 // Mock Data for the Showcase (In a real app, this would come from Firestore)
@@ -139,11 +141,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase">{property.title}</h1>
-                  <p className="text-[#111111]/40 text-sm md:text-base font-medium tracking-widest uppercase">{property.address}</p>
+                  <h1 className="text-base md:text-lg font-black tracking-tighter uppercase">{property.title}</h1>
+                  <p className="text-[#111111]/40 text-xs md:text-sm font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-base md:text-lg font-black text-primary tracking-tighter">
+                  <p className="text-sm md:text-base font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -215,6 +217,59 @@ export default function PropertyShowcase() {
                   </div>
                   <div className="shrink-0 flex items-center justify-center">
                     <EERGauge value={6.0} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Location & Suburb Insights Section */}
+              <div className="pt-12 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black uppercase tracking-tight">Location & Suburb Insights</h3>
+                    <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">Vaucluse, NSW 2030</p>
+                  </div>
+                  <MapPin className="w-4 h-4 text-[#111111]/20" />
+                </div>
+
+                <div className="bg-white border border-[#F1F1F1] rounded-3xl p-8 space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div className="space-y-4">
+                      <p className="text-[#111111]/60 text-lg font-light leading-relaxed">
+                        Vaucluse remains one of Sydney's most prestigious postcodes, offering a unique blend of heritage charm and world-class modern architecture. The area has seen a <span className="text-[#111111] font-bold">12.4% appreciation</span> in median values over the last 12 months.
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 pt-4">
+                        <div>
+                          <p className="text-2xl font-black text-[#111111]">$4,250,000</p>
+                          <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Median Suburb Price</p>
+                        </div>
+                        <div>
+                          <p className="text-2xl font-black text-[#111111]">78</p>
+                          <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Walkability Score</p>
+                        </div>
+                      </div>
+                      <div className="pt-6">
+                        <Button variant="link" className="p-0 h-auto text-primary font-bold uppercase tracking-widest text-[10px] group">
+                          VIEW SUBURB REPORT <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-[#F1F1F1] group cursor-pointer shadow-sm">
+                      <Image 
+                        src="https://picsum.photos/seed/vaucluse-map-insight/600/400" 
+                        alt="Location Map" 
+                        fill 
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                        data-ai-hint="city map"
+                      />
+                      <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-4 h-4 rounded-full bg-primary animate-ping" />
+                        <div className="w-3 h-3 rounded-full bg-primary absolute shadow-xl" />
+                      </div>
+                      <div className="absolute bottom-4 left-4 right-4 glass-morphism p-3 rounded-xl border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-white text-[10px] font-bold uppercase tracking-widest text-center">Interactive Map Active</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
