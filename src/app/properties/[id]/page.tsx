@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -90,13 +89,13 @@ export default function PropertyShowcase() {
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
       <Navbar />
 
-      {/* 1. Hero Experience (Gallery & Parallax) */}
+      {/* 1. Hero Experience (Gallery) */}
       <section className="pt-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[60vh] md:h-[70vh]">
             <div className="lg:col-span-8 relative rounded-3xl overflow-hidden group">
               <div 
-                className="absolute inset-0 bg-cover bg-center parallax-bg"
+                className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${property.images[0]})` }}
               />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
