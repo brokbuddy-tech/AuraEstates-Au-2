@@ -5,9 +5,17 @@ import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Award, Search, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, Award, Search, ArrowRight, TrendingUp, Calculator } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const AGENTS = [
@@ -192,6 +200,94 @@ export default function AgentsPage() {
             <Button size="lg" className="h-14 px-8 bg-[#111111] text-white font-bold rounded-xl hover:bg-primary transition-all">
               CAREERS AT AETHER
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Valuation Calculator Section */}
+      <section className="py-24 px-6 md:px-12 bg-[#F8F9FA]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Market Intelligence</span>
+              <h2 className="text-4xl md:text-5xl font-black text-[#111111] uppercase tracking-tighter leading-none">
+                Instant <span className="text-primary italic">Valuation.</span>
+              </h2>
+              <p className="text-lg text-[#111111]/60 leading-relaxed font-light">
+                Leveraging Aether's proprietary AI models, we analyze millions of data points across Australia to provide you with a real-time estimate of your property's market value.
+              </p>
+              
+              <div className="space-y-6 bg-white p-8 rounded-3xl border border-[#E5E7EB] shadow-sm">
+                <div className="space-y-2">
+                  <Label htmlFor="suburb" className="text-xs uppercase font-bold tracking-widest text-[#111111]/40">Suburb</Label>
+                  <Input id="suburb" placeholder="e.g. Vaucluse, NSW" className="h-12 rounded-xl" />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs uppercase font-bold tracking-widest text-[#111111]/40">Property Type</Label>
+                    <Select>
+                      <SelectTrigger className="h-12 rounded-xl">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="house">House</SelectItem>
+                        <SelectItem value="apartment">Apartment</SelectItem>
+                        <SelectItem value="townhouse">Townhouse</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs uppercase font-bold tracking-widest text-[#111111]/40">Bedrooms</Label>
+                    <Select>
+                      <SelectTrigger className="h-12 rounded-xl">
+                        <SelectValue placeholder="Beds" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 Bed</SelectItem>
+                        <SelectItem value="2">2 Beds</SelectItem>
+                        <SelectItem value="3">3 Beds</SelectItem>
+                        <SelectItem value="4">4+ Beds</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <Button className="w-full h-14 bg-[#111111] text-white font-bold rounded-xl hover:bg-primary transition-all">
+                  CALCULATE ESTIMATE
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="glass-morphism rounded-[2.5rem] p-12 border border-white/20 bg-white/40 shadow-2xl overflow-hidden text-center space-y-8">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                
+                <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto">
+                  <TrendingUp className="w-10 h-10" />
+                </div>
+                
+                <div>
+                  <p className="text-xs font-bold text-[#111111]/40 uppercase tracking-[0.3em] mb-2">Estimated Market Range</p>
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#111111] tracking-tighter">$2,450,000 - $2,780,000</h3>
+                </div>
+
+                <div className="pt-8 border-t border-[#111111]/5">
+                  <p className="text-sm text-[#111111]/60 font-medium italic">
+                    "This estimate is powered by Aether AI v4.2 and includes recent off-market transactions in your area."
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-4 pt-4">
+                  <div className="px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+                    High Confidence
+                  </div>
+                  <div className="px-4 py-2 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">
+                    Q3 2026 Updated
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
