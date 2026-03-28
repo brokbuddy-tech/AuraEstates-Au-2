@@ -3,7 +3,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { CheckCircle2, ShieldCheck, HelpCircle } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function TrustAndFinancials() {
@@ -21,36 +21,7 @@ export function TrustAndFinancials() {
     <div className="space-y-12 py-24 px-6 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto space-y-16">
         
-        {/* Section 1: Verified Compliance */}
-        <section className="bg-[#F7F6F2] rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 border border-black/5">
-          <div className="relative w-32 h-32 bg-white p-2 rounded-2xl shadow-sm flex-shrink-0">
-            <Image 
-              src="https://picsum.photos/seed/reia-qr/200/200" 
-              alt="REIA Verification QR" 
-              fill 
-              className="object-contain p-2"
-              data-ai-hint="qr code"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-               <ShieldCheck className="w-12 h-12 text-[#111111]" />
-            </div>
-          </div>
-          
-          <div className="flex-1 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Certified Listing</span>
-              <CheckCircle2 className="w-4 h-4 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold text-[#111111] mb-2 uppercase tracking-tight">
-              REIA Listing ID: <span className="font-mono text-primary">AE-2026-X942</span>
-            </h3>
-            <p className="text-[#111111]/60 text-sm leading-relaxed max-w-2xl">
-              This property listing has been independently reviewed and verified for Australian compliance and legal standards. Verified by the Real Estate Institute of Australia (REIA).
-            </p>
-          </div>
-        </section>
-
-        {/* Section 2: Upfront Cost Transparency */}
+        {/* Section: Upfront Cost Transparency */}
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="space-y-8">
             <div>
