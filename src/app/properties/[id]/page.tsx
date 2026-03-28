@@ -8,24 +8,20 @@ import { useParams } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { 
   Bed, 
   Bath, 
   Car, 
   Maximize2, 
   CheckCircle2, 
-  ShieldCheck, 
   Calendar as CalendarIcon,
   ArrowRight,
   Info,
-  QrCode,
   Share2,
   Heart,
   MessageSquare,
   Mail,
   FileText,
-  Award,
   Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -73,7 +69,6 @@ export default function PropertyShowcase() {
   const propertyId = params.id as string;
   const property = PROPERTY_DATA[propertyId as keyof typeof PROPERTY_DATA] || PROPERTY_DATA["b1"];
   
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedState, setSelectedState] = useState("nsw");
   const [depositPercent, setDepositPercent] = useState(10);
 
@@ -136,11 +131,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-xl md:text-3xl font-black tracking-tighter uppercase">{property.title}</h1>
+                  <h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase">{property.title}</h1>
                   <p className="text-[#111111]/40 text-sm md:text-base font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg md:text-2xl font-black text-primary tracking-tighter">
+                  <p className="text-lg md:text-xl font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -192,23 +187,6 @@ export default function PropertyShowcase() {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-
-            {/* 3. Compliance & Trust */}
-            <div className="bg-[#F8F9FA] rounded-[2.5rem] p-8 md:p-12 border border-[#F1F1F1] flex flex-col md:flex-row items-center gap-12 group">
-              <div className="w-32 h-32 bg-white rounded-2xl p-2 shadow-inner flex items-center justify-center border border-[#F1F1F1]">
-                <QrCode className="w-full h-full text-[#111111]/20 group-hover:text-primary transition-colors" />
-              </div>
-              <div className="flex-1 space-y-4">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="text-primary w-6 h-6" />
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">REIA Compliance No: <span className="text-primary">AE-2026-X942</span></h3>
-                </div>
-                <p className="text-[#111111]/50 text-sm leading-relaxed">
-                  This property listing has been independently reviewed and verified for Australian compliance and legal standards. Verified by the Real Estate Institute of Australia (REIA) for transparency and consumer protection.
-                </p>
-                <button className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] hover:underline">Download Compliance Certificate</button>
               </div>
             </div>
 
@@ -322,16 +300,16 @@ export default function PropertyShowcase() {
                 {/* Trust Grid (Performance Metrics) */}
                 <div className="grid grid-cols-3 py-6 border-b border-black/5 mx-8">
                   <div className="text-center space-y-1">
-                    <p className="text-lg font-black text-[#111111]">{property.agent.sold}</p>
+                    <p className="text-lg font-black text-[#111111]">{property.agent.sold} SOLD</p>
                     <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Sold</p>
                   </div>
                   <div className="text-center space-y-1 border-x border-black/5">
-                    <p className="text-lg font-black text-[#111111]">{property.agent.experience}</p>
+                    <p className="text-lg font-black text-[#111111]">{property.agent.experience}y EXP</p>
                     <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Exp</p>
                   </div>
                   <div className="text-center space-y-1">
                     <p className="text-lg font-black text-[#111111] flex items-center justify-center gap-1">
-                      {property.agent.rating} <Star className="w-3 h-3 fill-current text-primary" />
+                      {property.agent.rating} <Star className="w-3 h-3 fill-current text-primary" /> RATING
                     </p>
                     <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Rating</p>
                   </div>
