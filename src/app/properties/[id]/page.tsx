@@ -91,6 +91,43 @@ const EERGauge = ({ value }: { value: number }) => {
   );
 };
 
+const InternetGauge = ({ quality }: { quality: string }) => {
+  return (
+    <div className="relative w-48 h-24 overflow-hidden flex flex-col items-center">
+      <svg className="w-48 h-24" viewBox="0 0 100 50">
+        <path
+          d="M 10 50 A 40 40 0 0 1 90 50"
+          fill="none"
+          stroke="#F1F5F9"
+          strokeWidth="10"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 10 50 A 40 40 0 0 1 90 50"
+          fill="none"
+          stroke="url(#internet-gradient)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray="125.6"
+          strokeDashoffset={0}
+        />
+        <defs>
+          <linearGradient id="internet-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FDE047" />
+            <stop offset="100%" stopColor="#EA580C" />
+          </linearGradient>
+        </defs>
+        {/* Needle */}
+        <g transform={`rotate(70, 50, 50)`}>
+          <line x1="50" y1="50" x2="50" y2="15" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="50" cy="50" r="3" fill="#334155" />
+        </g>
+      </svg>
+      <p className="mt-2 text-[10px] font-black text-[#64748B] tracking-[0.3em] uppercase">{quality}</p>
+    </div>
+  );
+};
+
 export default function PropertyShowcase() {
   const params = useParams();
   const propertyId = params.id as string;
@@ -217,6 +254,32 @@ export default function PropertyShowcase() {
                     <EERGauge value={6.0} />
                   </div>
                 </div>
+              </div>
+
+              {/* Internet Availability Section */}
+              <div className="pt-12 space-y-6">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight">Internet Availability</h3>
+                  <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">{property.address} has an FTTP NBN connection, updated Mar 2026</p>
+                </div>
+
+                <div className="bg-[#F8F9FA] border border-[#F1F1F1] rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-12">
+                  <div className="flex-1 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <h4 className="text-lg font-black text-[#111111]">Current NBN connection</h4>
+                      <span className="px-2 py-0.5 bg-[#E0F2FE] text-[#0369A1] text-[10px] font-bold rounded uppercase">FTTP</span>
+                    </div>
+                    <p className="text-[#111111]/60 text-lg font-light leading-relaxed">
+                      This property is connected to <span className="text-[#005F73] font-bold">NBN Fibre to the Premises</span> which can support download speeds up to 1000Mbps and 400Mbps upload with a corresponding internet plan.
+                    </p>
+                  </div>
+                  <div className="shrink-0 flex items-center justify-center">
+                    <InternetGauge quality="Amazing" />
+                  </div>
+                </div>
+                <p className="text-[10px] text-[#111111]/30 font-medium">
+                  Always check with your preferred provider to see what options are available at this property
+                </p>
               </div>
             </div>
 
