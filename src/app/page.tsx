@@ -10,8 +10,8 @@ export default function Home() {
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
       <Navbar />
       <Hero />
-      <FeatureGrid />
       <PropertyCarousel />
+      <FeatureGrid />
       <Editorial />
       
       <section className="py-32 px-6 md:px-12 bg-white flex flex-col items-center text-center">
