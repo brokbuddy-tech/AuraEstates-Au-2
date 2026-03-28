@@ -23,7 +23,8 @@ import {
   Share2,
   Info,
   Calendar,
-  Clock
+  Clock,
+  MapPin
 } from "lucide-react";
 
 // Mock Data for the Showcase
@@ -315,6 +316,43 @@ export default function PropertyShowcase() {
                 <p className="text-[10px] text-[#111111]/30 font-medium">
                   Registration closes 24 hours prior to commencement. Contact agent for registration details.
                 </p>
+              </div>
+
+              {/* Property Location Map Section */}
+              <div className="pt-12 space-y-6">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight">Property Location</h3>
+                  <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">{property.address}</p>
+                </div>
+
+                <div className="relative aspect-video rounded-3xl overflow-hidden border border-[#F1F1F1] group cursor-pointer shadow-sm">
+                  <Image 
+                    src="https://picsum.photos/seed/property-map/1200/600" 
+                    alt="Property Map" 
+                    fill 
+                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    data-ai-hint="city map"
+                  />
+                  <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors" />
+                  
+                  {/* Map Pin Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center animate-pulse">
+                      <div className="w-4 h-4 rounded-full bg-primary shadow-2xl shadow-primary/50" />
+                    </div>
+                  </div>
+
+                  {/* Actions Overlay */}
+                  <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                    <div className="glass-morphism px-4 py-2 rounded-xl text-[#111111] border-white/40 shadow-xl backdrop-blur-xl">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#111111]/60">GPS Coordinates</p>
+                      <p className="text-xs font-bold">-33.8568, 151.2153</p>
+                    </div>
+                    <Button className="bg-white text-[#111111] hover:bg-white/90 font-bold rounded-xl shadow-xl">
+                      GET DIRECTIONS
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
 
