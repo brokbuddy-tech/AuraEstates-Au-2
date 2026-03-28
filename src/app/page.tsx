@@ -5,6 +5,7 @@ import { FeatureGrid } from "@/components/feature-grid";
 import { PropertyCarousel } from "@/components/property-carousel";
 import { Editorial } from "@/components/editorial";
 import { TrustAndFinancials } from "@/components/trust-and-financials";
+import { FAQSection } from "@/components/faq-section";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
@@ -44,6 +45,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <FAQSection />
       
       <Footer />
     </main>
