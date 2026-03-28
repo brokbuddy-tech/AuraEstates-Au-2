@@ -1,4 +1,5 @@
 
+import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { FeatureGrid } from "@/components/feature-grid";
@@ -31,12 +32,16 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="px-10 py-5 bg-[#111111] text-white font-bold rounded-2xl hover:bg-primary transition-all active:scale-95 shadow-2xl shadow-black/10">
-              Get Started for Free
-            </button>
-            <button className="px-10 py-5 bg-white text-[#111111] font-bold rounded-2xl border border-[#E5E7EB] hover:border-primary transition-all active:scale-95">
-              Explore Suburbs
-            </button>
+            <Link href="/buy">
+              <button className="px-10 py-5 bg-[#111111] text-white font-bold rounded-2xl hover:bg-primary transition-all active:scale-95 shadow-2xl shadow-black/10">
+                Search Properties
+              </button>
+            </Link>
+            <Link href="/buy">
+              <button className="px-10 py-5 bg-white text-[#111111] font-bold rounded-2xl border border-[#E5E7EB] hover:border-primary transition-all active:scale-95">
+                Explore Suburbs
+              </button>
+            </Link>
           </div>
         </div>
       </section>
