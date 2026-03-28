@@ -1,13 +1,16 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { 
   Bed, 
   Bath, 
@@ -133,6 +136,9 @@ export default function PropertyShowcase() {
   const propertyId = params.id as string;
   const property = PROPERTY_DATA[propertyId as keyof typeof PROPERTY_DATA] || PROPERTY_DATA["b1"];
   
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
       <Navbar />
@@ -280,6 +286,62 @@ export default function PropertyShowcase() {
                 <p className="text-[10px] text-[#111111]/30 font-medium">
                   Always check with your preferred provider to see what options are available at this property
                 </p>
+              </div>
+
+              {/* 5. Private Inspection Booking Section */}
+              <div className="pt-12 space-y-8 border-t border-[#F1F1F1] mt-16">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight">Schedule Private Viewing</h3>
+                  <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">Select your preferred date and time for a guided walkthrough</p>
+                </div>
+
+                <div className="bg-white border border-[#F1F1F1] rounded-3xl p-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-[#111111]/40">1. Select Date</Label>
+                    <div className="border border-[#F1F1F1] rounded-2xl p-4 flex justify-center">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        className="rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-[#111111]/40">2. Select Time</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {["10:00 AM", "11:30 AM", "1:00 PM", "2:30 PM", "4:00 PM", "5:30 PM"].map((time) => (
+                          <button
+                            key={time}
+                            onClick={() => setSelectedTime(time)}
+                            className={cn(
+                              "h-12 rounded-xl text-xs font-bold transition-all border",
+                              selectedTime === time 
+                                ? "bg-[#111111] text-white border-[#111111] shadow-lg" 
+                                : "bg-[#F8F9FA] text-[#111111]/60 border-[#F1F1F1] hover:border-[#111111]"
+                            )}
+                          >
+                            {time}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-[#F1F1F1] space-y-4">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-[#111111]/40 font-medium">Selected Slot:</span>
+                        <span className="font-black text-[#111111]">
+                          {date?.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) || "Not selected"} • {selectedTime || "Not selected"}
+                        </span>
+                      </div>
+                      <Button className="w-full h-14 bg-[#005F73] hover:bg-[#004a5a] text-white font-bold rounded-xl shadow-xl shadow-[#005F73]/20 transition-all">
+                        REQUEST BOOKING
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
