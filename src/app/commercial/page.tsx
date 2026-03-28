@@ -153,7 +153,7 @@ export default function CommercialPage() {
 
               <div className="mt-20 flex flex-col items-center">
                 <p className="text-black/40 text-sm mb-6">You've viewed 6 of 420+ listings</p>
-                <Button variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
+                <Button size="lg" className="bg-primary text-white font-bold px-12 py-6 rounded-xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">
                   LOAD MORE ASSETS
                 </Button>
               </div>
