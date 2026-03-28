@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -14,7 +13,7 @@ const PROPERTIES = [
     beds: 4,
     baths: 3,
     cars: 2,
-    description: "Experience coastal living at its finest in this stunning contemporary residence. Featuring floor-to-ceiling windows with panoramic ocean views, a gourmet chef's kitchen, and expansive outdoor entertaining areas. This property offers the perfect blend of luxury and relaxation."
+    description: "Experience coastal living at its finest in this stunning contemporary residence. Featuring floor-to-ceiling windows with panoramic ocean views, a gourmet chef's kitchen, and expansive outdoor entertaining areas."
   },
   {
     id: "2",
@@ -24,7 +23,7 @@ const PROPERTIES = [
     beds: 5,
     baths: 4,
     cars: 3,
-    description: "An architectural masterpiece nestled in a quiet cul-de-sac. This family haven boasts high ceilings, premium finishes throughout, a private home cinema, and a heated infinity pool. Minutes away from world-class dining and pristine beaches."
+    description: "An architectural masterpiece nestled in a quiet cul-de-sac. This family haven boasts high ceilings, premium finishes throughout, a private home cinema, and a heated infinity pool."
   },
   {
     id: "3",
@@ -34,7 +33,7 @@ const PROPERTIES = [
     beds: 3,
     baths: 2,
     cars: 2,
-    description: "Luxury urban living in the heart of the CBD. This executive penthouse offers unrivaled 360-degree views of the Sydney skyline and harbour. Smart home automation, a wrap-around balcony, and exclusive access to resident facilities including a rooftop gym and spa."
+    description: "Luxury urban living in the heart of the CBD. This executive penthouse offers unrivaled 360-degree views of the Sydney skyline and harbour."
   },
   {
     id: "4",
@@ -44,25 +43,31 @@ const PROPERTIES = [
     beds: 4,
     baths: 3,
     cars: 2,
-    description: "A charming blend of period elegance and modern comfort. This beautifully renovated family home features open-plan living zones, a sun-drenched backyard with a designer pool, and a dedicated workspace. Close to prestigious schools and vibrant parklands."
+    description: "A charming blend of period elegance and modern comfort. This beautifully renovated family home features open-plan living zones and a designer pool."
   }
 ];
 
 export function PropertyCarousel() {
   return (
-    <section className="py-24 px-6 md:px-12 bg-gradient-to-b from-background to-[#151d1a]">
+    <section className="py-24 px-6 md:px-12 bg-[#F8F9FA]">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Recommended for you</h2>
-            <p className="text-white/40">Handpicked properties matching your preferences</p>
+            <h2 className="text-3xl md:text-4xl font-black text-[#111111] uppercase tracking-tighter">
+              Recommended <span className="text-primary italic">for you.</span>
+            </h2>
+            <p className="text-[#111111]/40 text-sm mt-2 font-medium">Handpicked properties matching your lifestyle</p>
           </div>
-          <button className="text-primary hover:text-accent transition-colors font-medium">View all</button>
+          <button className="text-primary hover:underline transition-colors font-bold text-xs uppercase tracking-widest">
+            View all
+          </button>
         </div>
 
         <div className="flex overflow-x-auto pb-8 gap-8 no-scrollbar scroll-smooth">
           {PROPERTIES.map((prop) => (
-            <PropertyCard key={prop.id} {...prop} />
+            <div key={prop.id} className="min-w-[320px] md:min-w-[400px]">
+              <PropertyCard {...prop} />
+            </div>
           ))}
         </div>
       </div>

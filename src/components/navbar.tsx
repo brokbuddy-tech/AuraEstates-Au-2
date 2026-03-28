@@ -26,12 +26,18 @@ export function Navbar() {
     >
       <div className="flex items-center gap-12">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold tracking-tighter text-white">
+          <span className={cn(
+            "text-2xl font-bold tracking-tighter transition-colors",
+            scrolled ? "text-[#111111]" : "text-white"
+          )}>
             Aether<span className="text-primary"> Australia</span>
           </span>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-white/90">
+        <div className={cn(
+          "hidden lg:flex items-center gap-8 text-sm font-medium transition-colors",
+          scrolled ? "text-[#111111]/80" : "text-white/90"
+        )}>
           <Link href="/buy" className="hover:text-primary transition-colors">Buy</Link>
           <Link href="/rent" className="hover:text-primary transition-colors">Rent</Link>
           <Link href="/sold" className="hover:text-primary transition-colors">Sold</Link>
@@ -45,12 +51,20 @@ export function Navbar() {
         <Link href="/contact">
           <Button
             variant="outline"
-            className="hidden md:flex items-center gap-2 border-white/20 text-white hover:bg-primary hover:border-primary transition-all duration-300 backdrop-blur-sm"
+            className={cn(
+              "hidden md:flex items-center gap-2 transition-all duration-300 backdrop-blur-sm",
+              scrolled 
+                ? "border-primary/20 text-primary hover:bg-primary hover:text-white" 
+                : "border-white/20 text-white hover:bg-white hover:text-primary"
+            )}
           >
             Contact Us
           </Button>
         </Link>
-        <Button variant="ghost" size="icon" className="lg:hidden text-white">
+        <Button variant="ghost" size="icon" className={cn(
+          "lg:hidden transition-colors",
+          scrolled ? "text-[#111111]" : "text-white"
+        )}>
           <Menu className="w-6 h-6" />
         </Button>
       </div>
