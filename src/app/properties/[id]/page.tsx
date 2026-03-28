@@ -1,7 +1,6 @@
-
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -25,7 +24,7 @@ import {
   Calendar,
   Clock,
   Download,
-  X
+  Loader2
 } from "lucide-react";
 import {
   Dialog,
@@ -34,6 +33,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 // Mock Data for the Showcase
 const PROPERTY_DATA = {
@@ -141,6 +143,52 @@ export default function PropertyShowcase() {
   const params = useParams();
   const propertyId = params.id as string;
   const property = PROPERTY_DATA[propertyId as keyof typeof PROPERTY_DATA] || PROPERTY_DATA["b1"];
+  const { toast } = useToast();
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadBrochure = async () => {
+    const element = document.getElementById("digital-brochure-container");
+    if (!element) return;
+
+    setIsDownloading(true);
+    toast({
+      title: "Generating Brochure",
+      description: "We are preparing your premium digital dossier...",
+    });
+
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+      });
+      
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width / 2, canvas.height / 2],
+      });
+
+      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width / 2, canvas.height / 2);
+      pdf.save(`Aether-Brochure-${property.title.replace(/\s+/g, "-")}.pdf`);
+
+      toast({
+        title: "Download Complete",
+        description: "Your digital brochure has been saved successfully.",
+      });
+    } catch (error) {
+      console.error("PDF Generation Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Download Failed",
+        description: "An error occurred while generating your PDF. Please try again.",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
@@ -422,7 +470,7 @@ export default function PropertyShowcase() {
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none bg-white rounded-3xl">
-                      <div className="relative">
+                      <div id="digital-brochure-container" className="relative bg-white">
                         {/* Brochure Header Image */}
                         <div className="relative h-[300px] w-full">
                           <Image 
@@ -455,10 +503,13 @@ export default function PropertyShowcase() {
                         {/* Brochure Content */}
                         <div className="p-12 space-y-12">
                           {/* Price & Title Display */}
-                          <div>
-                            <p className="text-primary font-black text-3xl tracking-tighter mb-1">${property.price.toLocaleString()}</p>
-                            <h2 className="text-5xl font-black uppercase tracking-tighter text-[#111111] mb-4">{property.title}</h2>
-                            <div className="w-12 h-1 bg-primary mb-4" />
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-4">
+                              <p className="text-primary font-black text-3xl tracking-tighter">${property.price.toLocaleString()}</p>
+                              <div className="flex-1 h-px bg-primary/10" />
+                            </div>
+                            <h2 className="text-5xl font-black uppercase tracking-tighter text-[#111111]">{property.title}</h2>
+                            <div className="w-12 h-1 bg-primary mt-4" />
                           </div>
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[#F1F1F1]">
@@ -523,8 +574,17 @@ export default function PropertyShowcase() {
 
                         {/* Download Sticky Action */}
                         <div className="sticky bottom-0 bg-white border-t border-[#F1F1F1] p-6 flex justify-center">
-                          <Button className="bg-[#111111] text-white font-bold h-14 px-12 rounded-xl flex items-center gap-3 shadow-2xl">
-                            <Download className="w-5 h-5" /> DOWNLOAD PDF BROCHURE
+                          <Button 
+                            onClick={handleDownloadBrochure}
+                            disabled={isDownloading}
+                            className="bg-[#111111] text-white font-bold h-14 px-12 rounded-xl flex items-center gap-3 shadow-2xl disabled:opacity-50"
+                          >
+                            {isDownloading ? (
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                            ) : (
+                              <Download className="w-5 h-5" />
+                            )}
+                            {isDownloading ? "GENERATING PDF..." : "DOWNLOAD PDF BROCHURE"}
                           </Button>
                         </div>
                       </div>
