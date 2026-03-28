@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Award, Search, ArrowRight, TrendingUp, Calculator } from "lucide-react";
+import { Mail, Phone, MapPin, Award, Search, ArrowRight, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
@@ -205,7 +205,7 @@ export default function AgentsPage() {
       </section>
 
       {/* Valuation Calculator Section */}
-      <section className="py-24 px-6 md:px-12 bg-[#F8F9FA]">
+      <section id="valuation-calculator" className="py-24 px-6 md:px-12 bg-[#F8F9FA]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">

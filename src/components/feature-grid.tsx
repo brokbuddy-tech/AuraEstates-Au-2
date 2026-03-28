@@ -9,7 +9,7 @@ const FEATURES = [
     desc: "Get an instant estimate for any home in Australia.",
     icon: Calculator,
     color: "bg-blue-500/10 text-blue-600",
-    href: "/sell"
+    href: "/agents#valuation-calculator"
   },
   {
     title: "Find an Agent",
