@@ -454,9 +454,10 @@ export default function PropertyShowcase() {
 
                         {/* Brochure Content */}
                         <div className="p-12 space-y-12">
-                          {/* Price Display */}
+                          {/* Price & Title Display */}
                           <div>
                             <p className="text-primary font-black text-3xl tracking-tighter mb-1">${property.price.toLocaleString()}</p>
+                            <h2 className="text-5xl font-black uppercase tracking-tighter text-[#111111] mb-4">{property.title}</h2>
                             <div className="w-12 h-1 bg-primary mb-4" />
                           </div>
 
