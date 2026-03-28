@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -432,6 +433,7 @@ export default function PropertyShowcase() {
                           />
                           <div className="absolute inset-0 bg-black/40" />
                           <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12 text-white">
+                            <p className="text-primary font-black text-2xl tracking-tighter mb-2">${property.price.toLocaleString()}</p>
                             <h2 className="text-5xl font-black uppercase tracking-tighter mb-4">{property.title}</h2>
                             <p className="text-lg font-medium uppercase tracking-[0.2em]">{property.address}</p>
                           </div>
