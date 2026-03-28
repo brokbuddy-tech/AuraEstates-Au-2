@@ -19,7 +19,8 @@ import {
   MessageSquare,
   Mail,
   FileText,
-  Star
+  Star,
+  Share2
 } from "lucide-react";
 
 // Mock Data for the Showcase (In a real app, this would come from Firestore)
