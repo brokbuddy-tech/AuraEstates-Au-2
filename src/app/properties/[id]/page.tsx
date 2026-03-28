@@ -21,7 +21,9 @@ import {
   FileText,
   Star,
   Share2,
-  Info
+  Info,
+  Calendar,
+  Clock
 } from "lucide-react";
 
 // Mock Data for the Showcase
@@ -174,11 +176,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-sm md:text-base font-black tracking-tighter uppercase">{property.title}</h1>
-                  <p className="text-[#111111]/40 text-xs md:text-sm font-medium tracking-widest uppercase">{property.address}</p>
+                  <h1 className="text-sm font-black tracking-tighter uppercase">{property.title}</h1>
+                  <p className="text-[#111111]/40 text-xs font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs md:text-sm font-black text-primary tracking-tighter">
+                  <p className="text-sm font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -277,6 +279,41 @@ export default function PropertyShowcase() {
                 </div>
                 <p className="text-[10px] text-[#111111]/30 font-medium">
                   Always check with your preferred provider to see what options are available at this property
+                </p>
+              </div>
+
+              {/* Auction Details Section */}
+              <div className="pt-12 space-y-6">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight">Auction Details</h3>
+                  <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">Public Auction - Registered bidders only</p>
+                </div>
+
+                <div className="bg-white border border-[#F1F1F1] rounded-3xl p-8 flex flex-col md:flex-row items-center gap-12">
+                   <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                      <div className="flex items-center gap-4 p-6 bg-[#F8F9FA] rounded-2xl border border-[#F1F1F1]">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                          <Calendar className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Auction Date</p>
+                          <p className="font-black text-lg">Saturday, 28 March 2026</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4 p-6 bg-[#F8F9FA] rounded-2xl border border-[#F1F1F1]">
+                        <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                          <Clock className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Commencing</p>
+                          <p className="font-black text-lg">11:00 AM AEST</p>
+                        </div>
+                      </div>
+                   </div>
+                </div>
+                <p className="text-[10px] text-[#111111]/30 font-medium">
+                  Registration closes 24 hours prior to commencement. Contact agent for registration details.
                 </p>
               </div>
             </div>
