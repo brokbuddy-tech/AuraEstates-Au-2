@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Calculator, UserSearch, Map, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -7,25 +8,29 @@ const FEATURES = [
     title: "Property Valuations",
     desc: "Get an instant estimate for any home in Australia.",
     icon: Calculator,
-    color: "bg-blue-500/10 text-blue-600"
+    color: "bg-blue-500/10 text-blue-600",
+    href: "/sell"
   },
   {
     title: "Find an Agent",
     desc: "Connect with the top-performing agents in your local area.",
     icon: UserSearch,
-    color: "bg-emerald-500/10 text-primary"
+    color: "bg-emerald-500/10 text-primary",
+    href: "/agents"
   },
   {
     title: "Suburb Insights",
     desc: "Explore schools, crime rates, and market trends.",
     icon: Map,
-    color: "bg-purple-500/10 text-purple-600"
+    color: "bg-purple-500/10 text-purple-600",
+    href: "/buy"
   },
   {
     title: "Loan Calculator",
     desc: "Find out how much you can borrow for your next move.",
     icon: ShieldCheck,
-    color: "bg-orange-500/10 text-orange-600"
+    color: "bg-orange-500/10 text-orange-600",
+    href: "/buy"
   }
 ];
 
@@ -42,16 +47,17 @@ export function FeatureGrid() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((feat, idx) => (
-            <div
+            <Link
               key={idx}
-              className="group p-8 rounded-2xl bg-[#F8F9FA] border border-[#E5E7EB] hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer"
+              href={feat.href}
+              className="group p-8 rounded-2xl bg-[#F8F9FA] border border-[#E5E7EB] hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer flex flex-col"
             >
               <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center mb-6", feat.color)}>
                 <feat.icon className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-[#111111] mb-3 group-hover:text-primary transition-colors">{feat.title}</h3>
               <p className="text-[#111111]/50 text-sm leading-relaxed font-light">{feat.desc}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
