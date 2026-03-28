@@ -27,7 +27,7 @@ import {
   Info
 } from "lucide-react";
 
-// Mock Data for the Showcase (In a real app, this would come from Firestore)
+// Mock Data for the Showcase
 const PROPERTY_DATA = {
   "b1": {
     id: "b1",
@@ -57,7 +57,7 @@ const PROPERTY_DATA = {
 };
 
 const EERGauge = ({ value }: { value: number }) => {
-  const rotation = (value / 10) * 180 - 90; // Map 0-10 to -90 to 90 degrees
+  const rotation = (value / 10) * 180 - 90;
   return (
     <div className="relative w-48 h-24 overflow-hidden flex flex-col items-center">
       <svg className="w-48 h-24" viewBox="0 0 100 50">
@@ -83,7 +83,6 @@ const EERGauge = ({ value }: { value: number }) => {
             <stop offset="100%" stopColor="#22C55E" />
           </linearGradient>
         </defs>
-        {/* Needle */}
         <g transform={`rotate(${rotation}, 50, 50)`}>
           <line x1="50" y1="50" x2="50" y2="15" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
           <circle cx="50" cy="50" r="3" fill="#334155" />
@@ -120,7 +119,6 @@ const InternetGauge = ({ quality }: { quality: string }) => {
             <stop offset="100%" stopColor="#EA580C" />
           </linearGradient>
         </defs>
-        {/* Needle */}
         <g transform={`rotate(70, 50, 50)`}>
           <line x1="50" y1="50" x2="50" y2="15" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
           <circle cx="50" cy="50" r="3" fill="#334155" />
