@@ -23,8 +23,16 @@ import {
   Info,
   Calendar,
   Clock,
-  MapPin
+  Download,
+  X
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Mock Data for the Showcase
 const PROPERTY_DATA = {
@@ -406,9 +414,100 @@ export default function PropertyShowcase() {
                     BOOK PRIVATE INSPECTION
                   </Button>
                   
-                  <Button variant="outline" className="w-full h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
-                    <FileText className="w-4 h-4" /> VIEW DIGITAL BROCHURE
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
+                        <FileText className="w-4 h-4" /> VIEW DIGITAL BROCHURE
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-none bg-white rounded-3xl">
+                      <div className="relative">
+                        {/* Brochure Header Image */}
+                        <div className="relative h-[300px] w-full">
+                          <Image 
+                            src={property.images[0]} 
+                            alt="Brochure Cover" 
+                            fill 
+                            className="object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black/40" />
+                          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12 text-white">
+                            <h2 className="text-5xl font-black uppercase tracking-tighter mb-4">{property.title}</h2>
+                            <p className="text-lg font-medium uppercase tracking-[0.2em]">{property.address}</p>
+                          </div>
+                        </div>
+
+                        {/* Brochure Content */}
+                        <div className="p-12 space-y-12">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[#F1F1F1]">
+                            <div className="text-center">
+                              <p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Beds</p>
+                              <p className="text-2xl font-black">{property.beds}</p>
+                            </div>
+                            <div className="text-center border-l border-[#F1F1F1]">
+                              <p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Baths</p>
+                              <p className="text-2xl font-black">{property.baths}</p>
+                            </div>
+                            <div className="text-center border-l border-[#F1F1F1]">
+                              <p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Cars</p>
+                              <p className="text-2xl font-black">{property.cars}</p>
+                            </div>
+                            <div className="text-center border-l border-[#F1F1F1]">
+                              <p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Size</p>
+                              <p className="text-2xl font-black">{property.landSize}m²</p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-6">
+                            <h3 className="text-2xl font-black uppercase tracking-tight">Executive Summary</h3>
+                            <p className="text-lg text-[#111111]/60 leading-relaxed font-light">
+                              {property.description}
+                            </p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <div className="space-y-6">
+                              <h3 className="text-xl font-black uppercase tracking-tight">Key Features</h3>
+                              <ul className="space-y-3">
+                                {property.features.map((f, i) => (
+                                  <li key={i} className="flex items-center gap-3 text-sm font-medium">
+                                    <CheckCircle2 className="w-4 h-4 text-primary" /> {f}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div className="relative aspect-square rounded-2xl overflow-hidden">
+                              <Image src={property.images[1]} alt="Interior" fill className="object-cover" />
+                            </div>
+                          </div>
+
+                          {/* Agent Card in Brochure */}
+                          <div className="bg-[#F8F9FA] rounded-2xl p-8 flex items-center justify-between">
+                            <div className="flex items-center gap-6">
+                              <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md">
+                                <Image src={property.agent.image} alt={property.agent.name} fill className="object-cover" />
+                              </div>
+                              <div>
+                                <h4 className="text-xl font-black uppercase">{property.agent.name}</h4>
+                                <p className="text-primary text-[10px] font-bold uppercase tracking-widest">{property.agent.role}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <Button variant="ghost" size="icon" className="rounded-full bg-white"><Mail className="w-4 h-4" /></Button>
+                              <Button variant="ghost" size="icon" className="rounded-full bg-white"><MessageSquare className="w-4 h-4" /></Button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Download Sticky Action */}
+                        <div className="sticky bottom-0 bg-white border-t border-[#F1F1F1] p-6 flex justify-center">
+                          <Button className="bg-[#111111] text-white font-bold h-14 px-12 rounded-xl flex items-center gap-3 shadow-2xl">
+                            <Download className="w-5 h-5" /> DOWNLOAD PDF BROCHURE
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button variant="outline" className="h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
