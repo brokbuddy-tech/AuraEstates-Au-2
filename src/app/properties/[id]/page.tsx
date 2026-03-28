@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -19,7 +20,12 @@ import {
   Info,
   QrCode,
   Share2,
-  Heart
+  Heart,
+  MessageSquare,
+  Mail,
+  FileText,
+  Award,
+  Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -52,8 +58,11 @@ const PROPERTY_DATA = {
     ],
     agent: {
       name: "Alexander Vance",
-      role: "Director | Principal Consultant",
-      image: "https://picsum.photos/seed/agent-vance/200/200"
+      role: "SENIOR SALES EXECUTIVE",
+      image: "https://picsum.photos/seed/agent-vance/200/200",
+      sold: "142+",
+      experience: "15y",
+      rating: "4.9"
     }
   }
 };
@@ -126,11 +135,11 @@ export default function PropertyShowcase() {
             <div className="space-y-8">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div className="space-y-2">
-                  <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase">{property.title}</h1>
-                  <p className="text-[#111111]/40 text-base md:text-lg font-medium tracking-widest uppercase">{property.address}</p>
+                  <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase">{property.title}</h1>
+                  <p className="text-[#111111]/40 text-sm md:text-base font-medium tracking-widest uppercase">{property.address}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl md:text-4xl font-black text-primary tracking-tighter">
+                  <p className="text-xl md:text-3xl font-black text-primary tracking-tighter">
                     ${property.price.toLocaleString()}
                   </p>
                   <div className="flex gap-2 justify-end mt-2">
@@ -284,61 +293,86 @@ export default function PropertyShowcase() {
 
           </div>
 
-          {/* Right Column: Sticky Lead Gen Sidebar */}
+          {/* Right Column: Sticky Expert Advisor Sidebar */}
           <div className="lg:col-span-4 relative">
             <div className="sticky top-24 space-y-6">
-              <div className="glass-morphism rounded-[2.5rem] p-8 border border-white/20 bg-white/40 shadow-2xl space-y-8">
-                {/* Agent Header */}
-                <div className="flex items-center gap-4 border-b border-[#F1F1F1] pb-6">
-                  <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[#F1F1F1]">
-                    <Image src={property.agent.image} alt={property.agent.name} fill className="object-cover" />
-                  </div>
-                  <div>
-                    <h4 className="font-black text-lg uppercase tracking-tight">{property.agent.name}</h4>
-                    <p className="text-primary text-[10px] font-bold uppercase tracking-widest">{property.agent.role}</p>
+              <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-black/5 flex flex-col">
+                
+                {/* Hero Header */}
+                <div className="relative h-48 w-full">
+                  <Image 
+                    src="https://picsum.photos/seed/arch-header/600/400" 
+                    alt="Background" 
+                    fill 
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#111111]/90" />
+                  
+                  {/* Identity Block */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 px-6 text-center">
+                    <div className="relative w-24 h-24 rounded-full border-2 border-white overflow-hidden mb-4 shadow-xl translate-y-2">
+                      <Image src={property.agent.image} alt={property.agent.name} fill className="object-cover" />
+                    </div>
+                    <h4 className="text-white font-black text-xl tracking-tight uppercase">{property.agent.name}</h4>
+                    <p className="text-[#005F73] text-[10px] font-bold uppercase tracking-widest mt-1">{property.agent.role}</p>
                   </div>
                 </div>
 
-                {/* Booking Module */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-5 h-5 text-primary" />
-                    <h5 className="font-bold text-sm uppercase tracking-widest">Request Private Viewing</h5>
+                {/* Trust Grid (Performance Metrics) */}
+                <div className="grid grid-cols-3 py-6 border-b border-black/5 mx-8">
+                  <div className="text-center space-y-1">
+                    <p className="text-lg font-black text-[#111111]">{property.agent.sold}</p>
+                    <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Sold</p>
                   </div>
-                  
-                  <div className="bg-white rounded-2xl border border-[#F1F1F1] p-2">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-xl"
-                    />
+                  <div className="text-center space-y-1 border-x border-black/5">
+                    <p className="text-lg font-black text-[#111111]">{property.agent.experience}</p>
+                    <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Exp</p>
                   </div>
+                  <div className="text-center space-y-1">
+                    <p className="text-lg font-black text-[#111111] flex items-center justify-center gap-1">
+                      {property.agent.rating} <Star className="w-3 h-3 fill-current text-primary" />
+                    </p>
+                    <p className="text-[9px] font-bold text-[#9CA3AF] uppercase tracking-widest">Rating</p>
+                  </div>
+                </div>
 
-                  <div className="space-y-4">
-                    <p className="text-[10px] font-bold text-[#111111]/40 uppercase tracking-widest">Available Times</p>
-                    <div className="grid grid-cols-3 gap-2">
-                      {["10:00", "11:30", "14:00", "15:30", "17:00"].map((time) => (
-                        <button key={time} className="h-10 rounded-xl border border-[#F1F1F1] text-xs font-bold hover:bg-primary hover:text-white transition-all">
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button className="w-full h-14 bg-[#111111] text-white font-bold rounded-2xl hover:bg-primary transition-all active:scale-[0.98] group">
-                    BOOK INSPECTION <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                {/* Communication Hub (Tiered CTA) */}
+                <div className="p-8 space-y-4">
+                  <Button className="w-full h-14 bg-[#005F73] hover:bg-[#004a5a] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#005F73]/20">
+                    BOOK PRIVATE INSPECTION
                   </Button>
+                  
+                  <Button variant="outline" className="w-full h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
+                    <FileText className="w-4 h-4" /> VIEW DIGITAL BROCHURE
+                  </Button>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
+                      <MessageSquare className="w-4 h-4" /> SMS
+                    </Button>
+                    <Button variant="outline" className="h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
+                      <Mail className="w-4 h-4" /> EMAIL
+                    </Button>
+                  </div>
+
+                  <div className="text-center pt-4">
+                    <Link 
+                      href={`https://wa.me/61400000000?text=${encodeURIComponent(`Hi ${property.agent.name.split(' ')[0]}, I am interested in ${property.address}.`)}`}
+                      className="text-[#005F73] text-xs font-bold uppercase tracking-widest hover:underline flex items-center justify-center gap-2"
+                    >
+                      WHATSAPP AGENT <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
                 </div>
               </div>
 
-              {/* Quick Actions */}
+              {/* Quick Actions (External) */}
               <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest">
-                  SMS AGENT
+                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest bg-white">
+                  SAVE TO FAVORITES
                 </Button>
-                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest">
-                  SAVE PDF
+                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest bg-white">
+                  DOWNLOAD PDF
                 </Button>
               </div>
             </div>
