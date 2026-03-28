@@ -73,12 +73,12 @@ export function StateSelector() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex overflow-x-auto pb-8 gap-8 no-scrollbar scroll-smooth">
           {STATES.map((state, idx) => (
             <Link 
               key={idx} 
               href={state.href}
-              className="group relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500"
+              className="group relative aspect-[4/3] min-w-[300px] md:min-w-[400px] flex-shrink-0 rounded-[2rem] overflow-hidden bg-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
               <Image 
                 src={state.image} 
@@ -96,7 +96,7 @@ export function StateSelector() {
                     <MapPin className="w-4 h-4" />
                     <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/80">{state.city}</span>
                   </div>
-                  <h3 className="text-3xl font-black text-white uppercase tracking-tighter leading-none mb-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-2">
                     {state.name}
                   </h3>
                   <div className="flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
