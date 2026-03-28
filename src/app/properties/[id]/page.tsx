@@ -66,9 +66,12 @@ export default function PropertyShowcase() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[60vh] md:h-[70vh]">
             <div className="lg:col-span-8 relative rounded-3xl overflow-hidden group">
-              <div 
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${property.images[0]})` }}
+              <Image 
+                src={property.images[0]} 
+                alt={property.title} 
+                fill 
+                className="object-cover transition-colors"
+                priority
               />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
               <Button variant="outline" className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-xl shadow-xl">
@@ -230,16 +233,6 @@ export default function PropertyShowcase() {
                     </Link>
                   </div>
                 </div>
-              </div>
-
-              {/* Quick Actions (External) */}
-              <div className="flex gap-4">
-                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest bg-white">
-                  SAVE TO FAVORITES
-                </Button>
-                <Button variant="outline" className="flex-1 h-12 rounded-2xl border-[#F1F1F1] font-bold text-xs uppercase tracking-widest bg-white">
-                  DOWNLOAD PDF
-                </Button>
               </div>
             </div>
           </div>
