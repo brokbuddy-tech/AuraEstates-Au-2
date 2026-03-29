@@ -25,18 +25,18 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
   }, []);
 
   // Determine theme based on pathname if not manually provided
-  // Pages with heroes/dark backgrounds get "dark" (white text) by default
-  // Detail pages or others might prefer "light" (dark text) initially
+  // Detail pages start as light (dark text) because they have white backgrounds
   const isDetailPage = pathname.includes("/properties/");
   const effectiveTheme = manualTheme || (isDetailPage ? "light" : "dark");
   
+  // When scrolled, we always want the "light" style (dark text on white background)
   const isLight = effectiveTheme === "light" || scrolled;
 
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12 flex items-center justify-between",
-        scrolled ? "glass-morphism py-3 shadow-sm border-b border-black/5" : "bg-transparent"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between",
+        scrolled ? "bg-white/95 backdrop-blur-md py-3 shadow-md border-b border-black/5" : "bg-transparent"
       )}
     >
       <div className="flex items-center gap-12">
