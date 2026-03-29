@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -23,7 +24,8 @@ import {
   Calendar,
   Clock,
   Download,
-  Loader2
+  Loader2,
+  Phone
 } from "lucide-react";
 import {
   Dialog,
@@ -566,7 +568,7 @@ export default function PropertyShowcase() {
                                 href={`tel:${property.agent.phone}`} 
                                 className="flex items-center gap-3 text-sm font-bold text-[#111111]/60 hover:text-primary transition-colors bg-white px-4 py-2 rounded-xl border border-[#F1F1F1]"
                               >
-                                <MessageSquare className="w-4 h-4 text-primary" /> {property.agent.phone}
+                                <Phone className="w-4 h-4 text-primary" /> {property.agent.phone}
                               </a>
                               <a 
                                 href={`mailto:${property.agent.email}`} 

@@ -7,18 +7,12 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-interface NavbarProps {
-  theme?: "light" | "dark";
-}
-
-export function Navbar({ theme: manualTheme }: NavbarProps) {
+export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     setIsMounted(true);
@@ -29,36 +23,24 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Determine theme based on pathname if not manually provided
-  const isDetailPage = pathname.includes("/properties/");
-  const effectiveTheme = manualTheme || (isDetailPage ? "light" : "dark");
-  
-  // On mobile or when scrolled, we always want the "light" style (dark text on white background)
-  const isLight = isMounted && (effectiveTheme === "light" || scrolled || isMobile);
+  if (!isMounted) return null;
 
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between",
-        (scrolled || (isMounted && isMobile)) 
-          ? "bg-white/95 backdrop-blur-md py-3 shadow-md border-b border-black/5" 
-          : "bg-transparent"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12 flex items-center justify-between",
+        "bg-white/95 backdrop-blur-md border-b border-black/5",
+        scrolled ? "py-3 shadow-md" : "py-4"
       )}
     >
       <div className="flex items-center gap-12">
         <Link href="/" className="flex items-center gap-2">
-          <span className={cn(
-            "text-2xl font-bold tracking-tighter transition-colors",
-            isLight ? "text-[#111111]" : "text-white"
-          )}>
-            Aether<span className={isLight ? "text-primary" : "text-white"}> Australia</span>
+          <span className="text-2xl font-bold tracking-tighter text-[#111111]">
+            Aether<span className="text-primary"> Australia</span>
           </span>
         </Link>
 
-        <div className={cn(
-          "hidden lg:flex items-center gap-8 text-sm font-medium transition-colors",
-          isLight ? "text-[#111111]/80" : "text-white/90"
-        )}>
+        <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#111111]/60">
           <Link href="/buy" className="hover:text-primary transition-colors">Buy</Link>
           <Link href="/rent" className="hover:text-primary transition-colors">Rent</Link>
           <Link href="/sold" className="hover:text-primary transition-colors">Sold</Link>
@@ -72,12 +54,7 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
         <Link href="/contact" className="hidden md:block">
           <Button
             variant="outline"
-            className={cn(
-              "items-center gap-2 transition-all duration-300 backdrop-blur-sm bg-transparent",
-              isLight 
-                ? "border-primary/20 text-primary hover:bg-primary hover:text-white" 
-                : "border-white/20 text-white hover:bg-white hover:text-primary"
-            )}
+            className="border-primary/20 text-primary font-bold uppercase tracking-widest text-[10px] h-10 px-6 rounded-xl hover:bg-primary hover:text-white transition-all"
           >
             Contact Us
           </Button>
@@ -86,10 +63,7 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
           variant="ghost" 
           size="icon" 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={cn(
-            "lg:hidden transition-colors",
-            isLight ? "text-[#111111]" : "text-white"
-          )}
+          className="lg:hidden text-[#111111]"
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
