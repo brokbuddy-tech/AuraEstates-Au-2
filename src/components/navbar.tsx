@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -63,6 +63,30 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Contact Links - Desktop only */}
+        <div className="hidden xl:flex items-center gap-6 mr-2">
+          <a 
+            href="tel:+61288880000" 
+            className={cn(
+              "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all group",
+              isLight ? "text-[#111111]/40 hover:text-primary" : "text-white/40 hover:text-white"
+            )}
+          >
+            <Phone className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" />
+            +61 2 8888 0000
+          </a>
+          <a 
+            href="mailto:hello@auraestates.com.au" 
+            className={cn(
+              "flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all group",
+              isLight ? "text-[#111111]/40 hover:text-primary" : "text-white/40 hover:text-white"
+            )}
+          >
+            <Mail className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" />
+            hello@auraestates.com.au
+          </a>
+        </div>
+
         <Link href="/contact" className="hidden md:block">
           <Button
             variant="outline"
@@ -98,7 +122,17 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
            <Link href="/agents" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Find Agent</Link>
            <Link href="/commercial" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Commercial</Link>
            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">About Us</Link>
-           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-8">
+           
+           <div className="mt-8 space-y-4">
+             <a href="tel:+61288880000" className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
+               <Phone className="w-4 h-4 text-primary" /> +61 2 8888 0000
+             </a>
+             <a href="mailto:hello@auraestates.com.au" className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
+               <Mail className="w-4 h-4 text-primary" /> hello@auraestates.com.au
+             </a>
+           </div>
+
+           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-4">
              <Button className="w-full h-14 bg-primary text-white font-bold rounded-xl">Contact Us</Button>
            </Link>
         </div>
