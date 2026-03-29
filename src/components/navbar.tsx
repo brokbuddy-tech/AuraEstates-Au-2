@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface NavbarProps {
   theme?: "light" | "dark";
@@ -15,9 +16,12 @@ interface NavbarProps {
 export function Navbar({ theme: manualTheme }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
+    setIsMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -29,14 +33,16 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
   const isDetailPage = pathname.includes("/properties/");
   const effectiveTheme = manualTheme || (isDetailPage ? "light" : "dark");
   
-  // When scrolled, we always want the "light" style (dark text on white background)
-  const isLight = effectiveTheme === "light" || scrolled;
+  // On mobile or when scrolled, we always want the "light" style (dark text on white background)
+  const isLight = isMounted && (effectiveTheme === "light" || scrolled || isMobile);
 
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12 flex items-center justify-between",
-        scrolled ? "bg-white/95 backdrop-blur-md py-3 shadow-md border-b border-black/5" : "bg-transparent"
+        (scrolled || (isMounted && isMobile)) 
+          ? "bg-white/95 backdrop-blur-md py-3 shadow-md border-b border-black/5" 
+          : "bg-transparent"
       )}
     >
       <div className="flex items-center gap-12">
