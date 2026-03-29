@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { 
@@ -87,8 +86,6 @@ export default function BuyPage() {
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
-      <Navbar />
-
       <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 z-0"

@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +15,6 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-background relative flex flex-col">
-      <Navbar />
-
       <section className="relative flex-1 flex items-center justify-center pt-24 pb-12 px-6">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">

@@ -45,7 +45,7 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
             "text-2xl font-bold tracking-tighter transition-colors",
             isLight ? "text-[#111111]" : "text-white"
           )}>
-            Aether<span className="text-primary"> Australia</span>
+            Aether<span className={isLight ? "text-primary" : "text-white"}> Australia</span>
           </span>
         </Link>
 
