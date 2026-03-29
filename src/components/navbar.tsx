@@ -70,7 +70,7 @@ export function Navbar({ theme: manualTheme }: NavbarProps) {
               "items-center gap-2 transition-all duration-300 backdrop-blur-sm",
               isLight 
                 ? "border-primary/20 text-primary hover:bg-primary hover:text-white" 
-                : "border-white/20 text-white hover:bg-white hover:text-primary"
+                : "border-white/20 text-white bg-transparent hover:bg-white hover:text-primary"
             )}
           >
             Contact Us
