@@ -60,7 +60,9 @@ const PROPERTY_DATA = {
       image: "https://picsum.photos/seed/agent-vance/200/200",
       sold: "142+",
       experience: "15y",
-      rating: "4.9"
+      rating: "4.9",
+      phone: "+61 400 000 000",
+      email: "alexander.vance@auraestates.com.au"
     }
   }
 };
@@ -191,8 +193,6 @@ export default function PropertyShowcase() {
   
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
-      {/* Navbar is now fixed in root layout */}
-
       {/* 1. Hero Experience (Gallery) */}
       <section className="pt-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
@@ -550,7 +550,7 @@ export default function PropertyShowcase() {
                           </div>
 
                           {/* Agent Card in Brochure */}
-                          <div className="bg-[#F8F9FA] rounded-2xl p-8 flex items-center justify-between">
+                          <div className="bg-[#F8F9FA] rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="flex items-center gap-6">
                               <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md">
                                 <Image src={property.agent.image} alt={property.agent.name} fill className="object-cover" />
@@ -560,9 +560,20 @@ export default function PropertyShowcase() {
                                 <p className="text-primary text-[10px] font-bold uppercase tracking-widest">{property.agent.role}</p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                              <Button variant="ghost" size="icon" className="rounded-full bg-white"><Mail className="w-4 h-4" /></Button>
-                              <Button variant="ghost" size="icon" className="rounded-full bg-white"><MessageSquare className="w-4 h-4" /></Button>
+                            
+                            <div className="flex flex-col gap-3 w-full md:w-auto">
+                              <a 
+                                href={`tel:${property.agent.phone}`} 
+                                className="flex items-center gap-3 text-sm font-bold text-[#111111]/60 hover:text-primary transition-colors bg-white px-4 py-2 rounded-xl border border-[#F1F1F1]"
+                              >
+                                <MessageSquare className="w-4 h-4 text-primary" /> {property.agent.phone}
+                              </a>
+                              <a 
+                                href={`mailto:${property.agent.email}`} 
+                                className="flex items-center gap-3 text-sm font-bold text-[#111111]/60 hover:text-primary transition-colors bg-white px-4 py-2 rounded-xl border border-[#F1F1F1]"
+                              >
+                                <Mail className="w-4 h-4 text-primary" /> {property.agent.email}
+                              </a>
                             </div>
                           </div>
                         </div>
