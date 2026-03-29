@@ -15,6 +15,11 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger 
+} from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SidebarFilter } from "@/components/sidebar-filter";
@@ -125,24 +130,40 @@ export default function SoldPage() {
             </aside>
 
             <div className="flex-1">
-              <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
                   <h2 className="text-3xl font-black text-[#111111] uppercase tracking-tight">Recent Sales</h2>
                   <p className="text-[#111111]/40 text-sm font-medium mt-1">Showcasing 4,200+ properties sold by Aether Australia</p>
                 </div>
-                <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
-                  <span>Sort by:</span>
-                  <Select defaultValue="sold">
-                    <SelectTrigger className="h-auto p-0 border-none bg-transparent hover:text-primary transition-colors shadow-none focus:ring-0 w-fit gap-1 text-[#111111] font-bold">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sold">Recently Sold</SelectItem>
-                      <SelectItem value="price-high">Sale Price: High to Low</SelectItem>
-                      <SelectItem value="price-low">Sale Price: Low to High</SelectItem>
-                      <SelectItem value="size">Largest Size</SelectItem>
-                    </SelectContent>
-                  </Select>
+
+                <div className="flex items-center gap-4">
+                  {/* Mobile Filter Trigger */}
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" className="lg:hidden h-10 px-4 border-[#E5E7EB] text-[#111111] font-bold flex items-center gap-2 rounded-xl active:scale-95 transition-all">
+                        <Filter className="w-4 h-4 text-primary" />
+                        Filter
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="p-0 w-[300px] border-none">
+                       <SidebarFilter className="border-none h-full" />
+                    </SheetContent>
+                  </Sheet>
+
+                  <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
+                    <span className="hidden sm:inline">Sort by:</span>
+                    <Select defaultValue="sold">
+                      <SelectTrigger className="h-10 px-4 border-[#E5E7EB] bg-transparent hover:text-primary transition-colors shadow-none focus:ring-0 w-fit gap-2 text-[#111111] font-bold rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="sold">Recently Sold</SelectItem>
+                        <SelectItem value="price-high">Sale Price: High to Low</SelectItem>
+                        <SelectItem value="price-low">Sale Price: Low to High</SelectItem>
+                        <SelectItem value="size">Largest Size</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
@@ -173,12 +194,6 @@ export default function SoldPage() {
           </div>
         </div>
       </section>
-
-      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-        <Button className="h-12 px-8 bg-[#111111] text-white font-bold rounded-full shadow-2xl flex items-center gap-3 active:scale-95 transition-transform">
-          <Filter className="w-4 h-4 text-primary" /> FILTERS
-        </Button>
-      </div>
 
       <section className="py-24 px-6 md:px-12 bg-[#111111] text-white">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
