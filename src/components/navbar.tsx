@@ -29,7 +29,7 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12 flex items-center justify-between",
-        "bg-white/95 backdrop-blur-md border-b border-black/5",
+        "bg-white border-b border-black/5",
         scrolled ? "py-3 shadow-md" : "py-4"
       )}
     >
