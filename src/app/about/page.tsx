@@ -1,9 +1,7 @@
-
 "use client";
 
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { 
@@ -36,8 +34,6 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
-      <Navbar />
-
       {/* 1. Hero Section: The Vision */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div 

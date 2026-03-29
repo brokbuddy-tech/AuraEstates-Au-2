@@ -2,17 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface NavbarProps {
-  theme?: "light" | "dark"; // light background (dark text) or dark background (white text)
+  theme?: "light" | "dark";
 }
 
-export function Navbar({ theme = "dark" }: NavbarProps) {
+export function Navbar({ theme: manualTheme }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,13 +24,19 @@ export function Navbar({ theme = "dark" }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isLight = theme === "light" || scrolled;
+  // Determine theme based on pathname if not manually provided
+  // Pages with heroes/dark backgrounds get "dark" (white text) by default
+  // Detail pages or others might prefer "light" (dark text) initially
+  const isDetailPage = pathname.includes("/properties/");
+  const effectiveTheme = manualTheme || (isDetailPage ? "light" : "dark");
+  
+  const isLight = effectiveTheme === "light" || scrolled;
 
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4 px-6 md:px-12 flex items-center justify-between",
-        scrolled ? "glass-morphism py-3 shadow-sm" : "bg-transparent"
+        scrolled ? "glass-morphism py-3 shadow-sm border-b border-black/5" : "bg-transparent"
       )}
     >
       <div className="flex items-center gap-12">
