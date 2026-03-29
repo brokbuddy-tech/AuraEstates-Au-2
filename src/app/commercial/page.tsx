@@ -1,14 +1,20 @@
+
 "use client";
 
 import React from "react";
 import Image from "next/image";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { 
-  ChevronDown, 
   Filter
 } from "lucide-react";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SidebarFilter } from "@/components/sidebar-filter";
@@ -87,8 +93,6 @@ export default function CommercialPage() {
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
-      <Navbar />
-
       <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 z-0"
@@ -128,9 +132,17 @@ export default function CommercialPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
                   <span>Sort by:</span>
-                  <button className="flex items-center gap-1 text-[#111111] hover:text-primary transition-colors">
-                    Price (High to Low) <ChevronDown className="w-4 h-4" />
-                  </button>
+                  <Select defaultValue="price-high">
+                    <SelectTrigger className="h-auto p-0 border-none bg-transparent hover:text-primary transition-colors shadow-none focus:ring-0 w-fit gap-1 text-[#111111] font-bold">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="price-high">Price: High to Low</SelectItem>
+                      <SelectItem value="price-low">Price: Low to High</SelectItem>
+                      <SelectItem value="newest">Newest First</SelectItem>
+                      <SelectItem value="size">Largest Floor Area</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
