@@ -7,7 +7,7 @@
  * - PropertySummaryOutput - The return type for the summarizePropertyDescription function.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai, hasGoogleAiKey} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const PropertyDescriptionInputSchema = z.object({
@@ -24,10 +24,41 @@ const PropertySummaryOutputSchema = z.object({
 });
 export type PropertySummaryOutput = z.infer<typeof PropertySummaryOutputSchema>;
 
+function buildFallbackSummary(description: string): PropertySummaryOutput {
+  const cleaned = description.replace(/\s+/g, ' ').trim();
+  const sentences = cleaned
+    .split(/(?<=[.!?])\s+/)
+    .map(sentence => sentence.trim())
+    .filter(Boolean);
+
+  const summary = sentences.slice(0, 3).map(sentence =>
+    sentence.replace(/[.!?]+$/, '')
+  );
+
+  return {
+    summary:
+      summary.length > 0
+        ? summary
+        : ['Well-presented property with strong lifestyle and livability appeal.'],
+  };
+}
+
 export async function summarizePropertyDescription(
   input: PropertyDescriptionInput
 ): Promise<PropertySummaryOutput> {
-  return summarizePropertyDescriptionFlow(input);
+  if (!hasGoogleAiKey) {
+    return buildFallbackSummary(input.description);
+  }
+
+  try {
+    return await summarizePropertyDescriptionFlow(input);
+  } catch (error) {
+    console.warn(
+      '[summarizePropertyDescription] Falling back to a local summary.',
+      error
+    );
+    return buildFallbackSummary(input.description);
+  }
 }
 
 const summarizePropertyDescriptionPrompt = ai.definePrompt({
