@@ -1,4 +1,4 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 function normalizeApiBaseUrl(value: string) {
   const normalized = value.trim().replace(/\/+$/, '');
@@ -54,6 +54,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'brokbuddy-api.onrender.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.brokbuddy.com',
         port: '',
         pathname: '/**',
       },
