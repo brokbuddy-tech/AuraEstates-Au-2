@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -37,6 +38,16 @@ import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getPropertyById, type AuraProperty } from "@/lib/api";
+
+const DynamicLocationMap = dynamic(
+  () => import("@/components/location-map").then((mod) => ({ default: mod.LocationMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="leaflet-property-map relative h-96 w-full overflow-hidden rounded-3xl border border-border bg-muted/35 animate-pulse" />
+    ),
+  }
+);
 
 const EERGauge = ({ value }: { value: number }) => {
   const rotation = (value / 10) * 180 - 90;
@@ -280,6 +291,21 @@ export default function PropertyShowcase() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="pt-12 space-y-6">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight">Location</h3>
+                  <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">
+                    OpenStreetMap view for {property.address}
+                  </p>
+                </div>
+                <DynamicLocationMap
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  locationLabel={property.location}
+                  addressLabel={property.address}
+                />
               </div>
 
               <div className="pt-12 space-y-6">
