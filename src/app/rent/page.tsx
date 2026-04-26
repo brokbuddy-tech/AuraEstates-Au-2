@@ -1,111 +1,58 @@
-
 "use client";
 
 import React from "react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { 
-  Filter
-} from "lucide-react";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import { Filter } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { 
-  Sheet, 
-  SheetContent, 
-  SheetTrigger 
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SidebarFilter } from "@/components/sidebar-filter";
-
-const RENT_LISTINGS = [
-  {
-    id: "r1",
-    image: "https://picsum.photos/seed/rent1/800/600",
-    price: "$1,250 pw",
-    address: "101/15 Miller Street, Pyrmont NSW 2009",
-    beds: 2,
-    baths: 2,
-    cars: 1,
-    status: "For Rent",
-    description: "Modern executive apartment with stunning city views. Features open-plan living, gourmet kitchen, and access to resort-style pool and gym."
-  },
-  {
-    id: "r2",
-    image: "https://picsum.photos/seed/rent2/800/600",
-    price: "$2,400 pw",
-    address: "42 Oceanview Drive, Vaucluse NSW 2030",
-    beds: 4,
-    baths: 3,
-    cars: 2,
-    status: "For Rent",
-    description: "Breathtaking coastal residence with panoramic Pacific views. Multiple living zones, expansive decks, and direct access to coastal walks."
-  },
-  {
-    id: "r3",
-    image: "https://picsum.photos/seed/rent3/800/600",
-    price: "$950 pw",
-    address: "15/88 Skyline Terrace, Southbank VIC 3006",
-    beds: 2,
-    baths: 2,
-    cars: 1,
-    status: "For Rent",
-    description: "Sleek urban living in the heart of Southbank. Floor-to-ceiling glass, premium finishes, and walking distance to the arts precinct."
-  },
-  {
-    id: "r4",
-    image: "https://picsum.photos/seed/rent4/800/600",
-    price: "$1,800 pw",
-    address: "8 Wattle Grove, Mosman NSW 2088",
-    beds: 4,
-    baths: 2,
-    cars: 2,
-    status: "For Rent",
-    description: "Spacious family home in a quiet, leafy cul-de-sac. Large garden, modern kitchen, and close proximity to leading schools."
-  },
-  {
-    id: "r5",
-    image: "https://picsum.photos/seed/rent5/800/600",
-    price: "$3,200 pw",
-    address: "1 Beachside Court, Byron Bay NSW 2481",
-    beds: 4,
-    baths: 4,
-    cars: 3,
-    status: "For Rent",
-    description: "Ultimate luxury beachfront living. Architectural masterpiece with private pool and direct beach access. Fully furnished option available."
-  },
-  {
-    id: "r6",
-    image: "https://picsum.photos/seed/rent6/800/600",
-    price: "$750 pw",
-    address: "304/55 Park Road, Milton QLD 4064",
-    beds: 2,
-    baths: 1,
-    cars: 1,
-    status: "For Rent",
-    description: "Contemporary apartment in the vibrant Milton precinct. Open-plan design, private balcony, and close to cafes and public transport."
-  }
-];
+import { useAuraListings } from "@/hooks/use-aura-listings";
 
 export default function RentPage() {
-  const heroImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { properties, total, page, totalPages, loading } = useAuraListings("rent");
+  const heroImage = PlaceHolderImages.find((img) => img.id === "editorial-1")?.imageUrl;
+  const activeQuery = searchParams.get("q");
+
+  const handleSortChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "newest") params.delete("sort"); else params.set("sort", value);
+    params.delete("page");
+    router.push(`/rent${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
+  const handleLoadMore = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(page + 1));
+    router.push(`/rent?${params.toString()}`);
+  };
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
       <section className="relative h-[60vh] min-h-[500px] w-full flex items-center justify-center overflow-hidden">
-        <div 
+        <div
           className="absolute inset-0 z-0"
-          style={{ 
+          style={{
             backgroundImage: `url(${heroImage})`,
-            backgroundAttachment: 'fixed',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover'
+            backgroundAttachment: "fixed",
+            backgroundPosition: "center",
+            backgroundSize: "cover"
           }}
         >
           <div className="absolute inset-0 bg-black/40" />
@@ -122,10 +69,9 @@ export default function RentPage() {
       <section className="py-16 px-6 md:px-12 bg-white">
         <div className="max-w-[1440px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12">
-            
             <aside className="hidden lg:block w-[300px] shrink-0">
               <div className="sticky top-24">
-                <SidebarFilter className="rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]" />
+                <SidebarFilter total={total} className="rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]" />
               </div>
             </aside>
 
@@ -133,11 +79,12 @@ export default function RentPage() {
               <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                 <div>
                   <h2 className="text-3xl font-black text-[#111111] uppercase tracking-tight">Rental Listings</h2>
-                  <p className="text-[#111111]/40 text-sm font-medium mt-1">Discover premium rental properties across Australia</p>
+                  <p className="text-[#111111]/40 text-sm font-medium mt-1">
+                    Showing {total.toLocaleString()} rentals{activeQuery ? ` for "${activeQuery}"` : ""}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  {/* Mobile Filter Trigger */}
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="outline" className="lg:hidden h-10 px-4 border-[#E5E7EB] text-[#111111] font-bold flex items-center gap-2 rounded-xl active:scale-95 transition-all">
@@ -146,13 +93,13 @@ export default function RentPage() {
                       </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 w-[300px] border-none">
-                       <SidebarFilter className="border-none h-full" />
+                      <SidebarFilter total={total} className="border-none h-full" />
                     </SheetContent>
                   </Sheet>
 
                   <div className="flex items-center gap-3 text-sm font-bold text-[#111111]/60">
                     <span className="hidden sm:inline">Sort by:</span>
-                    <Select defaultValue="newest">
+                    <Select value={searchParams.get("sort") || "newest"} onValueChange={handleSortChange}>
                       <SelectTrigger className="h-10 px-4 border-[#E5E7EB] bg-transparent hover:text-primary transition-colors shadow-none focus:ring-0 w-fit gap-2 text-[#111111] font-bold rounded-xl">
                         <SelectValue />
                       </SelectTrigger>
@@ -168,29 +115,26 @@ export default function RentPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {RENT_LISTINGS.map((listing) => (
-                  <PropertyCard 
-                    key={listing.id}
-                    id={listing.id}
-                    image={listing.image}
-                    price={listing.price}
-                    address={listing.address}
-                    beds={listing.beds}
-                    baths={listing.baths}
-                    cars={listing.cars}
-                    description={listing.description}
-                    status={listing.status}
-                  />
-                ))}
-              </div>
+              {loading && properties.length === 0 ? (
+                <p className="text-sm uppercase tracking-[0.3em] text-[#111111]/40">Loading listings...</p>
+              ) : properties.length === 0 ? (
+                <p className="text-sm uppercase tracking-[0.3em] text-[#111111]/40">No rentals matched the current filters.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                  {properties.map((listing) => (
+                    <PropertyCard key={listing.id} {...listing} />
+                  ))}
+                </div>
+              )}
 
-              <div className="mt-20 flex flex-col items-center">
-                <p className="text-black/40 text-sm mb-6">You've viewed 6 of 840+ properties</p>
-                <Button variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
-                  LOAD MORE RENTALS
-                </Button>
-              </div>
+              {page < totalPages && (
+                <div className="mt-20 flex flex-col items-center">
+                  <p className="text-black/40 text-sm mb-6">You've viewed {Math.min(page * 12, total)} of {total.toLocaleString()} rentals</p>
+                  <Button onClick={handleLoadMore} variant="outline" size="lg" className="border-black/10 text-black font-bold px-12 py-6 rounded-xl hover:bg-white hover:border-primary transition-all">
+                    LOAD MORE RENTALS
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

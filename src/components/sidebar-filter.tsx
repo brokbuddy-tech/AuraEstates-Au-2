@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { 
-  MapPin, 
-  Bed, 
-  Bath, 
-  Car, 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  MapPin,
+  Bed,
+  Bath,
+  Car,
   Target,
   Waves,
   Sun,
@@ -16,8 +17,7 @@ import {
   TreePine,
   Briefcase,
   Maximize2,
-  X,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,23 +39,113 @@ const DUMMY_MAP_PROPERTIES = [
   { id: 4, x: "20%", y: "70%", price: "$1.55M", address: "Mosman" },
 ];
 
-export function SidebarFilter({ className }: { className?: string }) {
+const RESIDENTIAL_TYPES = [
+  { id: "House", label: "House", icon: Home },
+  { id: "Apartment", label: "Apartment", icon: Building },
+  { id: "Townhouse", label: "Townhouse", icon: Warehouse },
+  { id: "Land", label: "Land", icon: TreePine },
+  { id: "Rural", label: "Rural", icon: TreePine },
+  { id: "Commercial", label: "Commercial", icon: Briefcase },
+];
+
+const COMMERCIAL_TYPES = [
+  { id: "Office", label: "Office", icon: Building },
+  { id: "Retail", label: "Retail", icon: Briefcase },
+  { id: "Industrial", label: "Industrial", icon: Warehouse },
+  { id: "Medical", label: "Medical", icon: Briefcase },
+  { id: "Showroom", label: "Showroom", icon: Building },
+  { id: "Development", label: "Development", icon: TreePine },
+];
+
+const FEATURE_OPTIONS = [
+  { id: "pool", label: "Swimming Pool" },
+  { id: "garage", label: "Garage" },
+  { id: "solar", label: "Solar Panels" },
+  { id: "waterfront", label: "Waterfront" },
+  { id: "study", label: "Study" },
+  { id: "ac", label: "Air Conditioning" },
+];
+
+export function SidebarFilter({ className, total = 0 }: { className?: string; total?: number }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [hoveredPin, setHoveredPin] = useState<number | null>(null);
+  const [location, setLocation] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minArea, setMinArea] = useState("");
+  const [maxArea, setMaxArea] = useState("");
+  const [bedrooms, setBedrooms] = useState("Any");
+  const [bathrooms, setBathrooms] = useState("Any");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+
+  const isCommercial = pathname === "/commercial";
+  const typeOptions = isCommercial ? COMMERCIAL_TYPES : RESIDENTIAL_TYPES;
+
+  useEffect(() => {
+    setLocation(searchParams.get("q") || "");
+    setMinPrice(searchParams.get("minPrice") || "");
+    setMaxPrice(searchParams.get("maxPrice") || "");
+    setMinArea(searchParams.get("minArea") || "");
+    setMaxArea(searchParams.get("maxArea") || "");
+    setBedrooms(searchParams.get("bedrooms") || "Any");
+    setBathrooms(searchParams.get("bathrooms") || "Any");
+    setSelectedTypes(
+      (searchParams.get("category") || "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean)
+    );
+  }, [searchParams]);
+
+  const toggleArrayValue = (value: string, current: string[], setter: (next: string[]) => void) => {
+    setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  };
+
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    const searchTerms = [location.trim(), ...selectedFeatures].filter(Boolean).join(" ");
+
+    if (searchTerms) params.set("q", searchTerms); else params.delete("q");
+    if (minPrice) params.set("minPrice", minPrice); else params.delete("minPrice");
+    if (maxPrice) params.set("maxPrice", maxPrice); else params.delete("maxPrice");
+    if (minArea) params.set("minArea", minArea); else params.delete("minArea");
+    if (maxArea) params.set("maxArea", maxArea); else params.delete("maxArea");
+    if (bedrooms !== "Any") params.set("bedrooms", bedrooms.replace("+", "")); else params.delete("bedrooms");
+    if (bathrooms !== "Any") params.set("bathrooms", bathrooms.replace("+", "")); else params.delete("bathrooms");
+    if (selectedTypes.length > 0) params.set("category", selectedTypes.join(",")); else params.delete("category");
+    params.delete("page");
+
+    router.push(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
+  const resetFilters = () => {
+    setLocation("");
+    setMinPrice("");
+    setMaxPrice("");
+    setMinArea("");
+    setMaxArea("");
+    setBedrooms("Any");
+    setBathrooms("Any");
+    setSelectedTypes([]);
+    setSelectedFeatures([]);
+    router.push(pathname);
+  };
 
   return (
     <aside className={cn("w-full h-fit flex flex-col bg-[#FAFAFA] border-r border-[#E5E7EB]", className)}>
-      {/* Header */}
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-[#E5E7EB] px-6 py-4 flex items-center justify-between">
         <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]">Filters</h2>
-        <button className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline">Reset All</button>
+        <button onClick={resetFilters} className="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline">Reset All</button>
       </div>
 
       <div className="p-6 space-y-8 overflow-y-auto max-h-[calc(100vh-160px)] no-scrollbar">
-        {/* Map View Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Map View</Label>
-            
+
             <Dialog>
               <DialogTrigger asChild>
                 <button className="text-[10px] font-bold text-primary flex items-center gap-1 hover:underline">
@@ -69,38 +159,35 @@ export function SidebarFilter({ className }: { className?: string }) {
                     Interactive Portfolio Map
                   </DialogTitle>
                 </DialogHeader>
-                
+
                 <div className="relative w-full h-full">
-                  <Image 
-                    src="https://picsum.photos/seed/full-map/1920/1080" 
-                    alt="Interactive Map" 
-                    fill 
+                  <Image
+                    src="https://picsum.photos/seed/full-map/1920/1080"
+                    alt="Interactive Map"
+                    fill
                     className="object-cover grayscale opacity-40"
                     data-ai-hint="city map"
                   />
-                  
-                  {/* Property Pins */}
-                  {DUMMY_MAP_PROPERTIES.map((prop) => (
-                    <div 
-                      key={prop.id}
+
+                  {DUMMY_MAP_PROPERTIES.map((property) => (
+                    <div
+                      key={property.id}
                       className="absolute group transition-all duration-300"
-                      style={{ left: prop.x, top: prop.y }}
-                      onMouseEnter={() => setHoveredPin(prop.id)}
+                      style={{ left: property.x, top: property.y }}
+                      onMouseEnter={() => setHoveredPin(property.id)}
                       onMouseLeave={() => setHoveredPin(null)}
                     >
                       <div className={cn(
                         "relative flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-all duration-300",
-                        hoveredPin === prop.id ? "bg-primary scale-125 shadow-2xl" : "bg-white text-black shadow-lg"
+                        hoveredPin === property.id ? "bg-primary scale-125 shadow-2xl" : "bg-white text-black shadow-lg"
                       )}>
                         <MapPin className="w-5 h-5" />
-                        
-                        {/* Tooltip */}
                         <div className={cn(
                           "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 glass-morphism p-4 rounded-xl border border-white/10 transition-all duration-300 pointer-events-none",
-                          hoveredPin === prop.id ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                          hoveredPin === property.id ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
                         )}>
-                          <p className="text-xs font-black text-white uppercase tracking-widest mb-1">{prop.price}</p>
-                          <p className="text-[10px] text-white/60 mb-3">{prop.address}</p>
+                          <p className="text-xs font-black text-white uppercase tracking-widest mb-1">{property.price}</p>
+                          <p className="text-[10px] text-white/60 mb-3">{property.address}</p>
                           <div className="flex items-center gap-2 text-[8px] font-bold text-primary">
                             VIEW DETAILS <Sparkles className="w-2 h-2" />
                           </div>
@@ -108,12 +195,6 @@ export function SidebarFilter({ className }: { className?: string }) {
                       </div>
                     </div>
                   ))}
-                  
-                  {/* Map Controls */}
-                  <div className="absolute bottom-8 right-8 flex flex-col gap-2">
-                    <button className="w-12 h-12 glass-morphism rounded-xl flex items-center justify-center text-white hover:bg-white/10">+</button>
-                    <button className="w-12 h-12 glass-morphism rounded-xl flex items-center justify-center text-white hover:bg-white/10">-</button>
-                  </div>
                 </div>
               </DialogContent>
             </Dialog>
@@ -122,10 +203,10 @@ export function SidebarFilter({ className }: { className?: string }) {
           <Dialog>
             <DialogTrigger asChild>
               <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-[#E5E7EB] group cursor-pointer shadow-sm">
-                <Image 
-                  src="https://picsum.photos/seed/aether-map-v1/600/400" 
-                  alt="Map Preview" 
-                  fill 
+                <Image
+                  src="https://picsum.photos/seed/aether-map-v1/600/400"
+                  alt="Map Preview"
+                  fill
                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                   data-ai-hint="satellite map"
                 />
@@ -137,69 +218,63 @@ export function SidebarFilter({ className }: { className?: string }) {
               </div>
             </DialogTrigger>
             <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden bg-[#111111]">
-               <div className="relative w-full h-full">
-                  <Image 
-                    src="https://picsum.photos/seed/full-map/1920/1080" 
-                    alt="Interactive Map" 
-                    fill 
-                    className="object-cover grayscale opacity-40"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-black uppercase tracking-[0.5em] select-none">
-                     Map Exploration Active
-                  </div>
-               </div>
+              <div className="relative w-full h-full">
+                <Image
+                  src="https://picsum.photos/seed/full-map/1920/1080"
+                  alt="Interactive Map"
+                  fill
+                  className="object-cover grayscale opacity-40"
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-white/20 text-4xl font-black uppercase tracking-[0.5em] select-none">
+                  Map Exploration Active
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
 
-        {/* Location */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Location</Label>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#111111]/40" />
-            <Input placeholder="Suburb or Postcode" className="pl-10 h-11 bg-white border-[#E5E7EB] text-sm focus-visible:ring-primary/20" />
+            <Input value={location} onChange={(event) => setLocation(event.target.value)} placeholder="Suburb or Postcode" className="pl-10 h-11 bg-white border-[#E5E7EB] text-sm focus-visible:ring-primary/20" />
             <Target className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary cursor-pointer hover:scale-110 transition-transform" />
           </div>
         </div>
 
-        {/* Price Range */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Price Range (AUD)</Label>
           <div className="flex gap-3">
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#111111]/40">$</span>
-              <Input placeholder="Min" className="pl-7 h-11 bg-white border-[#E5E7EB] text-sm" />
+              <Input value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder="Min" className="pl-7 h-11 bg-white border-[#E5E7EB] text-sm" />
             </div>
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#111111]/40">$</span>
-              <Input placeholder="Max" className="pl-7 h-11 bg-white border-[#E5E7EB] text-sm" />
+              <Input value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder="Max" className="pl-7 h-11 bg-white border-[#E5E7EB] text-sm" />
             </div>
           </div>
         </div>
 
-        {/* Land Size */}
         <div className="space-y-4">
-          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Land Size (m²)</Label>
+          <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Land Size (m2)</Label>
           <div className="flex gap-3">
-            <Input placeholder="Min" className="h-11 bg-white border-[#E5E7EB] text-sm" />
-            <Input placeholder="Max" className="h-11 bg-white border-[#E5E7EB] text-sm" />
+            <Input value={minArea} onChange={(event) => setMinArea(event.target.value)} placeholder="Min" className="h-11 bg-white border-[#E5E7EB] text-sm" />
+            <Input value={maxArea} onChange={(event) => setMaxArea(event.target.value)} placeholder="Max" className="h-11 bg-white border-[#E5E7EB] text-sm" />
           </div>
         </div>
 
-        {/* Property Type */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Property Type</Label>
           <div className="space-y-3">
-            {[
-              { id: "house", label: "House", icon: Home },
-              { id: "apartment", label: "Apartment", icon: Building },
-              { id: "townhouse", label: "Townhouse", icon: Warehouse },
-              { id: "land", label: "Land", icon: TreePine },
-              { id: "rural", label: "Rural", icon: TreePine },
-              { id: "commercial", label: "Commercial", icon: Briefcase },
-            ].map((type) => (
+            {typeOptions.map((type) => (
               <div key={type.id} className="flex items-center space-x-3 group cursor-pointer">
-                <Checkbox id={type.id} className="border-[#E5E7EB] data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+                <Checkbox
+                  id={type.id}
+                  checked={selectedTypes.includes(type.id)}
+                  onCheckedChange={() => toggleArrayValue(type.id, selectedTypes, setSelectedTypes)}
+                  className="border-[#E5E7EB] data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
                 <label htmlFor={type.id} className="flex items-center gap-2 text-sm font-medium text-[#111111]/70 cursor-pointer group-hover:text-primary transition-colors">
                   <type.icon className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 transition-opacity" />
                   {type.label}
@@ -209,22 +284,22 @@ export function SidebarFilter({ className }: { className?: string }) {
           </div>
         </div>
 
-        {/* Bedrooms & Bathrooms */}
         <div className="space-y-6">
           <div className="space-y-3">
             <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50 flex items-center gap-2">
               <Bed className="w-3 h-3" /> Bedrooms
             </Label>
             <div className="flex flex-wrap gap-2">
-              {["Any", "1", "2", "3", "4", "5+"].map((num) => (
+              {["Any", "1", "2", "3", "4", "5+"].map((value) => (
                 <button
-                  key={num}
+                  key={value}
+                  onClick={() => setBedrooms(value)}
                   className={cn(
                     "flex-1 min-w-[45px] h-10 rounded-lg text-xs font-bold transition-all border",
-                    num === "Any" ? "bg-[#111111] text-white border-[#111111]" : "bg-white text-[#111111]/60 border-[#E5E7EB] hover:border-[#111111]"
+                    bedrooms === value ? "bg-[#111111] text-white border-[#111111]" : "bg-white text-[#111111]/60 border-[#E5E7EB] hover:border-[#111111]"
                   )}
                 >
-                  {num}
+                  {value}
                 </button>
               ))}
             </div>
@@ -235,37 +310,35 @@ export function SidebarFilter({ className }: { className?: string }) {
               <Bath className="w-3 h-3" /> Bathrooms
             </Label>
             <div className="flex flex-wrap gap-2">
-              {["Any", "1", "2", "3", "4+"].map((num) => (
+              {["Any", "1", "2", "3", "4+"].map((value) => (
                 <button
-                  key={num}
+                  key={value}
+                  onClick={() => setBathrooms(value)}
                   className={cn(
                     "flex-1 min-w-[45px] h-10 rounded-lg text-xs font-bold transition-all border",
-                    num === "Any" ? "bg-[#111111] text-white border-[#111111]" : "bg-white text-[#111111]/60 border-[#E5E7EB] hover:border-[#111111]"
+                    bathrooms === value ? "bg-[#111111] text-white border-[#111111]" : "bg-white text-[#111111]/60 border-[#E5E7EB] hover:border-[#111111]"
                   )}
                 >
-                  {num}
+                  {value}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Features */}
         <div className="space-y-4">
           <Label className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#111111]/50">Features</Label>
           <div className="grid grid-cols-1 gap-3">
-            {[
-              { id: "pool", label: "Swimming Pool", icon: Waves },
-              { id: "garage", label: "Garage", icon: Car },
-              { id: "solar", label: "Solar Panels", icon: Sun },
-              { id: "waterfront", label: "Waterfront", icon: Waves },
-              { id: "study", label: "Study", icon: Briefcase },
-              { id: "ac", label: "Air Conditioning", icon: Sun },
-            ].map((feat) => (
-              <div key={feat.id} className="flex items-center space-x-3 group cursor-pointer">
-                <Checkbox id={feat.id} className="border-[#E5E7EB] data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
-                <label htmlFor={feat.id} className="text-xs font-medium text-[#111111]/70 cursor-pointer group-hover:text-primary transition-colors">
-                  {feat.label}
+            {FEATURE_OPTIONS.map((feature) => (
+              <div key={feature.id} className="flex items-center space-x-3 group cursor-pointer">
+                <Checkbox
+                  id={feature.id}
+                  checked={selectedFeatures.includes(feature.label)}
+                  onCheckedChange={() => toggleArrayValue(feature.label, selectedFeatures, setSelectedFeatures)}
+                  className="border-[#E5E7EB] data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <label htmlFor={feature.id} className="text-xs font-medium text-[#111111]/70 cursor-pointer group-hover:text-primary transition-colors">
+                  {feature.label}
                 </label>
               </div>
             ))}
@@ -273,10 +346,9 @@ export function SidebarFilter({ className }: { className?: string }) {
         </div>
       </div>
 
-      {/* Sticky Footer Action */}
       <div className="p-6 border-t border-[#E5E7EB] bg-white sticky bottom-0 z-10 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
-        <Button className="w-full h-12 bg-[#005F73] hover:bg-[#005F73]/90 text-white font-bold rounded-xl shadow-lg shadow-[#005F73]/10 transition-transform active:scale-95">
-          SHOW 142 PROPERTIES
+        <Button onClick={applyFilters} className="w-full h-12 bg-[#005F73] hover:bg-[#005F73]/90 text-white font-bold rounded-xl shadow-lg shadow-[#005F73]/10 transition-transform active:scale-95">
+          SHOW {total.toLocaleString()} PROPERTIES
         </Button>
       </div>
     </aside>

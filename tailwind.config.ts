@@ -1,5 +1,5 @@
 
-import type {Config} from 'tailwind-merge';
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: ['class'],
