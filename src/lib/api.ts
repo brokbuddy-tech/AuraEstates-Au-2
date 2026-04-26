@@ -142,8 +142,19 @@ function toAbsoluteImageUrl(path: string) {
   return `${API_ORIGIN}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+function getPublicListingMediaUrl(
+  image?: ListingImage | null,
+  variant: "thumbnail" | "medium" | "compressed" | "original" = "compressed"
+) {
+  if (!image?.id) return "";
+  return `${API_BASE_URL}/public/aus/images/${image.id}/view?variant=${variant}`;
+}
+
 function getListingImageUrl(image?: ListingImage | null) {
   if (!image) return "";
+  const publicImageUrl = getPublicListingMediaUrl(image, "compressed");
+  if (publicImageUrl) return publicImageUrl;
+
   return toAbsoluteImageUrl(
     image.mediumUrl
       || image.thumbnailUrl

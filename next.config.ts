@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // Listing media already comes from pre-sized remote assets, and bypassing
+    // Next's optimizer avoids the local /_next/image 500s we see for AU CDN URLs.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
