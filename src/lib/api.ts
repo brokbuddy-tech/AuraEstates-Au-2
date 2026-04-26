@@ -208,6 +208,25 @@ function getListingsUrl(searchParams: URLSearchParams) {
   return `${API_BASE_URL}/public/aus/org/${ORG_SLUG}/listings${query ? `?${query}` : ""}`;
 }
 
+function getPropertyUrl(id: string) {
+  if (typeof window !== "undefined") {
+    return `/api/listings/${id}`;
+  }
+
+  return `${API_BASE_URL}/public/aus/listing/${id}`;
+}
+
+function isMappedAuraProperty(value: unknown): value is AuraProperty {
+  return Boolean(
+    value
+      && typeof value === "object"
+      && "id" in value
+      && "priceValue" in value
+      && "transactionType" in value
+      && "address" in value
+  );
+}
+
 function getStatusLabel(listing: RawListing) {
   if (listing.status?.toUpperCase() === "SOLD") {
     return (getNumberValue(listing.price) || 0) >= 5_000_000 ? "Record Price" : "Sold";
@@ -315,7 +334,13 @@ export async function getListings(params: Record<string, string | number | undef
 }
 
 export async function getPropertyById(id: string): Promise<AuraProperty | null> {
-  const response = await safeFetch(`${API_BASE_URL}/public/aus/listing/${id}`, { next: { revalidate: 120 } } as any);
+  const response = await safeFetch(getPropertyUrl(id), { next: { revalidate: 120 } } as any);
   if (!response.ok) return null;
-  return mapListingToAuraProperty(await response.json());
+
+  const data = await response.json();
+  if (isMappedAuraProperty(data)) {
+    return data;
+  }
+
+  return mapListingToAuraProperty(data);
 }
