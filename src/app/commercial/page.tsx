@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Footer } from "@/components/footer";
@@ -24,6 +24,14 @@ import { SidebarFilter } from "@/components/sidebar-filter";
 import { useAuraListings } from "@/hooks/use-aura-listings";
 
 export default function CommercialPage() {
+  return (
+    <Suspense fallback={<ListingsPageFallback />}>
+      <CommercialPageContent />
+    </Suspense>
+  );
+}
+
+function CommercialPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { properties, total, page, totalPages, loading } = useAuraListings("commercial");
@@ -139,6 +147,22 @@ export default function CommercialPage() {
         </div>
       </section>
 
+      <Footer />
+    </main>
+  );
+}
+
+function ListingsPageFallback() {
+  return (
+    <main className="min-h-screen bg-[#F8F9FA] relative flex flex-col">
+      <section className="relative h-[60vh] min-h-[500px] w-full bg-black/80" />
+      <section className="py-16 px-6 md:px-12 bg-white flex-1">
+        <div className="max-w-[1440px] mx-auto">
+          <p className="text-sm uppercase tracking-[0.3em] text-[#111111]/40">
+            Loading listings...
+          </p>
+        </div>
+      </section>
       <Footer />
     </main>
   );
