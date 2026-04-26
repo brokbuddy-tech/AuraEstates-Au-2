@@ -49,6 +49,28 @@ function getNumberValue(...values: unknown[]) {
   return undefined;
 }
 
+function normalizeListingDescription(description?: string) {
+  const plainText = (description || "")
+    .replace(/<\s*br\s*\/?>/gi, "\n")
+    .replace(/<\/\s*(div|p|section|article|h[1-6])\s*>/gi, "\n\n")
+    .replace(/<\/\s*li\s*>/gi, "\n")
+    .replace(/<\s*li\b[^>]*>/gi, "- ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, "\"")
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/\r/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+
+  return plainText || "Property details coming soon.";
+}
+
 type ListingImage = {
   id?: string | null;
   url?: string | null;
@@ -176,6 +198,16 @@ function getGalleryImages(images?: ListingImage[]) {
   );
 }
 
+function getListingsUrl(searchParams: URLSearchParams) {
+  const query = searchParams.toString();
+
+  if (typeof window !== "undefined") {
+    return `/api/listings${query ? `?${query}` : ""}`;
+  }
+
+  return `${API_BASE_URL}/public/aus/org/${ORG_SLUG}/listings${query ? `?${query}` : ""}`;
+}
+
 function getStatusLabel(listing: RawListing) {
   if (listing.status?.toUpperCase() === "SOLD") {
     return (getNumberValue(listing.price) || 0) >= 5_000_000 ? "Record Price" : "Sold";
@@ -230,7 +262,7 @@ export function mapListingToAuraProperty(listing: RawListing): AuraProperty {
     baths: getNumberValue(listing.bathrooms) || 0,
     cars: getNumberValue(listing.carSpaces, listing.parkingSpaces, listing.parking, listing.garageSpaces) || 0,
     area: getNumberValue(listing.areaM2, listing.builtUpArea, listing.landSize, listing.size) || 0,
-    description: listing.description || "Property details coming soon.",
+    description: normalizeListingDescription(listing.description),
     features: Array.isArray(listing.amenities) ? listing.amenities : [],
     status: getStatusLabel(listing),
     transactionType: listing.transactionType?.toUpperCase() === "RENT" ? "RENT" : "SALE",
@@ -256,16 +288,22 @@ export async function getListings(params: Record<string, string | number | undef
     }
   });
 
-  const response = await safeFetch(
-    `${API_BASE_URL}/public/aus/org/${ORG_SLUG}/listings${searchParams.toString() ? `?${searchParams.toString()}` : ""}`,
-    { next: { revalidate: 120 } } as any
-  );
+  const response = await safeFetch(getListingsUrl(searchParams), { next: { revalidate: 120 } } as any);
 
   if (!response.ok) {
     return { properties: [], total: 0, page: 1, totalPages: 1 };
   }
 
   const data = await response.json();
+  if (Array.isArray(data.properties)) {
+    return {
+      properties: data.properties,
+      total: data.total || data.properties.length,
+      page: data.page || 1,
+      totalPages: data.totalPages || 1,
+    };
+  }
+
   const rawListings = Array.isArray(data) ? data : (data.listings || []);
 
   return {
