@@ -1,5 +1,11 @@
+const publicEnv = {
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_ORG_SLUG: process.env.NEXT_PUBLIC_ORG_SLUG,
+  NEXT_PUBLIC_TEMPLATE_HEX_CODE: process.env.NEXT_PUBLIC_TEMPLATE_HEX_CODE,
+} as const;
+
 function getRequiredPublicEnv(name: string) {
-  const value = (((globalThis as any).process?.env?.[name]) || "") as string;
+  const value = publicEnv[name as keyof typeof publicEnv] || "";
   const normalized = value.trim();
   if (!normalized) {
     throw new Error(`Missing required public env variable: ${name}`);
@@ -18,7 +24,7 @@ function normalizeApiBaseUrl(value: string) {
 }
 
 const API_BASE_URL = normalizeApiBaseUrl(
-  ((globalThis as any).process?.env?.NEXT_PUBLIC_API_URL) || "http://localhost:4000"
+  publicEnv.NEXT_PUBLIC_API_URL || "http://localhost:4000"
 );
 const API_ORIGIN = API_BASE_URL.replace(/\/api$/i, "");
 const TEMPLATE_HEX_CODE = getRequiredPublicEnv("NEXT_PUBLIC_TEMPLATE_HEX_CODE").toLowerCase();
