@@ -203,6 +203,7 @@ export type AuraPropertyResults = {
 function toAbsoluteImageUrl(path: string) {
   if (!path) return path;
   if (/^https?:\/\//i.test(path)) return path;
+  if (path.startsWith(PUBLIC_TEMPLATE_PROXY_BASE_PATH)) return path;
   return `${API_ORIGIN}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
