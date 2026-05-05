@@ -1,4 +1,13 @@
-export const ORG_SLUG = "aussie-re-01";
+function getRequiredPublicEnv(name: string) {
+  const value = (((globalThis as any).process?.env?.[name]) || "") as string;
+  const normalized = value.trim();
+  if (!normalized) {
+    throw new Error(`Missing required public env variable: ${name}`);
+  }
+  return normalized;
+}
+
+export const ORG_SLUG = getRequiredPublicEnv("NEXT_PUBLIC_ORG_SLUG");
 
 function normalizeApiBaseUrl(value: string) {
   const normalized = value.trim().replace(/\/+$/, "");
@@ -12,6 +21,15 @@ const API_BASE_URL = normalizeApiBaseUrl(
   ((globalThis as any).process?.env?.NEXT_PUBLIC_API_URL) || "http://localhost:4000"
 );
 const API_ORIGIN = API_BASE_URL.replace(/\/api$/i, "");
+const TEMPLATE_HEX_CODE = getRequiredPublicEnv("NEXT_PUBLIC_TEMPLATE_HEX_CODE").toLowerCase();
+
+function getPublicTemplateUrl(path = "") {
+  const normalizedPath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
+  const publicTemplatePath = ["public", "templates", ORG_SLUG, TEMPLATE_HEX_CODE]
+    .filter(Boolean)
+    .join("/");
+  return `${API_BASE_URL}/${publicTemplatePath}${normalizedPath}`;
+}
 
 async function safeFetch(url: string, extraOpts?: RequestInit & { next?: any }, timeoutMs = 10000): Promise<Response> {
   const controller = new AbortController();
@@ -169,7 +187,7 @@ function getPublicListingMediaUrl(
   variant: "thumbnail" | "medium" | "compressed" | "original" = "compressed"
 ) {
   if (!image?.id) return "";
-  return `${API_BASE_URL}/public/aus/images/${image.id}/view?variant=${variant}`;
+  return getPublicTemplateUrl(`/images/${image.id}/view?variant=${variant}`);
 }
 
 function getListingImageUrl(image?: ListingImage | null) {
@@ -205,7 +223,7 @@ function getListingsUrl(searchParams: URLSearchParams) {
     return `/api/listings${query ? `?${query}` : ""}`;
   }
 
-  return `${API_BASE_URL}/public/aus/org/${ORG_SLUG}/listings${query ? `?${query}` : ""}`;
+  return `${getPublicTemplateUrl("/listings")}${query ? `?${query}` : ""}`;
 }
 
 function getPropertyUrl(id: string) {
@@ -213,7 +231,7 @@ function getPropertyUrl(id: string) {
     return `/api/listings/${id}`;
   }
 
-  return `${API_BASE_URL}/public/aus/listing/${id}`;
+  return getPublicTemplateUrl(`/listings/${id}`);
 }
 
 function isMappedAuraProperty(value: unknown): value is AuraProperty {
