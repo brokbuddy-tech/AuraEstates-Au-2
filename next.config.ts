@@ -10,6 +10,8 @@ function normalizeApiBaseUrl(value: string) {
 
 const apiBaseUrl = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
 const apiUrl = new URL(apiBaseUrl);
+const publicTemplateOrgSlug = (process.env.NEXT_PUBLIC_ORG_SLUG || '').trim();
+const templateHexCode = (process.env.TEMPLATE_HEX_CODE || '').trim().toLowerCase();
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -67,6 +69,18 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  async rewrites() {
+    return publicTemplateOrgSlug && templateHexCode ? [
+      {
+        source: '/api/public-template',
+        destination: `${apiBaseUrl}/public/templates/${publicTemplateOrgSlug}/${templateHexCode}`,
+      },
+      {
+        source: '/api/public-template/:path*',
+        destination: `${apiBaseUrl}/public/templates/${publicTemplateOrgSlug}/${templateHexCode}/:path*`,
+      },
+    ] : [];
   },
 };
 

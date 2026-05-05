@@ -1,7 +1,6 @@
 const publicEnv = {
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_ORG_SLUG: process.env.NEXT_PUBLIC_ORG_SLUG,
-  NEXT_PUBLIC_TEMPLATE_HEX_CODE: process.env.NEXT_PUBLIC_TEMPLATE_HEX_CODE,
 } as const;
 
 function getRequiredPublicEnv(name: string) {
@@ -27,11 +26,24 @@ const API_BASE_URL = normalizeApiBaseUrl(
   publicEnv.NEXT_PUBLIC_API_URL || "http://localhost:4000"
 );
 const API_ORIGIN = API_BASE_URL.replace(/\/api$/i, "");
-const TEMPLATE_HEX_CODE = getRequiredPublicEnv("NEXT_PUBLIC_TEMPLATE_HEX_CODE").toLowerCase();
+const PUBLIC_TEMPLATE_PROXY_BASE_PATH = "/api/public-template";
 
 function getPublicTemplateUrl(path = "") {
   const normalizedPath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
-  const publicTemplatePath = ["public", "templates", ORG_SLUG, TEMPLATE_HEX_CODE]
+  return `${PUBLIC_TEMPLATE_PROXY_BASE_PATH}${normalizedPath}`;
+}
+
+function getRequiredServerTemplateHexCode() {
+  const value = (process.env.TEMPLATE_HEX_CODE || "").trim();
+  if (!value) {
+    throw new Error("Missing required server env variable: TEMPLATE_HEX_CODE");
+  }
+  return value.toLowerCase();
+}
+
+function getUpstreamPublicTemplateUrl(path = "") {
+  const normalizedPath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
+  const publicTemplatePath = ["public", "templates", ORG_SLUG, getRequiredServerTemplateHexCode()]
     .filter(Boolean)
     .join("/");
   return `${API_BASE_URL}/${publicTemplatePath}${normalizedPath}`;
@@ -145,6 +157,12 @@ type RawListing = {
       whatsapp?: string | null;
     } | null;
   } | null;
+  agent?: {
+    name?: string | null;
+    phone?: string | null;
+    email?: string | null;
+    whatsapp?: string | null;
+  } | null;
 };
 
 export type AuraProperty = {
@@ -229,7 +247,7 @@ function getListingsUrl(searchParams: URLSearchParams) {
     return `/api/listings${query ? `?${query}` : ""}`;
   }
 
-  return `${getPublicTemplateUrl("/listings")}${query ? `?${query}` : ""}`;
+  return `${getUpstreamPublicTemplateUrl("/listings")}${query ? `?${query}` : ""}`;
 }
 
 function getPropertyUrl(id: string) {
@@ -237,7 +255,7 @@ function getPropertyUrl(id: string) {
     return `/api/listings/${id}`;
   }
 
-  return getPublicTemplateUrl(`/listings/${id}`);
+  return getUpstreamPublicTemplateUrl(`/listings/${id}`);
 }
 
 function isMappedAuraProperty(value: unknown): value is AuraProperty {
@@ -312,12 +330,13 @@ export function mapListingToAuraProperty(listing: RawListing): AuraProperty {
     propertyType: listing.propertyType || "RESIDENTIAL",
     category: listing.category || "Property",
     agentName: getStringValue(
+      listing.agent?.name,
       listing.broker?.brokerProfile?.displayName,
       [listing.broker?.firstName, listing.broker?.lastName].filter(Boolean).join(" ")
     ) || "Aura Estates Advisor",
-    agentPhone: getStringValue(listing.broker?.brokerProfile?.publicPhone, listing.broker?.phone),
-    agentEmail: getStringValue(listing.broker?.brokerProfile?.publicEmail, listing.broker?.email),
-    agentWhatsapp: getStringValue(listing.broker?.brokerProfile?.whatsapp),
+    agentPhone: getStringValue(listing.agent?.phone, listing.broker?.brokerProfile?.publicPhone, listing.broker?.phone),
+    agentEmail: getStringValue(listing.agent?.email, listing.broker?.brokerProfile?.publicEmail, listing.broker?.email),
+    agentWhatsapp: getStringValue(listing.agent?.whatsapp, listing.broker?.brokerProfile?.whatsapp),
     latitude: getNumberValue(listing.latitude) ?? null,
     longitude: getNumberValue(listing.longitude) ?? null,
   };
