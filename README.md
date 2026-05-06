@@ -1,5 +1,24 @@
-# Firebase Studio
+# AuraEstates-Au-2
 
-This is a NextJS starter in Firebase Studio.
+Standalone Next.js public template for client deployments.
 
-To get started, take a look at src/app/page.tsx.
+Required env vars:
+
+- `NEXT_PUBLIC_API_URL`
+- `NEXT_PUBLIC_ORG_SLUG`
+- `TEMPLATE_HEX_CODE`
+
+Deployment contract:
+
+- Data loads from `/api/public/templates/:slug/:templateHexCode`
+- `:slug` must match the organization slug
+- `:templateHexCode` must match the organization template code
+
+Checks before deploy:
+
+- `npm run typecheck`
+- `npm run build`
+
+Reference:
+
+- See [templates/README.md](../../README.md) for the shared deployment contract
