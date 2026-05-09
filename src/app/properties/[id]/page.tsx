@@ -199,7 +199,7 @@ export default function PropertyShowcase() {
   const agent = {
     name: property.agentName,
     role: property.transactionType === "RENT" ? "LEASING EXECUTIVE" : "SENIOR SALES EXECUTIVE",
-    image: "https://picsum.photos/seed/agent-vance/200/200",
+    image: property.agentAvatar || "",
     sold: "142+",
     experience: "15",
     rating: "4.9",
@@ -387,11 +387,22 @@ export default function PropertyShowcase() {
             <div className="sticky top-24 space-y-6">
               <div className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-black/5 flex flex-col">
                 <div className="relative h-48 w-full">
-                  <Image src="https://picsum.photos/seed/arch-header/600/400" alt="Background" fill className="object-cover" />
+                  <Image src={heroImages[1] || heroImages[0]} alt={property.title} fill className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#111111]/90" />
                   <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 px-6 text-center">
                     <div className="relative w-24 h-24 rounded-full border-2 border-white overflow-hidden mb-4 shadow-xl translate-y-2">
-                      <Image src={agent.image} alt={agent.name} fill className="object-cover" />
+                      {agent.image ? (
+                        <Image src={agent.image} alt={agent.name} fill className="object-cover" sizes="96px" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-[#111111] text-2xl font-black text-white">
+                          {agent.name
+                            .split(/\s+/)
+                            .filter(Boolean)
+                            .slice(0, 2)
+                            .map((part) => part.charAt(0).toUpperCase())
+                            .join("")}
+                        </div>
+                      )}
                     </div>
                     <h4 className="text-white font-black text-xl tracking-tight uppercase">{agent.name}</h4>
                     <p className="text-[#005F73] text-[10px] font-bold uppercase tracking-widest mt-1">{agent.role}</p>

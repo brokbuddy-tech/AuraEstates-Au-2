@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -15,6 +16,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [brandName, setBrandName] = useState("AuraEstates");
+  const [brandLogo, setBrandLogo] = useState<string | null>(null);
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
 
@@ -34,6 +36,7 @@ export function Navbar() {
       const siteConfig = await getSiteConfig(agencySlug);
       if (!active) return;
       setBrandName(siteConfig.branding?.displayName || siteConfig.organization.name || "AuraEstates");
+      setBrandLogo(siteConfig.profile?.logo || null);
     }
 
     void loadSiteConfig();
@@ -54,6 +57,17 @@ export function Navbar() {
     >
       <div className="flex items-center gap-12">
         <Link href={prefixAgencyPath("/", agencySlug)} className="flex items-center gap-2">
+          {brandLogo ? (
+            <span className="relative h-10 w-10 overflow-hidden rounded-full border border-black/10 bg-white shadow-sm">
+              <Image
+                src={brandLogo}
+                alt={`${brandName} logo`}
+                fill
+                className="object-contain p-1.5"
+                sizes="40px"
+              />
+            </span>
+          ) : null}
           <span className="text-2xl font-bold tracking-tighter text-[#111111]">
             {brandName}
           </span>

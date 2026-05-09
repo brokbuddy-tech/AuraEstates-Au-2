@@ -26,9 +26,10 @@ interface PropertyProps {
   cars: number;
   description: string;
   status?: string;
+  agentAvatar?: string;
 }
 
-export function PropertyCard({ id, image, price, address, beds, baths, cars, description, status }: PropertyProps) {
+export function PropertyCard({ id, image, price, address, beds, baths, cars, description, status, agentAvatar }: PropertyProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [summary, setSummary] = useState<string[]>([]);
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
@@ -212,7 +213,9 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
             </div>
             <div className="flex -space-x-2">
               <div className="w-6 h-6 rounded-full border-2 border-white bg-slate-200 overflow-hidden relative">
-                <Image src="https://picsum.photos/seed/agent1/50/50" alt="Agent" fill />
+                {agentAvatar ? (
+                  <Image src={agentAvatar} alt="Agent" fill className="object-cover" sizes="24px" />
+                ) : null}
               </div>
             </div>
           </div>
