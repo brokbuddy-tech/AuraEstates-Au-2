@@ -9,9 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { AuraContactPageContent } from "@/components/public/agency-contact-page";
 
 export default function ContactPage() {
-  const backgroundImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl;
+  return <AuraContactPageContent />;
+
+  const backgroundImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl || "";
 
   return (
     <main className="min-h-screen bg-background relative flex flex-col">

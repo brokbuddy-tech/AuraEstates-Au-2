@@ -16,6 +16,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { AuraAgentsPageContent } from "@/components/public/agency-agents-page";
 
 const AGENTS = [
   {
@@ -81,6 +82,8 @@ const AGENTS = [
 ];
 
 export default function AgentsPage() {
+  return <AuraAgentsPageContent />;
+
   const heroImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl;
 
   return (

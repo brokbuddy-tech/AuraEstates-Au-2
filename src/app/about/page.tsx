@@ -13,6 +13,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AuraAboutPageContent } from "@/components/public/agency-about-page";
 
 const LEADERSHIP = [
   { name: "Alexander Vance", role: "Chief Executive Officer", image: "https://picsum.photos/seed/leader1/400/500" },
@@ -29,6 +30,8 @@ const VALUES = [
 ];
 
 export default function AboutPage() {
+  return <AuraAboutPageContent />;
+
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-home")?.imageUrl;
   const metricsBg = PlaceHolderImages.find(img => img.id === "prop-1")?.imageUrl;
 

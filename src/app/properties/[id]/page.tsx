@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getPropertyById, type AuraProperty } from "@/lib/api";
+import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 const DynamicLocationMap = dynamic(
   () => import("@/components/location-map").then((mod) => ({ default: mod.LocationMap })),
@@ -96,7 +97,9 @@ const InternetGauge = ({ quality }: { quality: string }) => {
 
 export default function PropertyShowcase() {
   const params = useParams();
+  const pathname = usePathname();
   const propertyId = params.id as string;
+  const agencySlug = resolveAgencySlugFromPathname(pathname);
   const { toast } = useToast();
   const [property, setProperty] = useState<AuraProperty | null>(null);
   const [loading, setLoading] = useState(true);
@@ -107,7 +110,7 @@ export default function PropertyShowcase() {
 
     async function loadProperty() {
       setLoading(true);
-      const result = await getPropertyById(propertyId);
+      const result = await getPropertyById(propertyId, agencySlug);
       if (!active) return;
       setProperty(result);
       setLoading(false);
@@ -118,7 +121,7 @@ export default function PropertyShowcase() {
     return () => {
       active = false;
     };
-  }, [propertyId]);
+  }, [agencySlug, propertyId]);
 
   const handleDownloadBrochure = async () => {
     const element = document.getElementById("digital-brochure-container");

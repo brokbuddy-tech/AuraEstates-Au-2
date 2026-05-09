@@ -8,11 +8,64 @@ function normalizeApiBaseUrl(value: string) {
   return `${normalized}/api`;
 }
 
+function escapeForRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const reservedRootSegments = [
+  '_next',
+  'about',
+  'agent',
+  'agents',
+  'all-listings',
+  'apartments',
+  'api',
+  'area-guides',
+  'buy',
+  'careers',
+  'city-index',
+  'commercial',
+  'contact',
+  'content-hub',
+  'favicon.ico',
+  'find-an-agent',
+  'for-developers',
+  'insights',
+  'instant-valuation',
+  'invest',
+  'map',
+  'off-plan',
+  'portals',
+  'projects',
+  'properties',
+  'property',
+  'rent',
+  'robots.txt',
+  'search',
+  'sell',
+  'services',
+  'sitemap.xml',
+  'sold',
+  'townhouses',
+  'villas',
+  'vip-portal',
+];
+
+const reservedRootPattern = reservedRootSegments.map(escapeForRegex).join('|');
+const agencySlugSegmentPattern = `((?!(?:${reservedRootPattern})$)(?!.*\\.)[^/]+)`;
+const agencySlugRewrites = [
+  {
+    source: `/:agencySlug${agencySlugSegmentPattern}`,
+    destination: '/',
+  },
+  {
+    source: `/:agencySlug${agencySlugSegmentPattern}/:path*`,
+    destination: '/:path*',
+  },
+];
+
 const apiBaseUrl = normalizeApiBaseUrl(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000');
 const apiUrl = new URL(apiBaseUrl);
-const publicTemplateOrgSlug = (process.env.NEXT_PUBLIC_ORG_SLUG || '').trim();
-const templateHexCode = (process.env.TEMPLATE_HEX_CODE || '').trim().toLowerCase();
-
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
@@ -71,16 +124,9 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return publicTemplateOrgSlug && templateHexCode ? [
-      {
-        source: '/api/public-template',
-        destination: `${apiBaseUrl}/public/templates/${publicTemplateOrgSlug}/${templateHexCode}`,
-      },
-      {
-        source: '/api/public-template/:path*',
-        destination: `${apiBaseUrl}/public/templates/${publicTemplateOrgSlug}/${templateHexCode}/:path*`,
-      },
-    ] : [];
+    return {
+      beforeFiles: agencySlugRewrites,
+    };
   },
 };
 
