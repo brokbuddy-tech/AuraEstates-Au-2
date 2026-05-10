@@ -1,0 +1,46 @@
+   ▲ Next.js 15.5.9 (Turbopack)
+   - Local:        http://localhost:9105
+   - Network:      http://192.168.1.5:9105
+   - Environments: .env
+
+ ✓ Starting...
+Creating turbopack project {
+  dir: 'F:\\BrokBuddy\\brokbuddy\\templates\\AUS\\AuraEstates-Au-2',
+  testMode: true
+}
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 4.2s
+ ✓ Ready in 16.5s
+ ○ Compiling / ...
+ ✓ Compiled / in 50.7s
+Image with src "/api/public-template-proxy/skyline-realty/logo/view?v=logos%2Fcmm0c75t80000jjkvkw2dp6oc%2Fcompressed%2F1778043757804_czt6du7t.webp" is using a query string which is not configured in images.localPatterns. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-localpatterns
+ GET / 200 in 696ms
+ GET / 200 in 500ms
+ GET / 200 in 1604ms
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /_not-found/page ...
+ GET /favicon.ico?favicon.7ed73651.ico 200 in 4900ms
+ ✓ Compiled /_not-found/page in 6.2s
+ GET /api/public-template-proxy/skyline-realty/logo/view?v=logos%2Fcmm0c75t80000jjkvkw2dp6oc%2Fcompressed%2F1778043757804_czt6du7t.webp 404 in 6927ms
+ GET /api/public-template-proxy/skyline-realty 404 in 6477ms
+ GET /api/public-template-proxy/skyline-realty/listings?transactionType=SALE&status=ACTIVE&limit=6 404 in 6477ms
+ GET /api/public-template-proxy/skyline-realty 404 in 338ms
+ ○ Compiling /agents ...
+ ✓ Compiled /agents in 2.7s
+Image with src "/api/public-template-proxy/skyline-realty/profile-assets/cmm0c766z0002jjkvs7k5qvql/avatar/view?variant=medium" is using a query string which is not configured in images.localPatterns. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-localpatterns
+ GET /agents 200 in 5237ms
+ GET /api/public-template-proxy/skyline-realty/logo/view?v=logos%2Fcmm0c75t80000jjkvkw2dp6oc%2Fcompressed%2F1778043757804_czt6du7t.webp 404 in 698ms
+ GET /api/public-template-proxy/skyline-realty/profile-assets/cmm0c766z0002jjkvs7k5qvql/avatar/view?variant=medium 404 in 743ms
+ GET /api/public-template-proxy/skyline-realty 404 in 1052ms
+ GET /api/public-template-proxy/skyline-realty/agents 404 in 1053ms
+ GET /api/public-template-proxy/skyline-realty 404 in 447ms
+ GET /api/public-template-proxy/skyline-realty 404 in 424ms
+ GET /favicon.ico?favicon.7ed73651.ico 200 in 575ms
+ GET /agents/owner-skyline-4221 404 in 364ms
+ GET /api/public-template-proxy/skyline-realty/logo/view?v=logos%2Fcmm0c75t80000jjkvkw2dp6oc%2Fcompressed%2F1778043757804_czt6du7t.webp 404 in 367ms
+ GET /api/public-template-proxy/skyline-realty 404 in 537ms
+ GET /favicon.ico?favicon.7ed73651.ico 200 in 656ms
+^C
