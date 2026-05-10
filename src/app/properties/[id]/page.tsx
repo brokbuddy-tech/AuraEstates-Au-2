@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Footer } from "@/components/footer";
+import { FooterClient } from "@/components/footer-client";
 import { Button } from "@/components/ui/button";
 import {
   Bed,
@@ -534,7 +534,7 @@ export default function PropertyShowcase({
         </div>
       </section>
 
-      <Footer />
+      <FooterClient />
     </main>
   );
 }
