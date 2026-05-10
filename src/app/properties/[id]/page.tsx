@@ -95,33 +95,61 @@ const InternetGauge = ({ quality }: { quality: string }) => {
   );
 };
 
-export default function PropertyShowcase() {
+export default function PropertyShowcase({
+  propertyId: initialPropertyId,
+  agencySlug: initialAgencySlug,
+  initialProperty = null,
+}: {
+  propertyId?: string;
+  agencySlug?: string | null;
+  initialProperty?: AuraProperty | null;
+}) {
   const params = useParams();
   const pathname = usePathname();
-  const propertyId = params.id as string;
-  const agencySlug = resolveAgencySlugFromPathname(pathname);
+  const propertyId = initialPropertyId || (params.id as string);
+  const agencySlug = initialAgencySlug || resolveAgencySlugFromPathname(pathname);
   const { toast } = useToast();
-  const [property, setProperty] = useState<AuraProperty | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [property, setProperty] = useState<AuraProperty | null>(initialProperty);
+  const [loading, setLoading] = useState(!initialProperty);
   const [isDownloading, setIsDownloading] = useState(false);
+
+  useEffect(() => {
+    setProperty(initialProperty);
+    setLoading(!initialProperty);
+  }, [initialProperty]);
 
   useEffect(() => {
     let active = true;
 
     async function loadProperty() {
-      setLoading(true);
+      if (!propertyId) {
+        if (!initialProperty) {
+          setProperty(null);
+          setLoading(false);
+        }
+        return;
+      }
+
+      if (!initialProperty) {
+        setLoading(true);
+      }
+
       const result = await getPropertyById(propertyId, agencySlug);
       if (!active) return;
-      setProperty(result);
+      if (result) {
+        setProperty(result);
+      } else if (!initialProperty) {
+        setProperty(null);
+      }
       setLoading(false);
     }
 
-    loadProperty();
+    void loadProperty();
 
     return () => {
       active = false;
     };
-  }, [agencySlug, propertyId]);
+  }, [agencySlug, initialProperty, propertyId]);
 
   const handleDownloadBrochure = async () => {
     const element = document.getElementById("digital-brochure-container");

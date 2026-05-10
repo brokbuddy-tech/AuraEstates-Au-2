@@ -9,24 +9,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getSiteConfig, type SiteConfig } from "@/lib/public-site";
+import { getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 function getDisplayName(siteConfig: SiteConfig | null) {
   return siteConfig?.branding?.displayName || siteConfig?.organization.name || "Agency Website";
 }
 
-export function AuraContactPageContent() {
+export function AuraContactPageContent({
+  initialSiteConfig = null,
+}: {
+  initialSiteConfig?: SiteConfig | null;
+}) {
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
-  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
+  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(initialSiteConfig);
+
+  useEffect(() => {
+    setSiteConfig(initialSiteConfig);
+  }, [initialSiteConfig]);
 
   useEffect(() => {
     let active = true;
 
     async function load() {
       const nextSiteConfig = await getSiteConfig(agencySlug);
-      if (active) {
+      if (active && hasMeaningfulSiteConfig(nextSiteConfig)) {
         setSiteConfig(nextSiteConfig);
       }
     }

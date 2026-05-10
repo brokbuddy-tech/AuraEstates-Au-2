@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
@@ -14,6 +12,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuraAboutPageContent } from "@/components/public/agency-about-page";
+import { getAgents, getSiteConfig } from "@/lib/public-site";
+import { getRequestAgencySlug } from "@/lib/server-agency";
 
 const LEADERSHIP = [
   { name: "Alexander Vance", role: "Chief Executive Officer", image: "https://picsum.photos/seed/leader1/400/500" },
@@ -29,8 +29,19 @@ const VALUES = [
   { icon: RefreshCcw, title: "Always Improving", desc: "Relentless innovation in technology and strategy to define the future of the market." }
 ];
 
-export default function AboutPage() {
-  return <AuraAboutPageContent />;
+export default async function AboutPage() {
+  const agencySlug = await getRequestAgencySlug();
+  const [siteConfig, agentsResponse] = await Promise.all([
+    getSiteConfig(agencySlug),
+    getAgents(agencySlug),
+  ]);
+
+  return (
+    <AuraAboutPageContent
+      initialSiteConfig={siteConfig}
+      initialAgents={agentsResponse.agents}
+    />
+  );
 
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-home")?.imageUrl;
   const metricsBg = PlaceHolderImages.find(img => img.id === "prop-1")?.imageUrl;

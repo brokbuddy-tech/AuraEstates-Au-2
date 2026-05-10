@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
@@ -10,9 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AuraContactPageContent } from "@/components/public/agency-contact-page";
+import { getSiteConfig } from "@/lib/public-site";
+import { getRequestAgencySlug } from "@/lib/server-agency";
 
-export default function ContactPage() {
-  return <AuraContactPageContent />;
+export default async function ContactPage() {
+  const agencySlug = await getRequestAgencySlug();
+  const siteConfig = await getSiteConfig(agencySlug);
+
+  return <AuraContactPageContent initialSiteConfig={siteConfig} />;
 
   const backgroundImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl || "";
 

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { getSiteConfig, type SiteConfig } from "@/lib/public-site";
+import { getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 export function FooterClient({ initialSiteConfig }: { initialSiteConfig?: SiteConfig | null }) {
@@ -22,7 +22,7 @@ export function FooterClient({ initialSiteConfig }: { initialSiteConfig?: SiteCo
     async function load() {
       try {
         const nextSiteConfig = await getSiteConfig(agencySlug);
-        if (active) {
+        if (active && hasMeaningfulSiteConfig(nextSiteConfig)) {
           setSiteConfig(nextSiteConfig);
         }
       } catch {

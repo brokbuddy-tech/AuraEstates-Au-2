@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
@@ -17,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AuraAgentsPageContent } from "@/components/public/agency-agents-page";
+import { getAgents, getSiteConfig } from "@/lib/public-site";
+import { getRequestAgencySlug } from "@/lib/server-agency";
 
 const AGENTS = [
   {
@@ -81,8 +81,19 @@ const AGENTS = [
   }
 ];
 
-export default function AgentsPage() {
-  return <AuraAgentsPageContent />;
+export default async function AgentsPage() {
+  const agencySlug = await getRequestAgencySlug();
+  const [siteConfig, agentsResponse] = await Promise.all([
+    getSiteConfig(agencySlug),
+    getAgents(agencySlug),
+  ]);
+
+  return (
+    <AuraAgentsPageContent
+      initialSiteConfig={siteConfig}
+      initialAgents={agentsResponse.agents}
+    />
+  );
 
   const heroImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl;
 

@@ -29,20 +29,37 @@ function getWhatsAppHref(value?: string | null, message?: string) {
   return `https://wa.me/${digits}${text}`;
 }
 
-export function AuraAgentProfilePageContent({ agentSlug }: { agentSlug: string }) {
+export function AuraAgentProfilePageContent({
+  agentSlug,
+  initialProfile = null,
+}: {
+  agentSlug: string;
+  initialProfile?: Awaited<ReturnType<typeof getAgentProfile>> | null;
+}) {
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<Awaited<ReturnType<typeof getAgentProfile>> | null>(null);
+  const [loading, setLoading] = useState(!initialProfile);
+  const [profile, setProfile] = useState<Awaited<ReturnType<typeof getAgentProfile>> | null>(initialProfile);
+
+  useEffect(() => {
+    setProfile(initialProfile);
+    setLoading(!initialProfile);
+  }, [initialProfile]);
 
   useEffect(() => {
     let active = true;
 
     async function load() {
-      setLoading(true);
+      if (!initialProfile) {
+        setLoading(true);
+      }
       const nextProfile = await getAgentProfile(agentSlug, agencySlug);
       if (!active) return;
-      setProfile(nextProfile);
+      if (nextProfile?.agent) {
+        setProfile(nextProfile);
+      } else if (!initialProfile) {
+        setProfile(nextProfile);
+      }
       setLoading(false);
     }
 
@@ -50,7 +67,7 @@ export function AuraAgentProfilePageContent({ agentSlug }: { agentSlug: string }
     return () => {
       active = false;
     };
-  }, [agentSlug, agencySlug]);
+  }, [agentSlug, agencySlug, initialProfile]);
 
   if (loading) {
     return (
@@ -169,7 +186,7 @@ export function AuraAgentProfilePageContent({ agentSlug }: { agentSlug: string }
               <h3 className="text-2xl font-bold">Active Listings</h3>
               <div className="mt-8 grid gap-6 md:grid-cols-2">
                 {profile.activeListings.map((listing: any) => (
-                  <Link key={listing.id} href={prefixAgencyPath(`/properties/${listing.id}`, agencySlug)} className="group overflow-hidden rounded-3xl border border-[#E5E7EB]">
+                  <Link key={listing.id} href={prefixAgencyPath(`/property/${listing.id}`, agencySlug)} className="group overflow-hidden rounded-3xl border border-[#E5E7EB]">
                     <div className="relative aspect-[4/3]">
                       <Image src={listing.image} alt={listing.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
