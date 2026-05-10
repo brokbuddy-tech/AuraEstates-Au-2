@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { FooterClient } from "@/components/footer-client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -153,7 +153,7 @@ export default function SellPage() {
         </div>
       </section>
 
-      <Footer />
+      <FooterClient />
     </main>
   );
 }

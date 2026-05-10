@@ -3,7 +3,7 @@
 import React, { Suspense } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Footer } from "@/components/footer";
+import { FooterClient } from "@/components/footer-client";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import {
@@ -168,7 +168,7 @@ function BuyPageContent() {
         </div>
       </section>
 
-      <Footer />
+      <FooterClient />
     </main>
   );
 }
@@ -184,7 +184,7 @@ function ListingsPageFallback() {
           </p>
         </div>
       </section>
-      <Footer />
+      <FooterClient />
     </main>
   );
 }
