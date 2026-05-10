@@ -8,20 +8,20 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { getSiteConfig } from "@/lib/public-site";
+import { getSiteConfig, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
-export function Navbar() {
+export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig | null }) {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const [brandName, setBrandName] = useState("AuraEstates");
-  const [brandLogo, setBrandLogo] = useState<string | null>(null);
+  const [brandName, setBrandName] = useState(
+    initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates",
+  );
+  const [brandLogo, setBrandLogo] = useState<string | null>(initialSiteConfig?.profile?.logo || null);
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
 
   useEffect(() => {
-    setIsMounted(true);
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
@@ -30,22 +30,31 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
+    setBrandName(initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates");
+    setBrandLogo(initialSiteConfig?.profile?.logo || null);
+  }, [initialSiteConfig]);
+
+  useEffect(() => {
     let active = true;
 
     async function loadSiteConfig() {
-      const siteConfig = await getSiteConfig(agencySlug);
-      if (!active) return;
-      setBrandName(siteConfig.branding?.displayName || siteConfig.organization.name || "AuraEstates");
-      setBrandLogo(siteConfig.profile?.logo || null);
+      try {
+        const siteConfig = await getSiteConfig(agencySlug);
+        if (!active) return;
+        setBrandName(siteConfig.branding?.displayName || siteConfig.organization.name || "AuraEstates");
+        setBrandLogo(siteConfig.profile?.logo || null);
+      } catch {
+        if (!active) return;
+        setBrandName((current) => current || initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates");
+        setBrandLogo((current) => current || initialSiteConfig?.profile?.logo || null);
+      }
     }
 
     void loadSiteConfig();
     return () => {
       active = false;
     };
-  }, [agencySlug]);
-
-  if (!isMounted) return null;
+  }, [agencySlug, initialSiteConfig]);
 
   return (
     <nav
