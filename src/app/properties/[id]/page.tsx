@@ -300,7 +300,7 @@ export default function PropertyShowcase({
 
               <div className="space-y-6">
                 <h3 className="text-xl font-black uppercase tracking-tight">The Vision</h3>
-                <p className="text-lg text-[#111111]/60 leading-relaxed font-light">{property.description}</p>
+                <p className="text-lg text-[#111111]/60 leading-relaxed font-light whitespace-pre-line">{property.description}</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
                   {features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-sm font-medium">
@@ -485,7 +485,7 @@ export default function PropertyShowcase({
 
                           <div className="space-y-6">
                             <h3 className="text-2xl font-black uppercase tracking-tight">Executive Summary</h3>
-                            <p className="text-lg text-[#111111]/60 leading-relaxed font-light">{property.description}</p>
+                            <p className="text-lg text-[#111111]/60 leading-relaxed font-light whitespace-pre-line">{property.description}</p>
                           </div>
                         </div>
 
