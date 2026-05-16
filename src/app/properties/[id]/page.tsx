@@ -37,6 +37,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { PropertyHeroGallery } from "@/components/property-hero-gallery";
 import { getPropertyById, type AuraProperty } from "@/lib/api";
 import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
@@ -242,22 +243,7 @@ export default function PropertyShowcase({
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
       <section className="pt-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[60vh] md:h-[70vh]">
-            <div className="lg:col-span-8 relative rounded-3xl overflow-hidden group">
-              <Image src={heroImages[0]} alt={property.title} fill className="object-cover" priority />
-              <Button variant="outline" className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-xl shadow-xl">
-                <Maximize2 className="w-4 h-4 mr-2" /> View All Photos
-              </Button>
-            </div>
-            <div className="lg:col-span-4 flex flex-col gap-4">
-              <div className="relative flex-1 rounded-3xl overflow-hidden">
-                <Image src={heroImages[1]} alt="Detail 1" fill className="object-cover" />
-              </div>
-              <div className="relative flex-1 rounded-3xl overflow-hidden">
-                <Image src={heroImages[2]} alt="Detail 2" fill className="object-cover" />
-              </div>
-            </div>
-          </div>
+          <PropertyHeroGallery images={gallery} title={property.title} />
         </div>
       </section>
 
