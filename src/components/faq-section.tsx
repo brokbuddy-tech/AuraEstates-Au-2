@@ -7,10 +7,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { replaceTemplateBranding } from "@/lib/public-site";
 
 const FAQS = [
   {
-    question: "What regions does Aether Australia cover?",
+    question: "What regions does {{agencyName}} cover?",
     answer: "We specialize in premium metropolitan hubs and coastal estates across New South Wales, Victoria, Queensland, Western Australia, and South Australia. Our network is focused on high-growth and established premium postcodes."
   },
   {
@@ -22,16 +23,21 @@ const FAQS = [
     answer: "Yes. We provide complimentary instant digital property reports and expert in-person appraisals to help homeowners understand their property's true value in the current 2026 market cycle."
   },
   {
-    question: "How do I connect with a local Aether agent?",
+    question: "How do I connect with a local {{agencyName}} agent?",
     answer: "You can browse our directory on the 'Find Agent' page to see specialists in your specific region, or simply click 'Contact Us' to be matched with a consultant best suited to your requirements."
   },
   {
-    question: "What makes Aether different from traditional agencies?",
-    answer: "Traditional agencies focus on transactions; Aether focuses on strategic clarity. We combine deep architectural appreciation with predictive AI market intelligence to ensure our clients secure extraordinary outcomes."
+    question: "What makes {{agencyName}} different from traditional agencies?",
+    answer: "Traditional agencies focus on transactions; {{agencyName}} focuses on strategic clarity. We combine deep architectural appreciation with predictive AI market intelligence to ensure our clients secure extraordinary outcomes."
   }
 ];
 
-export function FAQSection() {
+export function FAQSection({ agencyName = "Agency Website" }: { agencyName?: string }) {
+  const faqs = FAQS.map((faq) => ({
+    question: replaceTemplateBranding(faq.question, agencyName),
+    answer: replaceTemplateBranding(faq.answer, agencyName),
+  }));
+
   return (
     <section className="py-24 px-6 md:px-12 bg-[#F8F9FA]">
       <div className="max-w-4xl mx-auto">
@@ -44,7 +50,7 @@ export function FAQSection() {
         </div>
 
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {FAQS.map((faq, idx) => (
+          {faqs.map((faq, idx) => (
             <AccordionItem 
               key={idx} 
               value={`item-${idx}`}

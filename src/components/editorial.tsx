@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
+import { replaceTemplateBranding } from "@/lib/public-site";
 
 const EDITORIAL_SLIDES = [
   {
@@ -28,7 +29,7 @@ const EDITORIAL_SLIDES = [
   }
 ];
 
-export function Editorial() {
+export function Editorial({ agencyName = "Agency Website" }: { agencyName?: string }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
@@ -47,7 +48,9 @@ export function Editorial() {
           {/* Editorial Content (Left) */}
           <div className="lg:col-span-5 space-y-8 order-2 lg:order-1">
             <div key={activeSlide} className="space-y-4 animate-fade-up">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Aether Intelligence</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+                {replaceTemplateBranding("{{agencyName}} Intelligence", agencyName)}
+              </span>
               <h2 className="text-4xl md:text-6xl font-serif text-[#111111] leading-[1.1] tracking-tight italic min-h-[120px] md:min-h-[180px]">
                 {EDITORIAL_SLIDES[activeSlide].title.split(':').map((part, i) => (
                   <React.Fragment key={i}>

@@ -3,13 +3,21 @@ import 'leaflet/dist/leaflet.css';
 import './globals.css';
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
-import { getSiteConfig } from "@/lib/public-site";
+import { getAgencyDisplayName, getSiteConfig } from "@/lib/public-site";
 import { getRequestAgencySlug } from "@/lib/server-agency";
 
-export const metadata: Metadata = {
-  title: 'Aether Australia | Premium Real Estate Search',
-  description: 'Experience a reimagined way to find your next home with AI-powered property insights.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const agencySlug = await getRequestAgencySlug();
+  const siteConfig = await getSiteConfig(agencySlug);
+  const agencyName = getAgencyDisplayName(siteConfig);
+
+  return {
+    title: siteConfig.branding?.metaTitle?.trim() || `${agencyName} | Premium Real Estate Search`,
+    description:
+      siteConfig.branding?.metaDescription?.trim()
+      || `Experience a reimagined way to find your next home with AI-powered property insights from ${agencyName}.`,
+  };
+}
 
 export default async function RootLayout({
   children,

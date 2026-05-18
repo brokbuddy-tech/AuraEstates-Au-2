@@ -8,15 +8,13 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
+import { getAgencyDisplayName, getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig | null }) {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [brandName, setBrandName] = useState(
-    initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates",
-  );
+  const [brandName, setBrandName] = useState(getAgencyDisplayName(initialSiteConfig));
   const [brandLogo, setBrandLogo] = useState<string | null>(initialSiteConfig?.profile?.logo || null);
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
@@ -30,7 +28,7 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
   }, []);
 
   useEffect(() => {
-    setBrandName(initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates");
+    setBrandName(getAgencyDisplayName(initialSiteConfig));
     setBrandLogo(initialSiteConfig?.profile?.logo || null);
   }, [initialSiteConfig]);
 
@@ -42,11 +40,11 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
         const siteConfig = await getSiteConfig(agencySlug);
         if (!active) return;
         if (!hasMeaningfulSiteConfig(siteConfig)) return;
-        setBrandName(siteConfig.branding?.displayName || siteConfig.organization.name || "AuraEstates");
+        setBrandName(getAgencyDisplayName(siteConfig));
         setBrandLogo(siteConfig.profile?.logo || null);
       } catch {
         if (!active) return;
-        setBrandName((current) => current || initialSiteConfig?.branding?.displayName || initialSiteConfig?.organization.name || "AuraEstates");
+        setBrandName((current) => current || getAgencyDisplayName(initialSiteConfig));
         setBrandLogo((current) => current || initialSiteConfig?.profile?.logo || null);
       }
     }

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,13 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Search, FileText, UserCheck, BarChart3, Megaphone, Handshake } from "lucide-react";
+import { getAgencyDisplayName, getSiteConfig, replaceTemplateBranding } from "@/lib/public-site";
+import { getRequestAgencySlug } from "@/lib/server-agency";
 
-export default function SellPage() {
+export default async function SellPage() {
+  const agencySlug = await getRequestAgencySlug();
+  const siteConfig = await getSiteConfig(agencySlug);
+  const agencyName = getAgencyDisplayName(siteConfig);
   const heroImage = PlaceHolderImages.find(img => img.id === "editorial-1")?.imageUrl;
 
   return (
     <main className="min-h-screen bg-background relative flex flex-col">
-      <Navbar />
+      <Navbar initialSiteConfig={siteConfig} />
 
       {/* Hero Section */}
       <section className="relative h-[80vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
@@ -76,7 +79,10 @@ export default function SellPage() {
             </div>
             <h2 className="text-3xl font-black text-[#111111] mb-4">Expert Appraisal</h2>
             <p className="text-[#111111]/60 text-lg mb-8 leading-relaxed">
-              Connect with a specialist Aether agent for a physical inspection and a bespoke strategic marketing plan tailored to your home.
+              {replaceTemplateBranding(
+                "Connect with a specialist {{agencyName}} agent for a physical inspection and a bespoke strategic marketing plan tailored to your home.",
+                agencyName,
+              )}
             </p>
             <button className="text-primary font-bold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
               Book Appointment <span className="text-xl">→</span>
@@ -114,7 +120,10 @@ export default function SellPage() {
               </div>
               <h3 className="text-xl font-bold text-white mb-4">Premium Marketing</h3>
               <p className="text-white/40 leading-relaxed">
-                Reaching the right buyers globally through the expansive Aether Network and high-key digital storytelling.
+                {replaceTemplateBranding(
+                  "Reaching the right buyers globally through the expansive {{agencyName}} Network and high-key digital storytelling.",
+                  agencyName,
+                )}
               </p>
               <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Link href="#" className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">View Example</Link>
@@ -146,14 +155,14 @@ export default function SellPage() {
             "Australian premium properties have seen a 12.4% yield increase in the 2026 fiscal year."
           </h2>
           <div className="flex items-center justify-center gap-4 text-sm font-medium text-black/40">
-             <span>Source: Aether Global Research</span>
+             <span>{replaceTemplateBranding("Source: {{agencyName}} Global Research", agencyName)}</span>
              <span className="w-1 h-1 rounded-full bg-black/20" />
              <span>Q3 2026 Report</span>
           </div>
         </div>
       </section>
 
-      <FooterClient />
+      <FooterClient initialSiteConfig={siteConfig} />
     </main>
   );
 }

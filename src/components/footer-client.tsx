@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
+import { getAgencyDisplayName, getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 export function FooterClient({ initialSiteConfig }: { initialSiteConfig?: SiteConfig | null }) {
@@ -38,7 +38,7 @@ export function FooterClient({ initialSiteConfig }: { initialSiteConfig?: SiteCo
     };
   }, [agencySlug, initialSiteConfig]);
 
-  const displayName = siteConfig?.branding?.displayName || siteConfig?.organization.name || "AuraEstates";
+  const displayName = getAgencyDisplayName(siteConfig);
   const officeAddress = siteConfig?.profile?.officeAddress?.trim();
   const officeEmail = siteConfig?.profile?.contact?.officialEmail || siteConfig?.branding?.publicEmail;
   const socialLinks = [

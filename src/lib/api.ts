@@ -462,7 +462,7 @@ export function mapListingToAuraProperty(listing: RawListing, agencySlug?: strin
       listing.agent?.name,
       listing.broker?.brokerProfile?.displayName,
       [listing.broker?.firstName, listing.broker?.lastName].filter(Boolean).join(" ")
-    ) || "Aura Estates Advisor",
+    ) || "Property Advisor",
     agentAvatar: getStringValue(
       listing.agent?.avatarUrl,
       listing.agent?.avatar,

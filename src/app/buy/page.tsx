@@ -1,8 +1,8 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FooterClient } from "@/components/footer-client";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
@@ -22,6 +22,8 @@ import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SidebarFilter } from "@/components/sidebar-filter";
 import { useAuraListings } from "@/hooks/use-aura-listings";
+import { getAgencyDisplayName, getSiteConfig, hasMeaningfulSiteConfig, replaceTemplateBranding } from "@/lib/public-site";
+import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 export default function BuyPage() {
   return (
@@ -33,10 +35,33 @@ export default function BuyPage() {
 
 function BuyPageContent() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const agencySlug = resolveAgencySlugFromPathname(pathname);
   const { properties, total, page, totalPages, loading } = useAuraListings("buy");
   const heroImage = PlaceHolderImages.find((img) => img.id === "hero-home")?.imageUrl;
   const activeQuery = searchParams.get("q");
+  const [agencyName, setAgencyName] = useState("Agency Website");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadSiteConfig() {
+      try {
+        const siteConfig = await getSiteConfig(agencySlug);
+        if (!active || !hasMeaningfulSiteConfig(siteConfig)) return;
+        setAgencyName(getAgencyDisplayName(siteConfig));
+      } catch {
+        if (!active) return;
+        setAgencyName((current) => current || "Agency Website");
+      }
+    }
+
+    void loadSiteConfig();
+    return () => {
+      active = false;
+    };
+  }, [agencySlug]);
 
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -151,7 +176,9 @@ function BuyPageContent() {
       <section className="py-24 px-6 md:px-12 bg-[#111111] text-white">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <div className="lg:w-1/2 space-y-6">
-            <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">Aether Market Intelligence</span>
+            <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+              {replaceTemplateBranding("{{agencyName}} Market Intelligence", agencyName)}
+            </span>
             <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">The 2026 Residential <span className="text-primary">Outlook.</span></h2>
             <p className="text-white/40 text-lg leading-relaxed">
               Sydney's premium market continues to lead global growth with a 15.2% appreciation in the last 12 months. Our AI models predict a continued stabilization of interest rates throughout Q3.

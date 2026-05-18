@@ -6,15 +6,21 @@ import { Editorial } from "@/components/editorial";
 import { StateSelector } from "@/components/state-selector";
 import { FAQSection } from "@/components/faq-section";
 import { Footer } from "@/components/footer";
+import { getAgencyDisplayName, getSiteConfig, replaceTemplateBranding } from "@/lib/public-site";
+import { getRequestAgencySlug } from "@/lib/server-agency";
 
-export default function Home() {
+export default async function Home() {
+  const agencySlug = await getRequestAgencySlug();
+  const siteConfig = await getSiteConfig(agencySlug);
+  const agencyName = getAgencyDisplayName(siteConfig);
+
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
       <Hero />
       <PropertyCarousel />
       <FeatureGrid />
       <StateSelector />
-      <Editorial />
+      <Editorial agencyName={agencyName} />
       
       <section className="py-32 px-6 md:px-12 bg-white flex flex-col items-center text-center">
         <div className="max-w-4xl bg-[#F8F9FA] rounded-[2.5rem] p-12 md:p-20 border border-[#E5E7EB] shadow-2xl relative overflow-hidden group">
@@ -25,7 +31,7 @@ export default function Home() {
             Ready to find your <br /><span className="text-primary italic">dream property?</span>
           </h2>
           <p className="text-[#111111]/50 text-lg mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-            Join over 2 million Australians using Aether Australia to secure their future. 
+            {replaceTemplateBranding("Join over 2 million Australians using {{agencyName}} to secure their future.", agencyName)}{" "}
             Personalized recommendations, AI-powered insights, and expert strategic advice.
           </p>
           
@@ -44,7 +50,7 @@ export default function Home() {
         </div>
       </section>
 
-      <FAQSection />
+      <FAQSection agencyName={agencyName} />
       
       <Footer />
     </main>

@@ -104,6 +104,28 @@ export type SiteConfig = {
   };
 };
 
+function getPossessiveName(name: string) {
+  const trimmedName = name.trim() || 'Agency Website';
+  return /s$/i.test(trimmedName) ? `${trimmedName}'` : `${trimmedName}'s`;
+}
+
+export function getAgencyDisplayName(siteConfig?: SiteConfig | null) {
+  return siteConfig?.branding?.displayName?.trim() || siteConfig?.organization.name?.trim() || 'Agency Website';
+}
+
+export function replaceTemplateBranding(text: string, agencyName: string) {
+  const normalizedAgencyName = agencyName.trim() || 'Agency Website';
+
+  return text
+    .replace(/{{agencyName}}/g, normalizedAgencyName)
+    .replace(/Aether Australia's/gi, getPossessiveName(normalizedAgencyName))
+    .replace(/\bAether Australia\b/gi, normalizedAgencyName)
+    .replace(/Aether's/gi, getPossessiveName(normalizedAgencyName))
+    .replace(/\bAether\b/gi, normalizedAgencyName)
+    .replace(/\bAura Estates\b/gi, normalizedAgencyName)
+    .replace(/AuraEstates/gi, normalizedAgencyName);
+}
+
 type ResolvedAgencyContext = {
   organization?: {
     slug?: string;
