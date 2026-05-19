@@ -243,7 +243,7 @@ export default function PropertyShowcase({
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
       <section className="pt-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
-          <PropertyHeroGallery images={gallery} title={property.title} />
+          <PropertyHeroGallery images={gallery} title={property.title} virtualTourUrl={property.virtualTourUrl} />
         </div>
       </section>
 

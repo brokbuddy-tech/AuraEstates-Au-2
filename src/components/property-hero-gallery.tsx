@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,9 +17,10 @@ import {
 interface PropertyHeroGalleryProps {
   images: string[];
   title: string;
+  virtualTourUrl?: string | null;
 }
 
-export function PropertyHeroGallery({ images, title }: PropertyHeroGalleryProps) {
+export function PropertyHeroGallery({ images, title, virtualTourUrl }: PropertyHeroGalleryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -51,6 +52,18 @@ export function PropertyHeroGallery({ images, title }: PropertyHeroGalleryProps)
           }}
         >
           <Image src={images[0]} alt={title} fill className="object-cover" priority />
+          {virtualTourUrl ? (
+            <Button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
+              }}
+              className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-full shadow-xl hover:bg-white"
+            >
+              <Video className="w-4 h-4 mr-2" /> Virtual Tour
+            </Button>
+          ) : null}
           <Button
             type="button"
             onClick={(event) => {
