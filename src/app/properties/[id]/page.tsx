@@ -96,6 +96,46 @@ const InternetGauge = ({ quality }: { quality: string }) => {
   );
 };
 
+function waitForImageAsset(image: HTMLImageElement) {
+  if (image.complete && image.naturalWidth > 0) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      image.removeEventListener("load", finish);
+      image.removeEventListener("error", finish);
+      resolve();
+    };
+
+    image.addEventListener("load", finish, { once: true });
+    image.addEventListener("error", finish, { once: true });
+
+    if (typeof image.decode === "function") {
+      image.decode().then(finish).catch(() => undefined);
+    }
+  });
+}
+
+async function waitForElementAssets(root: HTMLElement) {
+  const images = Array.from(root.querySelectorAll("img"));
+  await Promise.all(images.map((image) => waitForImageAsset(image)));
+
+  if ("fonts" in document) {
+    try {
+      await document.fonts.ready;
+    } catch {
+      // Ignore font readiness failures and continue the export.
+    }
+  }
+
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+}
+
 export default function PropertyShowcase({
   propertyId: initialPropertyId,
   agencySlug: initialAgencySlug,
@@ -163,21 +203,44 @@ export default function PropertyShowcase({
     });
 
     try {
+      await waitForElementAssets(element);
+
       const canvas = await html2canvas(element, {
-        scale: 2,
+        scale: Math.min(window.devicePixelRatio || 1, 2),
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px",
-        format: [canvas.width / 2, canvas.height / 2],
+        unit: "mm",
+        format: "a4",
       });
 
-      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width / 2, canvas.height / 2);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imageWidth = pageWidth;
+      const imageHeight = (canvas.height * imageWidth) / canvas.width;
+
+      let heightLeft = imageHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, imageWidth, imageHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imageWidth, imageHeight);
+        heightLeft -= pageHeight;
+      }
+
       pdf.save(`Aura-Brochure-${property.title.replace(/\s+/g, "-")}.pdf`);
 
       toast({
