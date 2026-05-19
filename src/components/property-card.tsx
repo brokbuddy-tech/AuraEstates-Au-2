@@ -7,12 +7,12 @@ import Link from "next/link";
 import { Bed, Bath, Car, Heart, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { summarizePropertyDescription } from "@/ai/flows/summarize-property-description";
 
@@ -66,7 +66,7 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
               <span className="text-black/10">No Image Available</span>
             </div>
           )}
-          
+
           {/* Status Badge */}
           {status && (
             <div className="absolute top-4 left-4 z-10">
@@ -78,19 +78,6 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
               </span>
             </div>
           )}
-
-          {/* Favorite Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsSaved(!isSaved); }}
-            className={cn(
-              "absolute top-4 right-4 z-10 glass-morphism-dark border-none text-white transition-colors h-10 w-10 rounded-full",
-              isSaved && "bg-primary text-white"
-            )}
-          >
-            <Heart className={cn("w-5 h-5", isSaved && "fill-current")} />
-          </Button>
 
           {/* Quick View Overlay on Hover */}
           <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
@@ -104,10 +91,10 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
         <div className="p-6 flex flex-col flex-1">
           <div className="flex justify-between items-start mb-2">
             <h3 className="text-2xl font-black text-[#111111] tracking-tight">{price}</h3>
-            
+
             <Dialog>
               <DialogTrigger asChild>
-                <button 
+                <button
                   onClick={fetchSummary}
                   className="text-primary hover:text-primary/80 flex items-center gap-1 text-[10px] uppercase font-black tracking-widest transition-colors"
                 >
@@ -125,16 +112,16 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
                 <div className="py-6 space-y-8">
                   {/* Core Details Section */}
                   <div className="relative h-48 w-full rounded-2xl overflow-hidden group">
-                    <Image 
-                      src={image} 
-                      alt={address} 
-                      fill 
+                    <Image
+                      src={image}
+                      alt={address}
+                      fill
                       className="object-cover opacity-60"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent" />
                     <div className="absolute bottom-6 left-6 right-6">
-                       <p className="text-primary font-black text-3xl tracking-tighter mb-1">{price}</p>
-                       <p className="text-white/60 text-sm font-medium uppercase tracking-widest line-clamp-1">{address}</p>
+                      <p className="text-primary font-black text-3xl tracking-tighter mb-1">{price}</p>
+                      <p className="text-white/60 text-sm font-medium uppercase tracking-widest line-clamp-1">{address}</p>
                     </div>
                   </div>
 
@@ -168,10 +155,10 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
                   {/* AI Insights Section */}
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
-                       <Sparkles className="w-4 h-4 text-primary" />
-                       <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">AI Key Features</h4>
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">AI Key Features</h4>
                     </div>
-                    
+
                     {isLoadingSummary ? (
                       <div className="space-y-3 animate-pulse">
                         <div className="h-4 bg-white/5 rounded w-full" />
@@ -190,7 +177,7 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
                     )}
                   </div>
                 </div>
-                
+
                 <div className="mt-8 flex gap-4">
                   <Button className="flex-1 h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-xl shadow-primary/10" variant="default">
                     CONTACT AGENT
@@ -202,9 +189,9 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
               </DialogContent>
             </Dialog>
           </div>
-          
+
           <p className="text-[#111111]/60 text-sm font-medium mb-6 line-clamp-1">{address}</p>
-          
+
           <div className="mt-auto flex items-center justify-between pt-4 border-t border-black/5">
             <div className="flex items-center gap-6 text-[#111111]/80">
               <span className="flex items-center gap-2 text-xs font-bold"><Bed className="w-4 h-4 text-primary" /> {beds}</span>

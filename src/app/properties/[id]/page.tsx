@@ -261,7 +261,6 @@ export default function PropertyShowcase({
                 </div>
                 <div className="text-right">
                   <div className="flex gap-2 justify-end mt-2">
-                    <Button size="icon" variant="outline" className="rounded-full border-[#F1F1F1]"><Heart className="w-4 h-4" /></Button>
                     <Button size="icon" variant="outline" className="rounded-full border-[#F1F1F1]"><Share2 className="w-4 h-4" /></Button>
                   </div>
                 </div>
