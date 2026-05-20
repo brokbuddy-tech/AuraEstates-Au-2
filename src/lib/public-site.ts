@@ -487,6 +487,17 @@ export async function getAgents(agencySlug?: string | null) {
   };
 }
 
+export async function getTestimonials(agencySlug?: string | null) {
+  const response = await fetchTemplateResponse('', { next: { revalidate: 300 } } as RequestInit, agencySlug);
+
+  if (!response.ok) {
+    return [] as any[];
+  }
+
+  const data = await response.json();
+  return Array.isArray(data.testimonials) ? data.testimonials : [];
+}
+
 export async function getAgentProfile(agentSlug: string, agencySlug?: string | null) {
   const response = await fetchTemplateResponse(`/agents/${agentSlug}`, { next: { revalidate: 300 } } as RequestInit, agencySlug);
   if (!response.ok) {

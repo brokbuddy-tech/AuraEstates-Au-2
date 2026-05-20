@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getAgents,
   getSiteConfig,
+  getTestimonials,
   hasMeaningfulSiteConfig,
+  replaceTemplateBranding,
   type SiteAgent,
   type SiteConfig,
 } from "@/lib/public-site";
@@ -30,30 +33,106 @@ function getAgentImage(seed: string, avatar?: string | null) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
+type AboutTestimonial = {
+  id: string;
+  quote: string;
+  author: string;
+  meta: string;
+  rating: number;
+};
+
+const FALLBACK_TESTIMONIALS: AboutTestimonial[] = [
+  {
+    id: "harper-lane",
+    quote: "{{agencyName}} brought structure, honesty, and a polished presentation to every stage of our sale.",
+    author: "Harper Lane",
+    meta: "Melbourne seller",
+    rating: 5,
+  },
+  {
+    id: "lucas-nguyen",
+    quote: "The team balanced strategic advice with genuinely responsive communication. We always knew what came next.",
+    author: "Lucas Nguyen",
+    meta: "Sydney buyer",
+    rating: 5,
+  },
+  {
+    id: "amelia-ford",
+    quote: "Our agent made the process feel calm and well-managed from first viewing through settlement day.",
+    author: "Amelia Ford",
+    meta: "Brisbane relocation",
+    rating: 5,
+  },
+];
+
+function normalizeTestimonials(input: unknown[]): AboutTestimonial[] {
+  const normalized: AboutTestimonial[] = [];
+
+  input.forEach((item, index) => {
+    const testimonial = item as {
+      id?: string;
+      quote?: string | null;
+      content?: string | null;
+      author?: string | null;
+      name?: string | null;
+      clientName?: string | null;
+      location?: string | null;
+      property?: string | null;
+      rating?: number | null;
+    };
+
+    const quote = testimonial.quote?.trim() || testimonial.content?.trim() || "";
+    if (!quote) return;
+
+    const author =
+      testimonial.author?.trim() ||
+      testimonial.name?.trim() ||
+      testimonial.clientName?.trim() ||
+      "Anonymous";
+
+    normalized.push({
+      id: testimonial.id || `${author}-${index}`,
+      quote,
+      author,
+      meta: testimonial.location?.trim() || testimonial.property?.trim() || "Verified client",
+      rating: typeof testimonial.rating === "number" ? testimonial.rating : 5,
+    });
+  });
+
+  return normalized;
+}
+
 export function AuraAboutPageContent({
   initialSiteConfig = null,
   initialAgents = [],
+  initialTestimonials = [],
 }: {
   initialSiteConfig?: SiteConfig | null;
   initialAgents?: SiteAgent[];
+  initialTestimonials?: unknown[];
 }) {
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(initialSiteConfig);
   const [agents, setAgents] = useState<SiteAgent[]>(initialAgents);
+  const [testimonials, setTestimonials] = useState<AboutTestimonial[]>(() =>
+    normalizeTestimonials(initialTestimonials),
+  );
 
   useEffect(() => {
     setSiteConfig(initialSiteConfig);
     setAgents(initialAgents);
-  }, [initialAgents, initialSiteConfig]);
+    setTestimonials(normalizeTestimonials(initialTestimonials));
+  }, [initialAgents, initialSiteConfig, initialTestimonials]);
 
   useEffect(() => {
     let active = true;
 
     async function load() {
-      const [nextSiteConfig, nextAgents] = await Promise.all([
+      const [nextSiteConfig, nextAgents, nextTestimonials] = await Promise.all([
         getSiteConfig(agencySlug),
         getAgents(agencySlug),
+        getTestimonials(agencySlug),
       ]);
 
       if (!active) return;
@@ -63,6 +142,7 @@ export function AuraAboutPageContent({
       setAgents((current) =>
         nextAgents.agents.length > 0 || current.length === 0 ? nextAgents.agents : current,
       );
+      setTestimonials(normalizeTestimonials(nextTestimonials));
     }
 
     void load();
@@ -82,6 +162,13 @@ export function AuraAboutPageContent({
   const vision =
     siteConfig?.profile?.vision?.trim() ||
     `Our vision is a public brand for ${displayName} that feels modern, credible, and unmistakably client-first.`;
+  const testimonialsToRender =
+    testimonials.length > 0
+      ? testimonials
+      : FALLBACK_TESTIMONIALS.map((testimonial) => ({
+          ...testimonial,
+          quote: replaceTemplateBranding(testimonial.quote, displayName),
+        }));
 
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
@@ -153,6 +240,42 @@ export function AuraAboutPageContent({
                 <p className="text-4xl font-black text-primary">{stat.value}</p>
                 <p className="mt-3 text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">{stat.label}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#F8F9FA] px-6 py-24 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 text-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Client Testimonials</span>
+            <h2 className="mt-5 text-4xl font-black uppercase tracking-tighter text-[#111111] md:text-6xl">
+              What Our Clients Say
+            </h2>
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#111111]/60 md:text-lg">
+              Real feedback from the clients who trusted {displayName} with their next move.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {testimonialsToRender.map((testimonial) => (
+              <article key={testimonial.id} className="flex h-full flex-col rounded-3xl border border-[#E5E7EB] bg-white p-8 shadow-sm">
+                <div className="flex gap-1 text-primary">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <Star
+                      key={`${testimonial.id}-star-${index}`}
+                      className="h-4 w-4"
+                      fill={index < testimonial.rating ? "currentColor" : "none"}
+                    />
+                  ))}
+                </div>
+                <p className="mt-6 text-lg font-light italic leading-8 text-[#111111]/70">
+                  &ldquo;{testimonial.quote}&rdquo;
+                </p>
+                <div className="mt-8 border-t border-[#E5E7EB] pt-6">
+                  <p className="text-xl font-black uppercase tracking-tight text-[#111111]">{testimonial.author}</p>
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary">{testimonial.meta}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
