@@ -76,6 +76,12 @@ export function AuraAboutPageContent({
     siteConfig?.profile?.aboutCompany?.trim() ||
     siteConfig?.branding?.bio?.trim() ||
     `${displayName} blends high-touch agency presentation with live organization and agent data pulled directly from Broker OS.`;
+  const mission =
+    siteConfig?.profile?.mission?.trim() ||
+    `${displayName} exists to make each buying, selling, and leasing decision feel informed, supported, and straightforward.`;
+  const vision =
+    siteConfig?.profile?.vision?.trim() ||
+    `Our vision is a public brand for ${displayName} that feels modern, credible, and unmistakably client-first.`;
 
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
@@ -88,16 +94,16 @@ export function AuraAboutPageContent({
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/45" />
-        <div className="relative z-10 text-center px-6">
-          <h1 className="text-5xl md:text-8xl font-extralight text-white mb-6 tracking-tight uppercase">
-            The Public Face of <br />
-            <span className="font-black italic">{displayName}.</span>
-          </h1>
-          <p className="text-white/70 text-sm md:text-base font-medium tracking-[0.3em] uppercase max-w-2xl mx-auto">
-            Organization-aware branding, listings, and agents on one dynamic website.
-          </p>
-        </div>
-      </section>
+          <div className="relative z-10 text-center px-6">
+            <h1 className="text-5xl md:text-8xl font-extralight text-white mb-6 tracking-tight uppercase">
+              The Public Face of <br />
+              <span className="font-black italic">{displayName}.</span>
+            </h1>
+            <p className="text-white/70 text-sm md:text-base font-medium tracking-[0.3em] uppercase max-w-2xl mx-auto">
+              {aboutCompany}
+            </p>
+          </div>
+        </section>
 
       <section className="py-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -124,6 +130,16 @@ export function AuraAboutPageContent({
                   Contact office
                 </Button>
               </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-3xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Our mission</p>
+                <p className="mt-4 text-base leading-relaxed text-[#111111]/70">{mission}</p>
+              </div>
+              <div className="rounded-3xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Our vision</p>
+                <p className="mt-4 text-base leading-relaxed text-[#111111]/70">{vision}</p>
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
