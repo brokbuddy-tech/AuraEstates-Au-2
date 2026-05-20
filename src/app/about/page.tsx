@@ -1,4 +1,5 @@
 import { AuraAboutPageContent } from "@/components/public/agency-about-page";
+import { Footer } from "@/components/footer";
 import { getAgents, getSiteConfig, getTestimonials } from "@/lib/public-site";
 import { getRequestAgencySlug } from "@/lib/server-agency";
 
@@ -11,10 +12,13 @@ export default async function AboutPage() {
   ]);
 
   return (
-    <AuraAboutPageContent
-      initialSiteConfig={siteConfig}
-      initialAgents={agentsResponse.agents}
-      initialTestimonials={testimonials}
-    />
+    <>
+      <AuraAboutPageContent
+        initialSiteConfig={siteConfig}
+        initialAgents={agentsResponse.agents}
+        initialTestimonials={testimonials}
+      />
+      <Footer />
+    </>
   );
 }

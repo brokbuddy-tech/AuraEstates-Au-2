@@ -142,14 +142,6 @@ export function AuraContactPageContent({
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
-
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <Link href={prefixAgencyPath("/agents", agencySlug)}>
-                <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white hover:text-[#111111] rounded-xl font-bold uppercase tracking-[0.2em] text-[10px]">
-                  View active agents
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </section>

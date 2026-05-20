@@ -1,4 +1,5 @@
 import { AuraAgentsPageContent } from "@/components/public/agency-agents-page";
+import { Footer } from "@/components/footer";
 import { getAgents, getSiteConfig } from "@/lib/public-site";
 import { getRequestAgencySlug } from "@/lib/server-agency";
 
@@ -10,9 +11,12 @@ export default async function AgentsPage() {
   ]);
 
   return (
-    <AuraAgentsPageContent
-      initialSiteConfig={siteConfig}
-      initialAgents={agentsResponse.agents}
-    />
+    <>
+      <AuraAgentsPageContent
+        initialSiteConfig={siteConfig}
+        initialAgents={agentsResponse.agents}
+      />
+      <Footer />
+    </>
   );
 }
