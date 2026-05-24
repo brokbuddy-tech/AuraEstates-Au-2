@@ -97,6 +97,7 @@ export function AuraAgentProfilePageContent({
     profile.agent.whatsapp || profile.agent.phone || profile.profile?.contact?.whatsappNumber,
     `Hi ${profile.agent.name}, I'm interested in your listings with ${displayName}.`
   );
+  const brokerRegistrationNumber = profile.agent.brn || profile.agent.licenseNumber;
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] px-6 py-24">
@@ -111,6 +112,11 @@ export function AuraAgentProfilePageContent({
               <p className="text-primary text-xs font-bold uppercase tracking-[0.3em]">
                 {profile.agent.jobTitle || profile.agent.title || profile.agent.tagline || "Property Consultant"}
               </p>
+              {brokerRegistrationNumber ? (
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">
+                  BRN {brokerRegistrationNumber}
+                </p>
+              ) : null}
               <div className="grid gap-3 pt-4">
                 {profile.agent.phone ? (
                   <a href={`tel:${profile.agent.phone}`}>

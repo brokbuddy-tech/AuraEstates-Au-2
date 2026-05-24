@@ -19,7 +19,6 @@ import {
   getSiteConfig,
   getTestimonials,
   hasMeaningfulSiteConfig,
-  replaceTemplateBranding,
   type SiteAgent,
   type SiteConfig,
 } from "@/lib/public-site";
@@ -104,39 +103,13 @@ type AboutTestimonial = {
   rating: number;
 };
 
-const FALLBACK_TESTIMONIALS: AboutTestimonial[] = [
-  {
-    id: "harper-lane",
-    quote:
-      "{{agencyName}} brought structure, honesty, and a polished presentation to every stage of our sale.",
-    author: "Harper Lane",
-    meta: "Melbourne seller",
-    rating: 5,
-  },
-  {
-    id: "lucas-nguyen",
-    quote:
-      "The team balanced strategic advice with genuinely responsive communication. We always knew what came next.",
-    author: "Lucas Nguyen",
-    meta: "Sydney buyer",
-    rating: 5,
-  },
-  {
-    id: "amelia-ford",
-    quote:
-      "Our agent made the process feel calm and well-managed from first viewing through settlement day.",
-    author: "Amelia Ford",
-    meta: "Brisbane relocation",
-    rating: 5,
-  },
-];
-
 function normalizeTestimonials(input: unknown[]): AboutTestimonial[] {
   const normalized: AboutTestimonial[] = [];
 
   input.forEach((item, index) => {
     const testimonial = item as {
       id?: string;
+      message?: string | null;
       quote?: string | null;
       content?: string | null;
       author?: string | null;
@@ -145,10 +118,14 @@ function normalizeTestimonials(input: unknown[]): AboutTestimonial[] {
       location?: string | null;
       property?: string | null;
       rating?: number | null;
+      badgeLabel?: string | null;
     };
 
     const quote =
-      testimonial.quote?.trim() || testimonial.content?.trim() || "";
+      testimonial.message?.trim() ||
+      testimonial.quote?.trim() ||
+      testimonial.content?.trim() ||
+      "";
     if (!quote) return;
 
     const author =
@@ -162,9 +139,10 @@ function normalizeTestimonials(input: unknown[]): AboutTestimonial[] {
       quote,
       author,
       meta:
+        testimonial.badgeLabel?.trim() ||
         testimonial.location?.trim() ||
         testimonial.property?.trim() ||
-        "Verified client",
+        "Client testimonial",
       rating: typeof testimonial.rating === "number" ? testimonial.rating : 5,
     });
   });
@@ -238,13 +216,7 @@ export function AuraAboutPageContent({
   const vision =
     siteConfig?.profile?.vision?.trim() ||
     `Our vision is a public brand for ${displayName} that feels modern, credible, and unmistakably client-first.`;
-  const testimonialsToRender =
-    testimonials.length > 0
-      ? testimonials
-      : FALLBACK_TESTIMONIALS.map((testimonial) => ({
-          ...testimonial,
-          quote: replaceTemplateBranding(testimonial.quote, displayName),
-        }));
+  const testimonialsToRender = testimonials;
 
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
@@ -469,6 +441,7 @@ export function AuraAboutPageContent({
           </div>
         </div>
       </section>
+      {testimonialsToRender.length > 0 ? (
       <section className="bg-[#F8F9FA] px-6 py-24 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
@@ -516,6 +489,7 @@ export function AuraAboutPageContent({
           </div>
         </div>
       </section>
+      ) : null}
       {/* 5. Interactive Social Proof & Network */}
       <section className="relative h-[600px] w-full flex items-center justify-center overflow-hidden">
         <div
