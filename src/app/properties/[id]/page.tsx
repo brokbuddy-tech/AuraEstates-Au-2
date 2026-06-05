@@ -12,7 +12,6 @@ import {
   Bath,
   Car,
   Maximize2,
-  CheckCircle2,
   ArrowRight,
   Heart,
   MessageSquare,
@@ -38,6 +37,7 @@ import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { PropertyHeroGallery } from "@/components/property-hero-gallery";
+import { AmenityIcon } from "@/components/amenity-icon";
 import { getPropertyById, type AuraProperty } from "@/lib/api";
 import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
@@ -366,7 +366,8 @@ export default function PropertyShowcase({
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4">
                   {features.map((feature, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-sm font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-primary" /> {feature}
+                      <AmenityIcon name={feature} className="h-4 w-4" />
+                      {feature}
                     </div>
                   ))}
                 </div>
