@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ReviewCarousel } from "@/components/review-carousel";
 import {
   getAgents,
   getSiteConfig,
@@ -27,6 +28,7 @@ import {
   resolveAgencySlugFromPathname,
 } from "@/lib/agency-routing";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { normalizePublicTestimonials, type ReviewCarouselItem } from "@/lib/reviews";
 
 const LEADERSHIP = [
   {
@@ -95,61 +97,6 @@ function getAgentImage(seed: string, avatar?: string | null) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-type AboutTestimonial = {
-  id: string;
-  quote: string;
-  author: string;
-  meta: string;
-  rating: number;
-};
-
-function normalizeTestimonials(input: unknown[]): AboutTestimonial[] {
-  const normalized: AboutTestimonial[] = [];
-
-  input.forEach((item, index) => {
-    const testimonial = item as {
-      id?: string;
-      message?: string | null;
-      quote?: string | null;
-      content?: string | null;
-      author?: string | null;
-      name?: string | null;
-      clientName?: string | null;
-      location?: string | null;
-      property?: string | null;
-      rating?: number | null;
-      badgeLabel?: string | null;
-    };
-
-    const quote =
-      testimonial.message?.trim() ||
-      testimonial.quote?.trim() ||
-      testimonial.content?.trim() ||
-      "";
-    if (!quote) return;
-
-    const author =
-      testimonial.author?.trim() ||
-      testimonial.name?.trim() ||
-      testimonial.clientName?.trim() ||
-      "Anonymous";
-
-    normalized.push({
-      id: testimonial.id || `${author}-${index}`,
-      quote,
-      author,
-      meta:
-        testimonial.badgeLabel?.trim() ||
-        testimonial.location?.trim() ||
-        testimonial.property?.trim() ||
-        "Client testimonial",
-      rating: typeof testimonial.rating === "number" ? testimonial.rating : 5,
-    });
-  });
-
-  return normalized;
-}
-
 export function AuraAboutPageContent({
   initialSiteConfig = null,
   initialAgents = [],
@@ -165,8 +112,8 @@ export function AuraAboutPageContent({
     initialSiteConfig,
   );
   const [agents, setAgents] = useState<SiteAgent[]>(initialAgents);
-  const [testimonials, setTestimonials] = useState<AboutTestimonial[]>(() =>
-    normalizeTestimonials(initialTestimonials),
+  const [testimonials, setTestimonials] = useState<ReviewCarouselItem[]>(() =>
+    normalizePublicTestimonials(initialTestimonials),
   );
   const metricsBg = PlaceHolderImages.find(
     (img) => img.id === "prop-1",
@@ -174,7 +121,7 @@ export function AuraAboutPageContent({
   useEffect(() => {
     setSiteConfig(initialSiteConfig);
     setAgents(initialAgents);
-    setTestimonials(normalizeTestimonials(initialTestimonials));
+    setTestimonials(normalizePublicTestimonials(initialTestimonials));
   }, [initialAgents, initialSiteConfig, initialTestimonials]);
 
   useEffect(() => {
@@ -196,7 +143,7 @@ export function AuraAboutPageContent({
           ? nextAgents.agents
           : current,
       );
-      setTestimonials(normalizeTestimonials(nextTestimonials));
+      setTestimonials(normalizePublicTestimonials(nextTestimonials));
     }
 
     void load();
@@ -441,55 +388,12 @@ export function AuraAboutPageContent({
           </div>
         </div>
       </section>
-      {testimonialsToRender.length > 0 ? (
-      <section className="bg-[#F8F9FA] px-6 py-24 md:px-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-14 text-center">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-              Client Testimonials
-            </span>
-            <h2 className="mt-5 text-4xl font-black uppercase tracking-tighter text-[#111111] md:text-6xl">
-              What Our Clients Say
-            </h2>
-            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#111111]/60 md:text-lg">
-              Real feedback from the clients who trusted {displayName} with
-              their next move.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {testimonialsToRender.map((testimonial) => (
-              <article
-                key={testimonial.id}
-                className="flex h-full flex-col rounded-3xl border border-[#E5E7EB] bg-white p-8 shadow-sm"
-              >
-                <div className="flex gap-1 text-primary">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <Star
-                      key={`${testimonial.id}-star-${index}`}
-                      className="h-4 w-4"
-                      fill={
-                        index < testimonial.rating ? "currentColor" : "none"
-                      }
-                    />
-                  ))}
-                </div>
-                <p className="mt-6 text-lg font-light italic leading-8 text-[#111111]/70">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-                <div className="mt-8 border-t border-[#E5E7EB] pt-6">
-                  <p className="text-xl font-black uppercase tracking-tight text-[#111111]">
-                    {testimonial.author}
-                  </p>
-                  <p className="mt-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                    {testimonial.meta}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-      ) : null}
+      <ReviewCarousel
+        title="What Our Clients Say"
+        description={`Real feedback from the clients who trusted ${displayName} with their next move.`}
+        items={testimonialsToRender}
+        variant="light"
+      />
       {/* 5. Interactive Social Proof & Network */}
       <section className="relative h-[600px] w-full flex items-center justify-center overflow-hidden">
         <div

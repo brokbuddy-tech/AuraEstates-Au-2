@@ -6,8 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, MessageSquare, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ReviewCarousel } from "@/components/review-carousel";
 import { getAgentProfile } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
+import { normalizeBrokerReviewCards } from "@/lib/reviews";
 
 function getAgentImage(seed: string, avatar?: string | null) {
   if (avatar) return avatar;
@@ -98,6 +100,7 @@ export function AuraAgentProfilePageContent({
     `Hi ${profile.agent.name}, I'm interested in your listings with ${displayName}.`
   );
   const brokerRegistrationNumber = profile.agent.brn || profile.agent.licenseNumber;
+  const brokerReviews = normalizeBrokerReviewCards(profile.agent.reviewSources);
 
   return (
     <main className="min-h-screen bg-[#F8F9FA] px-6 py-24">
@@ -187,6 +190,14 @@ export function AuraAgentProfilePageContent({
                 </div>
               </div>
             </div>
+
+            <ReviewCarousel
+              title="What My Clients Say"
+              description={`Verified feedback from clients who worked directly with ${profile.agent.name}.`}
+              items={brokerReviews}
+              variant="light"
+              className="rounded-3xl border border-[#E5E7EB] bg-white px-0 py-12 shadow-sm"
+            />
 
             <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
               <h3 className="text-2xl font-bold">Active Listings</h3>
