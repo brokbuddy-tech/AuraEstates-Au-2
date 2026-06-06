@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, Building, School, Sparkles } from "lucide-react";
+import { Search, MapPin, Building, School, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,18 +10,30 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 const CATEGORIES = ["Buy", "Rent", "Sold", "Rural", "Commercial"];
 
+type AiSearchFilters = {
+  q?: string;
+  type?: string;
+  transactionType?: string;
+  propertyType?: string;
+  category?: string;
+  readiness?: string;
+  bedrooms?: string;
+  bathrooms?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  minArea?: string;
+  maxArea?: string;
+};
+
 export function Hero() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("Buy");
   const [isAiMode, setIsAiMode] = useState(false);
+  const [isAiSearching, setIsAiSearching] = useState(false);
   const [query, setQuery] = useState("");
   const heroImage = PlaceHolderImages.find(img => img.id === "hero-home")?.imageUrl;
 
-  const pushToRoute = (tab: string, overrideQuery?: string) => {
-    const params = new URLSearchParams();
-    const searchValue = (overrideQuery ?? query).trim();
-    if (searchValue) params.set("q", searchValue);
-
+  const getDestination = (tab: string, params: URLSearchParams) => {
     let destination = "/buy";
     if (tab === "Rent") destination = "/rent";
     if (tab === "Sold") destination = "/sold";
@@ -29,6 +41,48 @@ export function Hero() {
     if (tab === "Rural") {
       destination = "/buy";
       params.set("category", "Rural");
+    }
+    return destination;
+  };
+
+  const pushToRoute = async (tab: string, overrideQuery?: string) => {
+    const params = new URLSearchParams();
+    const searchValue = (overrideQuery ?? query).trim();
+    let destination = getDestination(tab, params);
+
+    if (isAiMode && searchValue) {
+      setIsAiSearching(true);
+      try {
+        const response = await fetch("/api/ai-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: searchValue, filters: { type: tab.toLowerCase() } }),
+        });
+
+        if (!response.ok) throw new Error("AI search failed");
+        const data = await response.json() as { filters?: AiSearchFilters };
+        const filters = data.filters || {};
+
+        if (filters.transactionType === "RENT" || filters.type === "rent") destination = "/rent";
+        if (filters.propertyType === "COMMERCIAL" || filters.type === "commercial") destination = "/commercial";
+        if (filters.readiness === "OFFPLAN" || filters.type === "new-homes") destination = "/buy";
+
+        if (filters.q || searchValue) params.set("q", filters.q || searchValue);
+        if (filters.category) params.set("category", filters.category);
+        if (filters.bedrooms) params.set("bedrooms", filters.bedrooms);
+        if (filters.bathrooms) params.set("bathrooms", filters.bathrooms);
+        if (filters.minPrice) params.set("minPrice", filters.minPrice);
+        if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+        if (filters.minArea) params.set("minArea", filters.minArea);
+        if (filters.maxArea) params.set("maxArea", filters.maxArea);
+        if (filters.readiness) params.set("readiness", filters.readiness);
+      } catch {
+        params.set("q", searchValue);
+      } finally {
+        setIsAiSearching(false);
+      }
+    } else if (searchValue) {
+      params.set("q", searchValue);
     }
 
     router.push(`${destination}${params.toString() ? `?${params.toString()}` : ""}`);
@@ -112,26 +166,30 @@ export function Hero() {
                 )}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") void pushToRoute(activeTab);
+                }}
               />
             </div>
             <Button
               size="lg"
-              onClick={() => pushToRoute(activeTab)}
+              onClick={() => void pushToRoute(activeTab)}
+              disabled={isAiSearching}
               className="h-16 px-10 w-full md:w-auto bg-primary hover:bg-primary/90 text-white font-black rounded-2xl transition-all active:scale-95 shadow-2xl shadow-primary/20 tracking-widest"
             >
-              {isAiMode ? "AI SEARCH" : "SEARCH"}
+              {isAiSearching ? <Loader2 className="h-5 w-5 animate-spin" /> : isAiMode ? "AI SEARCH" : "SEARCH"}
             </Button>
           </div>
 
           {!isAiMode && (
             <div className="flex items-center justify-center gap-8 mt-8 text-[11px] text-white/70 font-bold uppercase tracking-[0.1em]">
-               <span onClick={() => pushToRoute(activeTab)} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
+               <span onClick={() => void pushToRoute(activeTab)} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
                  <MapPin className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> Near Me
                </span>
                <span onClick={() => router.push("/buy?readiness=OFFPLAN")} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
                  <Building className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> New Developments
                </span>
-               <span onClick={() => pushToRoute("Buy", "school zone")} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
+               <span onClick={() => void pushToRoute("Buy", "school zone")} className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors group">
                  <School className="w-3.5 h-3.5 text-primary group-hover:scale-110 transition-transform" /> School Zones
                </span>
             </div>
