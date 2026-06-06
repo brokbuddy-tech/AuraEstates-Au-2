@@ -4,9 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Award, MapPin, Search } from "lucide-react";
+import { ArrowRight, Mail, Phone, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   getAgents,
@@ -148,49 +147,51 @@ export function AuraAgentsPageContent({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {filteredAgents.map((agent) => (
-              <Link key={agent.slug || agent.id || agent.name} href={prefixAgencyPath(`/agents/${agent.slug || ""}`, agencySlug)}>
-                <Card className="group relative flex flex-col border-none shadow-none bg-transparent overflow-hidden">
-                  <div className="relative aspect-[4/5] rounded-3xl overflow-hidden mb-6">
-                    <Image
-                      src={getAgentImage(agent.slug || agent.name, agent.avatar)}
-                      alt={agent.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-2xl font-black text-[#111111] tracking-tight">{agent.name}</h3>
-                        <p className="text-primary text-xs font-bold uppercase tracking-widest">
-                          {agent.jobTitle || agent.title || agent.tagline || "Property Consultant"}
-                        </p>
-                      </div>
-                      <div className="w-10 h-10 rounded-full bg-[#F7F6F2] flex items-center justify-center text-[#111111]/20">
-                        <Award className="w-5 h-5" />
-                      </div>
-                    </div>
-
-                    {agent.specializations?.[0] ? (
-                      <p className="flex items-center gap-2 text-[#111111]/40 text-sm font-medium">
-                        <MapPin className="w-3 h-3" /> {agent.specializations[0]}
-                      </p>
-                    ) : null}
-
-                    <p className="text-[#111111]/60 text-sm leading-relaxed pt-4 border-t border-[#F7F6F2]">
+              <article key={agent.slug || agent.id || agent.name} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#111111]/10 bg-white shadow-sm transition-all hover:shadow-xl">
+                <div className="relative aspect-[4/3] bg-[#F7F6F2]">
+                  <Image
+                    src={getAgentImage(agent.slug || agent.name, agent.avatar)}
+                    alt={agent.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex min-h-[276px] flex-1 flex-col space-y-4 p-6">
+                  <div>
+                    <p className="text-primary text-xs font-bold uppercase tracking-widest">
+                      {agent.jobTitle || agent.title || agent.tagline || "Property Consultant"}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-black text-[#111111] tracking-tight">{agent.name}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[#111111]/60">
                       {agent.bio || `${agent.name} is part of the public roster for ${displayName}.`}
                     </p>
                   </div>
 
-                  <div className="mt-6">
-                    <span className="flex items-center gap-2 text-xs font-black text-primary uppercase tracking-widest group-hover:gap-4 transition-all">
-                      View Portfolio <ArrowRight className="w-3 h-3" />
-                    </span>
+                  <div className="space-y-2 text-sm text-[#111111]/60">
+                    {agent.email ? (
+                      <a href={`mailto:${agent.email}`} className="flex items-center gap-2 break-all hover:text-primary">
+                        <Mail className="h-4 w-4" />
+                        {agent.email}
+                      </a>
+                    ) : null}
+                    {agent.phone ? (
+                      <a href={`tel:${agent.phone}`} className="flex items-center gap-2 hover:text-primary">
+                        <Phone className="h-4 w-4" />
+                        {agent.phone}
+                      </a>
+                    ) : null}
                   </div>
-                </Card>
-              </Link>
+
+                  <Link
+                    href={prefixAgencyPath(`/agents/${agent.slug || ""}`, agencySlug)}
+                    className="mt-auto inline-flex items-center gap-2 text-xs font-black text-primary uppercase tracking-widest"
+                  >
+                    View Profile <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </article>
             ))}
           </div>
 
