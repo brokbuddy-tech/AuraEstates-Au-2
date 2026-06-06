@@ -103,14 +103,55 @@ export function AuraAgentProfilePageContent({
   const brokerReviews = normalizeBrokerReviewCards(profile.agent.reviewSources);
 
   return (
-    <main className="min-h-screen bg-[#F8F9FA] px-6 py-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm overflow-hidden">
-            <div className="relative aspect-[4/5]">
-              <Image src={getAgentImage(profile.agent.slug || profile.agent.name, profile.agent.avatar)} alt={profile.agent.name} fill className="object-cover" />
+    <main className="min-h-screen bg-[#F8F9FA]">
+      <section className="border-b border-[#E5E7EB] bg-white px-6 py-20">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-1 items-end gap-12 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <div className="relative aspect-square w-full max-w-[280px] overflow-hidden rounded-3xl border border-[#E5E7EB] bg-[#F8F9FA] shadow-sm">
+            <Image src={getAgentImage(profile.agent.slug || profile.agent.name, profile.agent.avatar)} alt={profile.agent.name} fill className="object-cover" />
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">{displayName}</p>
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-[#111111] md:text-6xl">{profile.agent.name}</h1>
+              <p className="mt-3 text-primary text-xs font-bold uppercase tracking-[0.3em]">
+                {profile.agent.jobTitle || profile.agent.title || profile.agent.tagline || "Property Consultant"}
+              </p>
             </div>
-            <div className="p-8 space-y-4">
+
+            <div className="flex flex-wrap gap-6 text-sm text-[#111111]/60">
+              {brokerRegistrationNumber ? (
+                <span className="flex items-center gap-2">
+                  <span className="font-black text-primary">BRN</span>
+                  {brokerRegistrationNumber}
+                </span>
+              ) : null}
+              {profile.agent.email ? (
+                <a href={`mailto:${profile.agent.email}`} className="flex items-center gap-2 hover:text-primary">
+                  <Mail className="h-4 w-4 text-primary" />
+                  {profile.agent.email}
+                </a>
+              ) : null}
+              {profile.agent.phone ? (
+                <a href={`tel:${profile.agent.phone}`} className="flex items-center gap-2 hover:text-primary">
+                  <Phone className="h-4 w-4 text-primary" />
+                  {profile.agent.phone}
+                </a>
+              ) : null}
+              {whatsappHref ? (
+                <a href={whatsappHref} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-primary">
+                  <MessageSquare className="h-4 w-4 text-primary" />
+                  WhatsApp
+                </a>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-[1600px] grid-cols-1 gap-16 px-6 py-20 lg:grid-cols-[320px_minmax(0,1fr)]">
+          <aside className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
+            <div className="space-y-4">
               <h1 className="text-3xl font-black tracking-tight">{profile.agent.name}</h1>
               <p className="text-primary text-xs font-bold uppercase tracking-[0.3em]">
                 {profile.agent.jobTitle || profile.agent.title || profile.agent.tagline || "Property Consultant"}
@@ -147,7 +188,7 @@ export function AuraAgentProfilePageContent({
                 ) : null}
               </div>
             </div>
-          </div>
+          </aside>
 
           <div className="space-y-8">
             <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
@@ -201,7 +242,7 @@ export function AuraAgentProfilePageContent({
 
             <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
               <h3 className="text-2xl font-bold">Active Listings</h3>
-              <div className="mt-8 grid gap-6 md:grid-cols-2">
+              <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
                 {profile.activeListings.map((listing: any) => (
                   <Link key={listing.id} href={prefixAgencyPath(`/property/${listing.id}`, agencySlug)} className="group overflow-hidden rounded-3xl border border-[#E5E7EB]">
                     <div className="relative aspect-[4/3]">
@@ -222,8 +263,7 @@ export function AuraAgentProfilePageContent({
               ) : null}
             </div>
           </div>
-        </div>
-      </div>
+      </section>
     </main>
   );
 }
