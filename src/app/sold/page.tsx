@@ -22,6 +22,7 @@ import { PropertyCard } from "@/components/property-card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { SidebarFilter } from "@/components/sidebar-filter";
 import { useAuraListings } from "@/hooks/use-aura-listings";
+import { cleanQueryForCategory, normalizeCategory } from "@/lib/search-utils";
 
 export default function SoldPage() {
   return (
@@ -36,7 +37,12 @@ function SoldPageContent() {
   const searchParams = useSearchParams();
   const { properties, total, page, totalPages, loading } = useAuraListings("sold");
   const heroImage = PlaceHolderImages.find((img) => img.id === "editorial-1")?.imageUrl;
-  const activeQuery = searchParams.get("q");
+  const activeCategory = (searchParams.get("category") || "")
+    .split(",")
+    .map(normalizeCategory)
+    .filter(Boolean)
+    .join(", ");
+  const activeQuery = cleanQueryForCategory(searchParams.get("q"), activeCategory) || activeCategory;
 
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());

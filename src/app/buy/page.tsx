@@ -24,6 +24,7 @@ import { SidebarFilter } from "@/components/sidebar-filter";
 import { useAuraListings } from "@/hooks/use-aura-listings";
 import { getAgencyDisplayName, getSiteConfig, hasMeaningfulSiteConfig, replaceTemplateBranding } from "@/lib/public-site";
 import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
+import { cleanQueryForCategory, normalizeCategory } from "@/lib/search-utils";
 
 export default function BuyPage() {
   return (
@@ -40,7 +41,12 @@ function BuyPageContent() {
   const agencySlug = resolveAgencySlugFromPathname(pathname);
   const { properties, total, page, totalPages, loading } = useAuraListings("buy");
   const heroImage = PlaceHolderImages.find((img) => img.id === "hero-home")?.imageUrl;
-  const activeQuery = searchParams.get("q");
+  const activeCategory = (searchParams.get("category") || "")
+    .split(",")
+    .map(normalizeCategory)
+    .filter(Boolean)
+    .join(", ");
+  const activeQuery = cleanQueryForCategory(searchParams.get("q"), activeCategory) || activeCategory;
   const [agencyName, setAgencyName] = useState("Agency Website");
 
   useEffect(() => {

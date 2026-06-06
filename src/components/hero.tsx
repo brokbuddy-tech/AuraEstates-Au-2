@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cleanQueryForCategory, normalizeCategory } from "@/lib/search-utils";
 
 const CATEGORIES = ["Buy", "Rent", "Sold", "Rural", "Commercial"];
 
@@ -67,8 +68,12 @@ export function Hero() {
         if (filters.propertyType === "COMMERCIAL" || filters.type === "commercial") destination = "/commercial";
         if (filters.readiness === "OFFPLAN" || filters.type === "new-homes") destination = "/buy";
 
-        if (filters.q || searchValue) params.set("q", filters.q || searchValue);
-        if (filters.category) params.set("category", filters.category);
+        const inferredCategory = normalizeCategory(filters.category);
+        if (inferredCategory) params.set("category", inferredCategory);
+
+        const queryCategory = inferredCategory || normalizeCategory(params.get("category"));
+        const cleanedQuery = cleanQueryForCategory(filters.q || searchValue, queryCategory);
+        if (cleanedQuery) params.set("q", cleanedQuery);
         if (filters.bedrooms) params.set("bedrooms", filters.bedrooms);
         if (filters.bathrooms) params.set("bathrooms", filters.bathrooms);
         if (filters.minPrice) params.set("minPrice", filters.minPrice);
@@ -77,12 +82,14 @@ export function Hero() {
         if (filters.maxArea) params.set("maxArea", filters.maxArea);
         if (filters.readiness) params.set("readiness", filters.readiness);
       } catch {
-        params.set("q", searchValue);
+        const cleanedQuery = cleanQueryForCategory(searchValue, normalizeCategory(params.get("category")));
+        if (cleanedQuery) params.set("q", cleanedQuery);
       } finally {
         setIsAiSearching(false);
       }
     } else if (searchValue) {
-      params.set("q", searchValue);
+      const cleanedQuery = cleanQueryForCategory(searchValue, normalizeCategory(params.get("category")));
+      if (cleanedQuery) params.set("q", cleanedQuery);
     }
 
     router.push(`${destination}${params.toString() ? `?${params.toString()}` : ""}`);

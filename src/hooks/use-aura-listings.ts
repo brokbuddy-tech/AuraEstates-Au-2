@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getListings, type AuraProperty } from "@/lib/api";
+import { cleanQueryForCategory, matchesTemplateCategory, normalizeCategory } from "@/lib/search-utils";
 
 type ListingMode = "buy" | "rent" | "sold" | "commercial";
 
@@ -45,10 +46,15 @@ export function useAuraListings(mode: ListingMode) {
     async function loadListings() {
       setLoading(true);
       const activeSort = searchParams.get("sort") || (mode === "commercial" ? "price-high" : "");
+      const category = (searchParams.get("category") || "")
+        .split(",")
+        .map(normalizeCategory)
+        .filter(Boolean)
+        .join(",");
+      const searchQuery = cleanQueryForCategory(searchParams.get("q"), category) || "";
 
       const params: Record<string, string | number> = {
-        q: searchParams.get("q") || "",
-        category: searchParams.get("category") || "",
+        q: searchQuery,
         minPrice: searchParams.get("minPrice") || "",
         maxPrice: searchParams.get("maxPrice") || "",
         bedrooms: searchParams.get("bedrooms") || "",
@@ -56,8 +62,8 @@ export function useAuraListings(mode: ListingMode) {
         minArea: searchParams.get("minArea") || "",
         maxArea: searchParams.get("maxArea") || "",
         readiness: searchParams.get("readiness") || "",
-        page: searchParams.get("page") || "1",
-        limit: 12,
+        page: category ? "1" : searchParams.get("page") || "1",
+        limit: category ? 96 : 12,
         sort: getApiSort(activeSort),
       };
 
@@ -78,10 +84,11 @@ export function useAuraListings(mode: ListingMode) {
       const result = await getListings(params);
       if (!active) return;
 
-      setProperties(applyClientSort(result.properties, activeSort));
-      setTotal(result.total);
-      setPage(result.page);
-      setTotalPages(result.totalPages);
+      const matchedProperties = result.properties.filter((property) => matchesTemplateCategory(property, category));
+      setProperties(applyClientSort(matchedProperties, activeSort));
+      setTotal(category ? matchedProperties.length : result.total);
+      setPage(category ? 1 : result.page);
+      setTotalPages(category ? 1 : result.totalPages);
       setLoading(false);
     }
 

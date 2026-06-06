@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cleanQueryForCategory, normalizeCategory } from "@/lib/search-utils";
 
 const DUMMY_MAP_PROPERTIES = [
   { id: 1, x: "30%", y: "40%", price: "$4.25M", address: "Vaucluse" },
@@ -85,19 +86,19 @@ export function SidebarFilter({ className, total = 0 }: { className?: string; to
   const typeOptions = isCommercial ? COMMERCIAL_TYPES : RESIDENTIAL_TYPES;
 
   useEffect(() => {
-    setLocation(searchParams.get("q") || "");
+    const categories = (searchParams.get("category") || "")
+      .split(",")
+      .map(normalizeCategory)
+      .filter(Boolean) as string[];
+
+    setLocation(cleanQueryForCategory(searchParams.get("q"), categories.join(",")) || "");
     setMinPrice(searchParams.get("minPrice") || "");
     setMaxPrice(searchParams.get("maxPrice") || "");
     setMinArea(searchParams.get("minArea") || "");
     setMaxArea(searchParams.get("maxArea") || "");
     setBedrooms(searchParams.get("bedrooms") || "Any");
     setBathrooms(searchParams.get("bathrooms") || "Any");
-    setSelectedTypes(
-      (searchParams.get("category") || "")
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean)
-    );
+    setSelectedTypes(categories);
   }, [searchParams]);
 
   const toggleArrayValue = (value: string, current: string[], setter: (next: string[]) => void) => {
@@ -106,7 +107,11 @@ export function SidebarFilter({ className, total = 0 }: { className?: string; to
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
-    const searchTerms = [location.trim(), ...selectedFeatures].filter(Boolean).join(" ");
+    const categories = selectedTypes.map(normalizeCategory).filter(Boolean) as string[];
+    const searchTerms = [
+      cleanQueryForCategory(location.trim(), categories.join(",")),
+      ...selectedFeatures,
+    ].filter(Boolean).join(" ");
 
     if (searchTerms) params.set("q", searchTerms); else params.delete("q");
     if (minPrice) params.set("minPrice", minPrice); else params.delete("minPrice");
@@ -115,7 +120,7 @@ export function SidebarFilter({ className, total = 0 }: { className?: string; to
     if (maxArea) params.set("maxArea", maxArea); else params.delete("maxArea");
     if (bedrooms !== "Any") params.set("bedrooms", bedrooms.replace("+", "")); else params.delete("bedrooms");
     if (bathrooms !== "Any") params.set("bathrooms", bathrooms.replace("+", "")); else params.delete("bathrooms");
-    if (selectedTypes.length > 0) params.set("category", selectedTypes.join(",")); else params.delete("category");
+    if (categories.length > 0) params.set("category", categories.join(",")); else params.delete("category");
     params.delete("page");
 
     router.push(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
