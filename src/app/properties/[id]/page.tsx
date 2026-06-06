@@ -510,7 +510,7 @@ export default function PropertyShowcase({
 
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 transition-all flex items-center justify-center gap-2">
+                      <Button variant="outline" className="w-full h-12 bg-black/5 border-none text-[#111111] font-bold rounded-xl hover:bg-black/10 hover:text-[#111111] transition-all flex items-center justify-center gap-2">
                         <FileText className="w-4 h-4" /> VIEW DIGITAL BROCHURE
                       </Button>
                     </DialogTrigger>
