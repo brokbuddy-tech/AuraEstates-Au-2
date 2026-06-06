@@ -150,88 +150,60 @@ export function AuraAgentProfilePageContent({
       </section>
 
       <section className="mx-auto grid max-w-[1600px] grid-cols-1 gap-16 px-6 py-20 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <aside className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
-            <div className="space-y-4">
-              <h1 className="text-3xl font-black tracking-tight">{profile.agent.name}</h1>
-              <p className="text-primary text-xs font-bold uppercase tracking-[0.3em]">
-                {profile.agent.jobTitle || profile.agent.title || profile.agent.tagline || "Property Consultant"}
-              </p>
-              {brokerRegistrationNumber ? (
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">
-                  BRN {brokerRegistrationNumber}
-                </p>
-              ) : null}
-              <div className="grid gap-3 pt-4">
-                {profile.agent.phone ? (
-                  <a href={`tel:${profile.agent.phone}`}>
-                    <Button className="w-full bg-[#111111] hover:bg-primary text-white rounded-xl">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Call
-                    </Button>
-                  </a>
-                ) : null}
-                {profile.agent.email ? (
-                  <a href={`mailto:${profile.agent.email}`}>
-                    <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white rounded-xl">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Email
-                    </Button>
-                  </a>
-                ) : null}
-                {whatsappHref ? (
-                  <a href={whatsappHref} target="_blank" rel="noreferrer">
-                    <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white rounded-xl">
-                      <MessageSquare className="w-4 h-4 mr-2" />
-                      WhatsApp
-                    </Button>
-                  </a>
-                ) : null}
-              </div>
-            </div>
-          </aside>
-
-          <div className="space-y-8">
-            <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Agent Branding</p>
-              <h2 className="mt-4 text-4xl font-black tracking-tight text-[#111111]">{displayName}</h2>
-              <p className="mt-6 text-lg text-[#111111]/60 leading-relaxed">
-                {profile.agent.bio || `${profile.agent.name} is part of the public-facing advisor network for ${displayName}.`}
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
-                <h3 className="text-xl font-bold">Profile Snapshot</h3>
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  {[
-                    { label: "Active", value: profile.stats.activeListings },
-                    { label: "Sold", value: profile.stats.soldListings },
-                    { label: "Rented", value: profile.stats.rentedListings },
-                    { label: "Languages", value: (profile.agent.languages || []).length },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-2xl bg-[#F8F9FA] border border-[#E5E7EB] p-4">
-                      <p className="text-2xl font-black">{item.value}</p>
-                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40 mt-1">{item.label}</p>
+          <aside className="space-y-10">
+            <div className="space-y-6 bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Profile</h2>
+              <div className="space-y-4 text-sm leading-7 text-[#111111]/60">
+                <p>{profile.agent.bio || profile.agent.tagline || `${profile.agent.name} is part of the public-facing advisor network for ${displayName}.`}</p>
+                <div className="space-y-3">
+                  {(profile.agent.languages || []).length > 0 ? (
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Languages</p>
+                      <p>{(profile.agent.languages || []).join(", ")}</p>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
-                <h3 className="text-xl font-bold">Specializations</h3>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {(profile.agent.specializations || []).map((item) => (
-                    <span key={item} className="rounded-full bg-primary/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                      {item}
-                    </span>
-                  ))}
-                  {(profile.agent.specializations || []).length === 0 ? (
-                    <p className="text-sm text-[#111111]/50">No public specializations added yet.</p>
+                  ) : null}
+                  {(profile.agent.specializations || []).length > 0 ? (
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Specializations</p>
+                      <p>{(profile.agent.specializations || []).join(", ")}</p>
+                    </div>
+                  ) : null}
+                  {profile.agent.yearsExperience ? (
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Experience</p>
+                      <p>{profile.agent.yearsExperience}+ years</p>
+                    </div>
+                  ) : null}
+                  {brokerRegistrationNumber ? (
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">BRN</p>
+                      <p>{brokerRegistrationNumber}</p>
+                    </div>
                   ) : null}
                 </div>
               </div>
             </div>
 
+            <div className="space-y-6 bg-white rounded-3xl border border-[#E5E7EB] shadow-sm p-8">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Live Stats</h2>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <p className="text-2xl font-black text-[#111111]">{profile.stats.activeListings}</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Active</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-[#111111]">{profile.stats.soldListings}</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Sold</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-[#111111]">{profile.stats.rentedListings}</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#111111]/40">Rented</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div className="space-y-8">
             <ReviewCarousel
               title="What My Clients Say"
               description={`Verified feedback from clients who worked directly with ${profile.agent.name}.`}
