@@ -246,6 +246,9 @@ type RawListing = {
   transactionType?: string;
   readiness?: string;
   status?: string;
+  isFeatured?: boolean | string | number | null;
+  featured?: boolean | string | number | null;
+  createdAt?: string | Date | null;
   price?: number | string;
   area?: string;
   subArea?: string;
@@ -267,6 +270,8 @@ type RawListing = {
   virtualTourUrl?: string | null;
   videoTourUrl?: string | null;
   fields?: {
+    isFeatured?: boolean | string | number | null;
+    featured?: boolean | string | number | null;
     virtualTourUrl?: string | null;
     virtualTour?: string | null;
     virtualTourLink?: string | null;
@@ -326,6 +331,9 @@ export type AuraProperty = {
   agentEmail?: string;
   agentWhatsapp?: string;
   virtualTourUrl?: string | null;
+  featured?: boolean;
+  createdAt?: string;
+  recentlyListed?: boolean;
   latitude: number | null;
   longitude: number | null;
 };
@@ -389,6 +397,40 @@ function getGalleryImages(images?: ListingImage[], agencySlug?: string | null) {
   );
 }
 
+const RECENTLY_LISTED_WINDOW_MS = 15 * 24 * 60 * 60 * 1000;
+
+function isTruthyListingFlag(value: unknown) {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value !== 0;
+  if (typeof value === "string") {
+    return ["true", "1", "yes", "y", "on"].includes(value.trim().toLowerCase());
+  }
+  return Boolean(value);
+}
+
+function isFeaturedListing(listing: RawListing) {
+  return [
+    listing.isFeatured,
+    listing.featured,
+    listing.fields?.isFeatured,
+    listing.fields?.featured,
+  ].some(isTruthyListingFlag);
+}
+
+function getCreatedAtIso(value: unknown) {
+  if (!value) return undefined;
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function isRecentlyListed(createdAt?: string) {
+  if (!createdAt) return false;
+  const createdTime = Date.parse(createdAt);
+  if (!Number.isFinite(createdTime)) return false;
+  const ageMs = Date.now() - createdTime;
+  return ageMs >= 0 && ageMs <= RECENTLY_LISTED_WINDOW_MS;
+}
+
 function getListingsUrl(searchParams: URLSearchParams, agencySlug?: string | null) {
   const query = searchParams.toString();
   return `/listings${query ? `?${query}` : ""}`;
@@ -448,6 +490,8 @@ export function mapListingToAuraProperty(listing: RawListing, agencySlug?: strin
   const priceValue = getNumberValue(listing.price) || 0;
   const location = [listing.subArea, listing.area, listing.emirate].filter(Boolean).join(", ") || "Australia";
   const address = getStringValue(listing.streetAddress, listing.address, listing.title, location) || "Address on request";
+  const createdAt = getCreatedAtIso(listing.createdAt);
+  const featured = isFeaturedListing(listing);
   const virtualTourUrl = getStringValue(
     listing.virtualTourUrl,
     listing.videoTourUrl,
@@ -494,6 +538,9 @@ export function mapListingToAuraProperty(listing: RawListing, agencySlug?: strin
     agentEmail: getStringValue(listing.agent?.email, listing.broker?.brokerProfile?.publicEmail, listing.broker?.email),
     agentWhatsapp: getStringValue(listing.agent?.whatsapp, listing.broker?.brokerProfile?.whatsapp),
     virtualTourUrl,
+    featured,
+    createdAt,
+    recentlyListed: isRecentlyListed(createdAt),
     latitude: getNumberValue(listing.latitude) ?? null,
     longitude: getNumberValue(listing.longitude) ?? null,
   };

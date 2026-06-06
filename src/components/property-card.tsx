@@ -26,10 +26,12 @@ interface PropertyProps {
   cars: number;
   description: string;
   status?: string;
+  featured?: boolean;
+  recentlyListed?: boolean;
   agentAvatar?: string;
 }
 
-export function PropertyCard({ id, image, price, address, beds, baths, cars, description, status, agentAvatar }: PropertyProps) {
+export function PropertyCard({ id, image, price, address, beds, baths, cars, description, status, featured, recentlyListed, agentAvatar }: PropertyProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [summary, setSummary] = useState<string[]>([]);
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
@@ -76,6 +78,20 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
               )}>
                 {status}
               </span>
+            </div>
+          )}
+          {(featured || recentlyListed) && (
+            <div className="absolute right-4 top-4 z-10 flex flex-col items-end gap-2">
+              {featured && (
+                <span className="rounded-sm bg-primary px-3 py-1 text-[10px] font-black tracking-widest text-white shadow-sm">
+                  Featured
+                </span>
+              )}
+              {recentlyListed && (
+                <span className="rounded-sm bg-slate-900/85 px-3 py-1 text-[10px] font-black tracking-widest text-white shadow-sm backdrop-blur-sm">
+                  Recently Listed
+                </span>
+              )}
             </div>
           )}
 
