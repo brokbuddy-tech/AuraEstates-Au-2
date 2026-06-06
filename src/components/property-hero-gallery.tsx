@@ -53,28 +53,17 @@ export function PropertyHeroGallery({ images, title, virtualTourUrl }: PropertyH
         >
           <Image src={images[0]} alt={title} fill className="object-cover" priority />
           {virtualTourUrl ? (
-            <Button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
+          <Button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
               }}
               className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-full shadow-xl hover:bg-white"
             >
               <Video className="w-4 h-4 mr-2" /> Virtual Tour
             </Button>
           ) : null}
-          <Button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation();
-              openGallery(0);
-            }}
-            variant="outline"
-            className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md border-none text-[#111111] font-bold rounded-xl shadow-xl"
-          >
-            <Maximize2 className="w-4 h-4 mr-2" /> View All Photos
-          </Button>
         </div>
         <div className="lg:col-span-4 flex flex-col gap-4">
           <button
@@ -92,6 +81,10 @@ export function PropertyHeroGallery({ images, title, virtualTourUrl }: PropertyH
             aria-label={`Open gallery image 3 of ${images.length}`}
           >
             <Image src={images[2] || images[0]} alt={`${title} detail 2`} fill className="object-cover" />
+            <span className="pointer-events-none absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-xl bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#111111] shadow-xl backdrop-blur-md">
+              <Maximize2 className="h-4 w-4" />
+              View More
+            </span>
           </button>
         </div>
       </div>
