@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +18,22 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
   const [brandLogo, setBrandLogo] = useState<string | null>(initialSiteConfig?.profile?.logo || null);
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
+  const desktopNavRef = useRef<HTMLDivElement | null>(null);
+  const desktopLinkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const navLinks = [
+    { label: "Buy", href: "/buy" },
+    { label: "Rent", href: "/rent" },
+    { label: "Sold", href: "/sold" },
+    { label: "Find Agent", href: "/agents" },
+    { label: "Commercial", href: "/commercial" },
+    { label: "About Us", href: "/about" },
+  ];
+  const isNavLinkActive = (href: string) => {
+    const prefixedHref = prefixAgencyPath(href, agencySlug);
+    return pathname === prefixedHref || pathname === href || pathname.startsWith(`${prefixedHref}/`) || pathname.startsWith(`${href}/`);
+  };
+  const activeNavLabel = navLinks.find((link) => isNavLinkActive(link.href))?.label;
+  const [activeUnderline, setActiveUnderline] = useState<{ left: number; width: number } | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,6 +71,32 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
     };
   }, [agencySlug, initialSiteConfig]);
 
+  useEffect(() => {
+    const updateUnderline = () => {
+      if (!activeNavLabel || !desktopNavRef.current) {
+        setActiveUnderline(null);
+        return;
+      }
+
+      const activeLink = desktopLinkRefs.current[activeNavLabel];
+      if (!activeLink) {
+        setActiveUnderline(null);
+        return;
+      }
+
+      const navRect = desktopNavRef.current.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      setActiveUnderline({
+        left: linkRect.left - navRect.left,
+        width: linkRect.width,
+      });
+    };
+
+    updateUnderline();
+    window.addEventListener("resize", updateUnderline);
+    return () => window.removeEventListener("resize", updateUnderline);
+  }, [activeNavLabel]);
+
   return (
     <nav
       className={cn(
@@ -81,13 +123,36 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
           </span>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#111111]/60">
-          <Link href={prefixAgencyPath("/buy", agencySlug)} className="hover:text-primary transition-colors">Buy</Link>
-          <Link href={prefixAgencyPath("/rent", agencySlug)} className="hover:text-primary transition-colors">Rent</Link>
-          <Link href={prefixAgencyPath("/sold", agencySlug)} className="hover:text-primary transition-colors">Sold</Link>
-          <Link href={prefixAgencyPath("/agents", agencySlug)} className="hover:text-primary transition-colors">Find Agent</Link>
-          <Link href={prefixAgencyPath("/commercial", agencySlug)} className="hover:text-primary transition-colors">Commercial</Link>
-          <Link href={prefixAgencyPath("/about", agencySlug)} className="hover:text-primary transition-colors">About Us</Link>
+        <div ref={desktopNavRef} className="relative hidden lg:flex items-center gap-8 pb-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#111111]/60">
+          {activeUnderline && (
+            <span
+              className="pointer-events-none absolute bottom-0 h-0.5 rounded-full bg-primary transition-all duration-300 ease-out"
+              style={{
+                left: activeUnderline.left,
+                width: activeUnderline.width,
+              }}
+            />
+          )}
+          {navLinks.map((link) => {
+            const isActive = link.label === activeNavLabel;
+
+            return (
+              <Link
+                key={link.label}
+                href={prefixAgencyPath(link.href, agencySlug)}
+                ref={(node) => {
+                  desktopLinkRefs.current[link.label] = node;
+                }}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "relative py-1 hover:text-primary transition-colors",
+                  isActive && "text-primary"
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -113,12 +178,19 @@ export function Navbar({ initialSiteConfig }: { initialSiteConfig?: SiteConfig |
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 top-[64px] bg-white z-40 p-8 flex flex-col gap-6 animate-in slide-in-from-right duration-300">
-           <Link href={prefixAgencyPath("/buy", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Buy</Link>
-           <Link href={prefixAgencyPath("/rent", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Rent</Link>
-           <Link href={prefixAgencyPath("/sold", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Sold</Link>
-           <Link href={prefixAgencyPath("/agents", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Find Agent</Link>
-           <Link href={prefixAgencyPath("/commercial", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">Commercial</Link>
-           <Link href={prefixAgencyPath("/about", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-black text-[#111111] uppercase tracking-tighter">About Us</Link>
+           {navLinks.map((link) => (
+             <Link
+               key={link.label}
+               href={prefixAgencyPath(link.href, agencySlug)}
+               onClick={() => setIsMobileMenuOpen(false)}
+               className={cn(
+                 "text-2xl font-black uppercase tracking-tighter",
+                 isNavLinkActive(link.href) ? "text-primary" : "text-[#111111]"
+               )}
+             >
+               {link.label}
+             </Link>
+           ))}
            
            <Link href={prefixAgencyPath("/contact", agencySlug)} onClick={() => setIsMobileMenuOpen(false)} className="mt-4">
              <Button className="w-full h-14 bg-primary text-white font-bold rounded-xl">Contact Us</Button>
