@@ -10,12 +10,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const agencySlug = await getRequestAgencySlug();
   const siteConfig = await getSiteConfig(agencySlug);
   const agencyName = getAgencyDisplayName(siteConfig);
+  const logoIconUrl = siteConfig.profile?.logo?.trim() || undefined;
 
   return {
     title: siteConfig.branding?.metaTitle?.trim() || `${agencyName} | Premium Real Estate Search`,
     description:
       siteConfig.branding?.metaDescription?.trim()
       || `Experience a reimagined way to find your next home with AI-powered property insights from ${agencyName}.`,
+    icons: logoIconUrl
+      ? {
+          icon: [{ url: logoIconUrl }],
+          shortcut: [{ url: logoIconUrl }],
+          apple: [{ url: logoIconUrl }],
+        }
+      : undefined,
   };
 }
 
