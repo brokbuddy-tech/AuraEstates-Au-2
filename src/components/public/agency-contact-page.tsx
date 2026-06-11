@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { getSiteConfig, hasMeaningfulSiteConfig, type SiteConfig } from "@/lib/public-site";
+import { getSiteConfig, hasMeaningfulSiteConfig, submitOrgInquiry, type SiteConfig } from "@/lib/public-site";
 import { prefixAgencyPath, resolveAgencySlugFromPathname } from "@/lib/agency-routing";
 
 function getDisplayName(siteConfig: SiteConfig | null) {
@@ -24,6 +24,8 @@ export function AuraContactPageContent({
   const pathname = usePathname();
   const agencySlug = resolveAgencySlugFromPathname(pathname);
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(initialSiteConfig);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitFeedback, setSubmitFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   useEffect(() => {
     setSiteConfig(initialSiteConfig);
@@ -58,6 +60,43 @@ export function AuraContactPageContent({
     "Phone available on request";
   const officeAddress = siteConfig?.profile?.officeAddress?.trim() || "Address shared on request";
   const officeTimings = siteConfig?.profile?.officeTimings?.trim() || "Available by appointment";
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitFeedback(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const firstName = String(formData.get("firstName") || "").trim();
+    const lastName = String(formData.get("lastName") || "").trim();
+
+    try {
+      await submitOrgInquiry({
+        name: [firstName, lastName].filter(Boolean).join(" "),
+        email: String(formData.get("email") || "").trim(),
+        phone: String(formData.get("phone") || "").trim(),
+        message: String(formData.get("message") || "").trim(),
+        templateName: "Aura Estates AU",
+        formContext: "contact-page",
+      }, agencySlug);
+
+      form.reset();
+      setSubmitFeedback({
+        type: "success",
+        message: `Thanks. ${displayName} will contact you shortly.`,
+      });
+    } catch (error) {
+      setSubmitFeedback({
+        type: "error",
+        message: error instanceof Error ? error.message : "Please try again in a moment.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-background relative flex flex-col">
@@ -118,27 +157,39 @@ export function AuraContactPageContent({
 
           <div className="glass-morphism p-8 md:p-12 rounded-3xl border border-white/10 shadow-2xl">
             <h2 className="text-2xl font-bold text-white mb-6">Send a Message</h2>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="first-name" className="text-white/60">First Name</Label>
-                  <Input id="first-name" placeholder="Jane" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" />
+                  <Input id="first-name" name="firstName" placeholder="Jane" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="last-name" className="text-white/60">Last Name</Label>
-                  <Input id="last-name" placeholder="Doe" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" />
+                  <Input id="last-name" name="lastName" placeholder="Doe" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" required />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-white/60">Email Address</Label>
-                <Input id="email" type="email" placeholder="jane@example.com" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" />
+                <Input id="email" name="email" type="email" placeholder="jane@example.com" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-white/60">Phone</Label>
+                <Input id="phone" name="phone" type="tel" placeholder="Your phone number" className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 rounded-xl focus:ring-primary" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="message" className="text-white/60">Message</Label>
-                <Textarea id="message" placeholder={`Tell ${displayName} how the team can help...`} className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[120px] rounded-xl focus:ring-primary" />
+                <Textarea id="message" name="message" placeholder={`Tell ${displayName} how the team can help...`} className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[120px] rounded-xl focus:ring-primary" required minLength={10} />
               </div>
-              <Button className="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-all active:scale-[0.98] group">
-                Send Message
+              {submitFeedback ? (
+                <p
+                  className={submitFeedback.type === "success" ? "text-sm font-semibold text-emerald-300" : "text-sm font-semibold text-red-300"}
+                  aria-live="polite"
+                >
+                  {submitFeedback.message}
+                </p>
+              ) : null}
+              <Button type="submit" disabled={isSubmitting} className="w-full h-14 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-all active:scale-[0.98] group disabled:opacity-70">
+                {isSubmitting ? "Sending..." : "Send Message"}
                 <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
