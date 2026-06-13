@@ -143,16 +143,20 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-3 gap-4 py-6 border-y border-white/5">
-                    <div className="flex flex-col items-center gap-1">
-                      <Bed className="w-5 h-5 text-primary" />
-                      <span className="text-lg font-black">{beds}</span>
-                      <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Beds</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-1 border-x border-white/5">
-                      <Bath className="w-5 h-5 text-primary" />
-                      <span className="text-lg font-black">{baths}</span>
-                      <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Baths</span>
-                    </div>
+                    {beds > 0 && (
+                      <div className="flex flex-col items-center gap-1">
+                        <Bed className="w-5 h-5 text-primary" />
+                        <span className="text-lg font-black">{beds}</span>
+                        <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Beds</span>
+                      </div>
+                    )}
+                    {baths > 0 && (
+                      <div className={`flex flex-col items-center gap-1 ${beds > 0 ? 'border-x border-white/5' : ''}`}>
+                        <Bath className="w-5 h-5 text-primary" />
+                        <span className="text-lg font-black">{baths}</span>
+                        <span className="text-[10px] text-white/40 uppercase font-bold tracking-widest">Baths</span>
+                      </div>
+                    )}
                     <div className="flex flex-col items-center gap-1">
                       <Car className="w-5 h-5 text-primary" />
                       <span className="text-lg font-black">{cars}</span>
@@ -210,8 +214,12 @@ export function PropertyCard({ id, image, price, address, beds, baths, cars, des
 
           <div className="mt-auto flex items-center justify-between pt-4 border-t border-black/5">
             <div className="flex items-center gap-6 text-[#111111]/80">
-              <span className="flex items-center gap-2 text-xs font-bold"><Bed className="w-4 h-4 text-primary" /> {beds}</span>
-              <span className="flex items-center gap-2 text-xs font-bold"><Bath className="w-4 h-4 text-primary" /> {baths}</span>
+              {beds > 0 && (
+                <span className="flex items-center gap-2 text-xs font-bold"><Bed className="w-4 h-4 text-primary" /> {beds}</span>
+              )}
+              {baths > 0 && (
+                <span className="flex items-center gap-2 text-xs font-bold"><Bath className="w-4 h-4 text-primary" /> {baths}</span>
+              )}
               <span className="flex items-center gap-2 text-xs font-bold"><Car className="w-4 h-4 text-primary" /> {cars}</span>
             </div>
             <div className="flex -space-x-2">

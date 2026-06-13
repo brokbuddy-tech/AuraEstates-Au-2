@@ -330,21 +330,25 @@ export default function PropertyShowcase({
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8 border-y border-[#F1F1F1] pb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary"><Bed /></div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Bedrooms</p>
-                    <p className="font-black text-xl">{property.beds}</p>
+                {property.beds > 0 && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary"><Bed /></div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Bedrooms</p>
+                      <p className="font-black text-xl">{property.beds}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 border-l border-[#F1F1F1] pl-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary"><Bath /></div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Bathrooms</p>
-                    <p className="font-black text-xl">{property.baths}</p>
+                )}
+                {property.baths > 0 && (
+                  <div className={`flex items-center gap-3 ${property.beds > 0 ? 'border-l border-[#F1F1F1] pl-4' : ''}`}>
+                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary"><Bath /></div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Bathrooms</p>
+                      <p className="font-black text-xl">{property.baths}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 border-l border-[#F1F1F1] pl-4">
+                )}
+                <div className={`flex items-center gap-3 ${property.beds > 0 || property.baths > 0 ? 'border-l border-[#F1F1F1] pl-4' : ''}`}>
                   <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary"><Car /></div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Car Space</p>
@@ -540,9 +544,13 @@ export default function PropertyShowcase({
                           </div>
 
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[#F1F1F1]">
-                            <div className="text-center"><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Beds</p><p className="text-2xl font-black">{property.beds}</p></div>
-                            <div className="text-center border-l border-[#F1F1F1]"><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Baths</p><p className="text-2xl font-black">{property.baths}</p></div>
-                            <div className="text-center border-l border-[#F1F1F1]"><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Cars</p><p className="text-2xl font-black">{property.cars}</p></div>
+                            {property.beds > 0 && (
+                              <div className="text-center"><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Beds</p><p className="text-2xl font-black">{property.beds}</p></div>
+                            )}
+                            {property.baths > 0 && (
+                              <div className={`text-center ${property.beds > 0 ? 'border-l border-[#F1F1F1]' : ''}`}><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Baths</p><p className="text-2xl font-black">{property.baths}</p></div>
+                            )}
+                            <div className={`text-center ${property.beds > 0 || property.baths > 0 ? 'border-l border-[#F1F1F1]' : ''}`}><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Cars</p><p className="text-2xl font-black">{property.cars}</p></div>
                             <div className="text-center border-l border-[#F1F1F1]"><p className="text-[10px] font-bold uppercase text-[#111111]/40 tracking-widest mb-2">Size</p><p className="text-2xl font-black">{property.area} m2</p></div>
                           </div>
 
