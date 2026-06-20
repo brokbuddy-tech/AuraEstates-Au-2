@@ -278,6 +278,15 @@ type RawListing = {
     tourUrl?: string | null;
     videoTourUrl?: string | null;
     matterportUrl?: string | null;
+    dldPermitNo?: string | null;
+    permitNumber?: string | null;
+    trakheesiPermit?: string | null;
+    trakheesi?: string | null;
+    reraPermit?: string | null;
+    reraNumber?: string | null;
+    reraProjectNumber?: string | number | null;
+    dldPermitLink?: string | null;
+    trakheesiPermitLink?: string | null;
   } | null;
   amenities?: string[];
   images?: ListingImage[];
@@ -303,6 +312,15 @@ type RawListing = {
     email?: string | null;
     whatsapp?: string | null;
   } | null;
+  dldPermitNo?: string;
+  permitNumber?: string;
+  trakheesi?: string;
+  trakheesiPermitNumber?: string;
+  reraPermit?: string;
+  reraNumber?: string;
+  reraProjectNumber?: string | number;
+  dldPermitLink?: string;
+  trakheesiPermitLink?: string;
 };
 
 export type AuraProperty = {
@@ -336,6 +354,11 @@ export type AuraProperty = {
   recentlyListed?: boolean;
   latitude: number | null;
   longitude: number | null;
+  dldPermitNo?: string;
+  trakheesi?: string;
+  reraPermit?: string;
+  dldPermitLink?: string;
+  agentBrn?: string;
 };
 
 export type AuraPropertyResults = {
@@ -543,6 +566,11 @@ export function mapListingToAuraProperty(listing: RawListing, agencySlug?: strin
     recentlyListed: isRecentlyListed(createdAt),
     latitude: getNumberValue(listing.latitude) ?? null,
     longitude: getNumberValue(listing.longitude) ?? null,
+    dldPermitNo: getStringValue(listing.dldPermitNo, listing.permitNumber, listing.trakheesiPermitNumber, listing.fields?.dldPermitNo, listing.fields?.permitNumber),
+    trakheesi: getStringValue(listing.trakheesi, listing.trakheesiPermitNumber, listing.permitNumber, listing.fields?.trakheesi, listing.fields?.trakheesiPermit),
+    reraPermit: getStringValue(listing.reraPermit, listing.reraNumber, listing.reraProjectNumber != null ? String(listing.reraProjectNumber) : undefined, listing.fields?.reraPermit, listing.fields?.reraNumber, listing.fields?.reraProjectNumber != null ? String(listing.fields.reraProjectNumber) : undefined),
+    dldPermitLink: getStringValue(listing.dldPermitLink, listing.trakheesiPermitLink, listing.fields?.dldPermitLink, listing.fields?.trakheesiPermitLink) || undefined,
+    agentBrn: getStringValue(listing.agent?.brn as string, listing.broker?.brokerProfile?.brn as string) || undefined,
   };
 }
 

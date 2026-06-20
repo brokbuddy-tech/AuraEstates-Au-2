@@ -461,6 +461,57 @@ export default function PropertyShowcase({
                   </div>
                 </div>
               </div>
+
+              {/* Regulatory Information */}
+              {(property.dldPermitNo || property.trakheesi || property.reraPermit || property.agentBrn || property.dldPermitLink) && (
+                <div className="pt-12 space-y-6">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black uppercase tracking-tight">Regulatory Information</h3>
+                    <p className="text-[10px] text-[#111111]/40 font-bold uppercase tracking-widest">
+                      Verified licensing and permit details
+                    </p>
+                  </div>
+                  <div className="bg-white border border-[#F1F1F1] rounded-3xl p-8 flex flex-col sm:flex-row justify-between items-start gap-8">
+                    <div className="space-y-4 flex-1 w-full">
+                      {(property.trakheesi || property.dldPermitNo) && (
+                        <div className="flex items-center justify-between p-4 bg-[#F8F9FA] rounded-2xl border border-[#F1F1F1]">
+                          <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">Permit Number</p>
+                          <p className="font-black text-lg">{property.trakheesi || property.dldPermitNo}</p>
+                        </div>
+                      )}
+                      {property.reraPermit && (
+                        <div className="flex items-center justify-between p-4 bg-[#F8F9FA] rounded-2xl border border-[#F1F1F1]">
+                          <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">RERA Licence</p>
+                          <p className="font-black text-lg">{property.reraPermit}</p>
+                        </div>
+                      )}
+                      {property.agentBrn && (
+                        <div className="flex items-center justify-between p-4 bg-[#F8F9FA] rounded-2xl border border-[#F1F1F1]">
+                          <p className="text-[10px] font-bold uppercase text-[#111111]/30 tracking-widest">BRN</p>
+                          <p className="font-black text-lg">{property.agentBrn}</p>
+                        </div>
+                      )}
+                    </div>
+                    {property.dldPermitLink && (
+                      <div className="flex flex-col items-center shrink-0">
+                        <div className="bg-white p-3 border border-[#F1F1F1] rounded-2xl shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(property.dldPermitLink)}`}
+                            alt="Permit QR Code"
+                            width={100}
+                            height={100}
+                            className="rounded-lg"
+                          />
+                        </div>
+                        <a href={property.dldPermitLink} target="_blank" rel="noopener noreferrer" className="mt-3 text-[10px] font-bold text-[#005F73] tracking-[0.2em] uppercase hover:underline">
+                          VERIFY PERMIT →
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
