@@ -302,6 +302,7 @@ type RawListing = {
       publicPhone?: string | null;
       publicEmail?: string | null;
       whatsapp?: string | null;
+      brn?: string | null;
     } | null;
   } | null;
   agent?: {
@@ -311,6 +312,7 @@ type RawListing = {
     phone?: string | null;
     email?: string | null;
     whatsapp?: string | null;
+    brn?: string | null;
   } | null;
   dldPermitNo?: string;
   permitNumber?: string;
