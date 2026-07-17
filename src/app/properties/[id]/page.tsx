@@ -40,6 +40,7 @@ import { PropertyHeroGallery } from "@/components/property-hero-gallery";
 import { AmenityIcon } from "@/components/amenity-icon";
 import { getPropertyById, type AuraProperty } from "@/lib/api";
 import { resolveAgencySlugFromPathname } from "@/lib/agency-routing";
+import { ListingViewTracker } from "@/components/listing-view-tracker";
 
 const DynamicLocationMap = dynamic(
   () => import("@/components/location-map").then((mod) => ({ default: mod.LocationMap })),
@@ -304,6 +305,7 @@ export default function PropertyShowcase({
 
   return (
     <main className="min-h-screen bg-white text-[#111111] selection:bg-primary/20">
+      <ListingViewTracker listingId={property.id} agencySlug={agencySlug} />
       <section className="pt-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
           <PropertyHeroGallery images={gallery} title={property.title} virtualTourUrl={property.virtualTourUrl} />
