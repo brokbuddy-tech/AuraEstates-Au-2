@@ -216,7 +216,7 @@ export function AuraAgentProfilePageContent({
               <h3 className="text-2xl font-bold">Active Listings</h3>
               <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
                 {profile.activeListings.map((listing: any) => (
-                  <Link key={listing.id} href={prefixAgencyPath(`/property/${listing.id}`, agencySlug)} className="group overflow-hidden rounded-3xl border border-[#E5E7EB]">
+                  <Link key={listing.id} href={prefixAgencyPath(`/properties/${listing.id}`, agencySlug)} className="group overflow-hidden rounded-3xl border border-[#E5E7EB]">
                     <div className="relative aspect-[4/3]">
                       <Image src={listing.image} alt={listing.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
